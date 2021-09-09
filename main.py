@@ -39,10 +39,13 @@ def simple_farm(*args):
 			time.sleep(1)
 		slide(x, y, x + 30, y, whandle)
 
-time.sleep(1)
 
-whandles = get_active_windows(CFG['whandle'])
 
-for hwnd in whandles:
-	t = threading.Thread(target=simple_farm, args=(hwnd,))
-	t.start()
+if __name__ == "__main__":
+	time.sleep(1)
+
+	whandles = get_active_windows(CFG['whandle'])
+		
+	for hwnd in whandles:
+		t = threading.Thread(target=simple_farm, args=(hwnd,))
+		t.start()
