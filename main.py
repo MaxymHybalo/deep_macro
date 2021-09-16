@@ -36,7 +36,7 @@ def simple_farm(*args):
 	while True:
 		for i in range(5):
 			press(whandle, '2')
-			time.sleep(1)
+			time.sleep(2.5)
 		slide(x, y, x + 30, y, whandle)
 
 time.sleep(1)
