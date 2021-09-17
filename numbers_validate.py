@@ -2,7 +2,7 @@ import pytesseract
 import cv2
 from datetime import datetime
 
-NUMBERS_AREA = (605, 290, 40, 30)
+NUMBERS_AREA = (605, 290, 80, 30)
 
 def crop_roi(img, roi):
 	x,y, w,h = roi

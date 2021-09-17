@@ -11,7 +11,7 @@ import cv2
 
 CONFIG_FILE = 'config.yml'
 CFG = config.load_config(CONFIG_FILE)
-NUMBERS_AREA = (605, 290, 40, 30)
+NUMBERS_AREA = (605, 290, 80, 30)
 
 # whandle = w.FindWindow(None, CFG['whandle']) 
 
