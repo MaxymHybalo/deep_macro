@@ -61,6 +61,8 @@ def send(whandle, message):
 		u.press(m)
 
 	time.sleep(0.2)
+	u.press('enter')
+	time.sleep(0.2)
 	click(CHAT_FREE_X, CHAT_FREE_Y, whandle)
 	# w.PostMessage(whandle, con.WM_KEYDOWN, con.VK_RETURN, 0)
 	# w.PostMessage(whandle, con.WM_KEYUP, con.VK_RETURN, 0)

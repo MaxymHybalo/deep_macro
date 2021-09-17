@@ -8,8 +8,10 @@ from screen_reader import get_window_image
 from numbers_validate import get_numbers_from_img
 
 import cv2
+
 CONFIG_FILE = 'config.yml'
 CFG = config.load_config(CONFIG_FILE)
+NUMBERS_AREA = (605, 290, 40, 30)
 
 # whandle = w.FindWindow(None, CFG['whandle']) 
 
@@ -47,8 +49,10 @@ def simple_farm(*args):
 
 def check_numbers(handle):
 	img = get_window_image(handle)
+	x, y, w, h = NUMBERS_AREA
+	cv2.rectangle(img, (x, y), (x + w, y + h), (255,0,0), 2)
 	cv2.imwrite('logs/' + str(handle) + '.png', img)
-	numbers = get_numbers_from_img(img)
+	numbers = get_numbers_from_img(img, handle=handle)
 	if numbers:
 		send(handle, numbers)
 
