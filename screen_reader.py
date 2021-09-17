@@ -5,8 +5,8 @@ import win32ui as ui
 from win32.lib import win32con as con
 from win32 import win32api
 import time
+
 def get_window_coord(whandle):
-	print(whandle)
 	rect = api.GetWindowRect(whandle)
 	l,t,r,b = rect
 	w = r - l
@@ -40,8 +40,14 @@ def get_window_image(hwnd):
 	srcdc = ui.CreateDCFromHandle(wdc)
 	memdc = srcdc.CreateCompatibleDC()
 	bmp = ui.CreateBitmap()
-	print(roi)
-	bmp.CreateCompatibleBitmap(srcdc, width, height)
+	if width < 0 or height < 0:
+		return None
+	try:
+		bmp.CreateCompatibleBitmap(srcdc, width, height)
+	except Exception as e:
+		print('error', width, height)
+		return
+		raise e
 	memdc.SelectObject(bmp)
 	memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
 	signedInts = bmp.GetBitmapBits(True)
@@ -53,13 +59,13 @@ def get_window_image(hwnd):
 	api.ReleaseDC(hwnd, wdc)
 	api.DeleteObject(bmp.GetHandle())
 
-
+	img = img[0:roi[3], 0:roi[2]]
 	cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
 	return img
 
-start = time.time()
+# start = time.time()
 # i = get_window_image(hwnd)
 # end = time.time() - start
 # print('time to end ', end)
-# # print(img.shape)
+# print(i.shape)
 # cv2.imwrite('img2.png', i)

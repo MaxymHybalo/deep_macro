@@ -40,4 +40,30 @@ def slide(x1, y1, x2, y2, whandle):
 
 	w.PostMessage(whandle, con.WM_RBUTTONUP, 0, p2)
 
+def send(whandle, message):
+	w.SetActiveWindow(whandle)
+	try:
+		w.SetForegroundWindow(whandle)
+	except Exception as e:
+		print(e)
+		print('whandle ', whandle)
+		raise e
+	
+	import pyautogui as u
+	
+	time.sleep(0.2)
+	u.press('enter')
+	time.sleep(0.2)
+
+	for m in message:
+		u.press(m)
+
+	time.sleep(0.2)
+	u.press('enter')
+	time.sleep(0.2)
+	u.press('enter')
+	# w.PostMessage(whandle, con.WM_KEYDOWN, con.VK_RETURN, 0)
+	# w.PostMessage(whandle, con.WM_KEYUP, con.VK_RETURN, 0)
+	# w.SendMessage(whandle, con.WM_KEYDOWN, ord('w'), 0)
+
 # press(460616, '1')
