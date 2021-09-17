@@ -2,7 +2,7 @@ import pytesseract
 import cv2
 from datetime import datetime
 
-NUMBERS_AREA = (320, 200, 435, 270)
+NUMBERS_AREA = (605, 290, 40, 30)
 
 def crop_roi(img, roi):
 	x,y, w,h = roi
@@ -24,13 +24,14 @@ def get_numbers_from_img(img):
 	img = pre_process_number_reading(img)
 	# change lang  to specified
 	text = pytesseract.image_to_string(img, config='-c tessedit_char_whitelist=0123456789')
-	text = text.strip()
+	text = ''.join(text.strip())
+	text = text[:3]
 	if len(text) > 0:
 		imname = str(datetime.now().strftime('%H_%M_%S')) + '.png'
 		print('logs to: ', imname, img.shape)
 		cv2.imwrite('logs/' + imname, img)
 	print('Tesseract text extracted: ', text, 'length', len(text))
-	return text if len(text) >= 3 else None
+	return text if len(text) == 3 else None
 
 # img = cv2.imread('numbers.png')
 

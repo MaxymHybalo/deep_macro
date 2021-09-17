@@ -16,6 +16,8 @@ KEYS = {
 	'9': 0x39,
 }
 
+CHAT_FREE_X, CHAT_FREE_Y = (50, 650)
+
 def press(whandle, key):
 	w.PostMessage(whandle, con.WM_KEYDOWN, KEYS[key])
 	w.PostMessage(whandle, con.WM_KEYUP, KEYS[key])
@@ -59,9 +61,7 @@ def send(whandle, message):
 		u.press(m)
 
 	time.sleep(0.2)
-	u.press('enter')
-	time.sleep(0.2)
-	u.press('enter')
+	click(CHAT_FREE_X, CHAT_FREE_Y, whandle)
 	# w.PostMessage(whandle, con.WM_KEYDOWN, con.VK_RETURN, 0)
 	# w.PostMessage(whandle, con.WM_KEYUP, con.VK_RETURN, 0)
 	# w.SendMessage(whandle, con.WM_KEYDOWN, ord('w'), 0)
