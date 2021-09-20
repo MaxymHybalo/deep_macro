@@ -42,6 +42,10 @@ def simple_farm(*args):
 		for i in range(5):
 			press(whandle, '2')
 			time.sleep(2.5)
+			press(whandle, '1')
+			time.sleep(1)
+			press(whandle, '1')
+			time.sleep(1)
 			check_numbers(whandle)
 		slide(x, y, x + 30, y, whandle)
 
@@ -66,6 +70,14 @@ if __name__ == "__main__":
 	# print(numbers)
 
 	for hwnd in whandles:
-		t = threading.Thread(target=simple_farm, args=(hwnd,))
-		time.sleep(3)
-		t.start()
+		if hwnd != 265230:
+		# if hwnd != 0:
+
+			t = threading.Thread(target=simple_farm, args=(hwnd,))
+			# from taming import taming
+			# t = threading.Thread(target=taming, args=(hwnd,))
+
+			time.sleep(3)
+			t.start()
+
+# !куплю броньки маха, бронь безмолвная молитва с полным блком, бсибы рыцаря

@@ -26,10 +26,10 @@ def get_numbers_from_img(img, handle=0):
 	text = pytesseract.image_to_string(img, config='-c tessedit_char_whitelist=0123456789')
 	text = ''.join(text.strip())
 	text = text[:3]
-	# if len(text) > 0:
-	imname = str(handle) + '_' + str(datetime.now().strftime('%H_%M_%S')) + '.png'
-	print('logs to: ', imname, img.shape)
-	cv2.imwrite('logs/' + imname, img)
+	if len(text) > 0:
+		imname = str(handle) + '_' + str(datetime.now().strftime('%H_%M_%S')) + '.png'
+		print('logs to: ', imname, img.shape)
+		cv2.imwrite('logs/' + imname, img)
 	print('Tesseract text extracted: ', text, 'length', len(text))
 	return text if len(text) == 3 else None
 

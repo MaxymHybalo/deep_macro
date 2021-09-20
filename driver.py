@@ -44,12 +44,12 @@ def slide(x1, y1, x2, y2, whandle):
 
 def send(whandle, message):
 	w.SetActiveWindow(whandle)
-	try:
-		w.SetForegroundWindow(whandle)
-	except Exception as e:
-		print(e)
-		print('whandle ', whandle)
-		raise e
+	# try:
+	# 	w.SetForegroundWindow(whandle)
+	# except Exception as e:
+	# 	print(e)
+	# 	print('whandle ', whandle)
+	# 	raise e
 	
 	import pyautogui as u
 	
