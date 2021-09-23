@@ -44,6 +44,8 @@ def get_window_image(hwnd):
 		return None
 	try:
 		bmp.CreateCompatibleBitmap(srcdc, width, height)
+		memdc.SelectObject(bmp)
+		memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
 	except Exception as e:
 		print('error', width, height)
 		return

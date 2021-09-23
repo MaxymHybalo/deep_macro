@@ -36,6 +36,8 @@ def get_window_coord(whandle):
 
 def simple_farm(*args):
 	whandle = args[0]
+	print(args)
+	notify = args[1]
 	x, y = get_window_coord(whandle)
 
 	while True:
@@ -46,21 +48,24 @@ def simple_farm(*args):
 			time.sleep(1)
 			press(whandle, '1')
 			time.sleep(1)
-			check_numbers(whandle)
+			check_numbers(whandle, notify)
 		slide(x, y, x + 30, y, whandle)
 
 
 
-def check_numbers(handle):
+def check_numbers(handle, notify):
 	img = get_window_image(handle)
 	x, y, w, h = NUMBERS_AREA
 	cv2.rectangle(img, (x, y), (x + w, y + h), (255,0,0), 2)
 	cv2.imwrite('logs/' + str(handle) + '.png', img)
 	numbers = get_numbers_from_img(img, handle=handle)
+
 	if numbers:
+		notify(hwnd=handle, data=numbers)
 		send(handle, numbers)
 
-if __name__ == "__main__":
+
+def polling(**kwargs):
 	time.sleep(1)
 
 	whandles = get_active_windows(CFG['whandle'])
@@ -70,14 +75,18 @@ if __name__ == "__main__":
 	# print(numbers)
 
 	for hwnd in whandles:
-		if hwnd != 265230:
+		t = None
+		# if hwnd == 263868:
+		# 	from taming import taming
+		# 	t = threading.Thread(target=taming, args=(hwnd,))
+		if hwnd != 461708:
 		# if hwnd != 0:
-
-			t = threading.Thread(target=simple_farm, args=(hwnd,))
-			# from taming import taming
+			t = threading.Thread(target=simple_farm, args=(hwnd, kwargs['notify'],))
 			# t = threading.Thread(target=taming, args=(hwnd,))
-
+		if t:
 			time.sleep(3)
 			t.start()
 
-# !куплю броньки маха, бронь безмолвная молитва с полным блком, бсибы рыцаря
+
+if __name__ == "__main__":
+	polling()	

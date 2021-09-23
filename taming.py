@@ -4,7 +4,7 @@ from main import get_active_windows, CFG
 
 CALL_TIMEOUT = 1
 TAMING = 4
-KILL = 8
+KILL = 2
 
 # whandles = get_active_windows(CFG['whandle'])
 
