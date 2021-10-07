@@ -18,3 +18,6 @@ def taming(whandle):
 	    time.sleep(TAMING)
 	    press(whandle, '1')
 	    time.sleep(KILL)
+
+if __name__ == '__main__':
+	taming(658190)

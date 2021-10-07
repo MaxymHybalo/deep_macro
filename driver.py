@@ -2,6 +2,7 @@ from win32 import win32gui as w
 from win32.lib import win32con as con
 from win32 import win32api
 import time
+from utils import get_window_coord
 
 KEYS = {
 	'0': 0x30,
@@ -52,7 +53,11 @@ def send(whandle, message):
 	# 	raise e
 	
 	import pyautogui as u
-	
+	import ctypes
+	x, y, _, _ = get_window_coord(whandle)
+	print('activate click', x + CHAT_FREE_X, y + CHAT_FREE_Y)
+	ctypes.windll.user32.SetCursorPos(x + CHAT_FREE_X, y + CHAT_FREE_Y)
+	u.click()
 	time.sleep(0.2)
 	u.press('enter')
 	time.sleep(0.2)

@@ -1,13 +1,15 @@
 import time
 import threading	
 
-import config
+import cv2
 from win32 import win32gui as w
+
+import config
 from driver import click, press, slide,send
 from screen_reader import get_window_image
 from numbers_validate import get_numbers_from_img
+import open_cards_job
 
-import cv2
 
 CONFIG_FILE = 'config.yml'
 CFG = config.load_config(CONFIG_FILE)
@@ -41,15 +43,14 @@ def simple_farm(*args):
 	x, y = get_window_coord(whandle)
 
 	while True:
-		for i in range(5):
-			press(whandle, '2')
-			time.sleep(2.5)
-			press(whandle, '1')
-			time.sleep(1)
-			press(whandle, '1')
-			time.sleep(1)
-			check_numbers(whandle, notify)
-		slide(x, y, x + 30, y, whandle)
+		press(whandle, '2')
+		time.sleep(2.5)
+		press(whandle, '1')
+		time.sleep(1)
+		press(whandle, '1')
+		time.sleep(1)
+		check_numbers(whandle, notify)
+		slide(x, y, x + 45, y, whandle)
 
 
 
@@ -76,15 +77,15 @@ def polling(**kwargs):
 
 	for hwnd in whandles:
 		t = None
-		# if hwnd == 263868:
+		# if hwnd == 264040:
 		# 	from taming import taming
 		# 	t = threading.Thread(target=taming, args=(hwnd,))
-		if hwnd != 461708:
+		if hwnd != 461576:
 		# if hwnd != 0:
 			t = threading.Thread(target=simple_farm, args=(hwnd, kwargs['notify'],))
 			# t = threading.Thread(target=taming, args=(hwnd,))
 		if t:
-			time.sleep(3)
+			time.sleep(2)
 			t.start()
 
 

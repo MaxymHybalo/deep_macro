@@ -6,12 +6,7 @@ from win32.lib import win32con as con
 from win32 import win32api
 import time
 
-def get_window_coord(whandle):
-	rect = api.GetWindowRect(whandle)
-	l,t,r,b = rect
-	w = r - l
-	h = b - t
-	return l, t, w, h
+from utils import get_window_coord
 
 def get_active_windows(handle):
 	process_whandles = []
