@@ -2,3 +2,8 @@ __pychahe__/*
 *.png
 *.pyc
 *.txt
+assets/
+logs/
+*.tb
+*.lnk
+*.png

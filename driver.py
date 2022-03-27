@@ -2,7 +2,7 @@ from win32 import win32gui as w
 from win32.lib import win32con as con
 from win32 import win32api
 import time
-from utils import get_window_coord
+from utils.deep_utils import get_window_coord
 
 KEYS = {
 	'0': 0x30,

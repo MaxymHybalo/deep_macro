@@ -5,7 +5,7 @@ from win32 import win32gui as w
 
 P1 = (741, 309 - 28)
 P2 = (734, 245 - 28)
-DELAY = 10
+DELAY = 6
 
 def open(wnd):
 	while True:

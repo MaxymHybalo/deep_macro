@@ -10,10 +10,11 @@ from screen_reader import get_window_image
 from numbers_validate import get_numbers_from_img
 import open_cards_job
 
+from enhancer.invetory_dispatcher import InventoryDispatcher
 
 CONFIG_FILE = 'config.yml'
 CFG = config.load_config(CONFIG_FILE)
-NUMBERS_AREA = (605, 290, 80, 30)
+NUMBERS_AREA = (890, 290, 80, 30)
 
 # whandle = w.FindWindow(None, CFG['whandle']) 
 
@@ -24,7 +25,6 @@ def get_active_windows(handle):
 	    if w.GetWindowText(hwnd) == 'Rappelz':
 	        process_whandles.append(hwnd)
 	        
-
 	w.EnumWindows(handleWindow, None)
 	print(process_whandles)
 	return process_whandles
@@ -39,7 +39,7 @@ def get_window_coord(whandle):
 def simple_farm(*args):
 	whandle = args[0]
 	print(args)
-	notify = args[1]
+	notify = None
 	x, y = get_window_coord(whandle)
 
 	while True:
@@ -52,8 +52,6 @@ def simple_farm(*args):
 		check_numbers(whandle, notify)
 		slide(x, y, x + 45, y, whandle)
 
-
-
 def check_numbers(handle, notify):
 	img = get_window_image(handle)
 	x, y, w, h = NUMBERS_AREA
@@ -62,9 +60,11 @@ def check_numbers(handle, notify):
 	numbers = get_numbers_from_img(img, handle=handle)
 
 	if numbers:
-		notify(hwnd=handle, data=numbers)
+		# notify(hwnd=handle, data=numbers)
 		send(handle, numbers)
 
+def configure(handle):
+	return InventoryDispatcher('enhancer.config.yml', handle)
 
 def polling(**kwargs):
 	time.sleep(1)
@@ -77,13 +77,17 @@ def polling(**kwargs):
 
 	for hwnd in whandles:
 		t = None
-		# if hwnd == 264040:
-		# 	from taming import taming
-		# 	t = threading.Thread(target=taming, args=(hwnd,))
-		if hwnd != 461576:
-		# if hwnd != 0:
-			t = threading.Thread(target=simple_farm, args=(hwnd, kwargs['notify'],))
+		# if hwnd == 2820856:
+		# from taming import taming
 			# t = threading.Thread(target=taming, args=(hwnd,))
+		# t = threading.Thread(target=open_cards_job.open, args=(hwnd,))
+		# if hwnd != 1969744:
+		# if hwnd != 2820856:
+		if hwnd != 0:
+			print('breakpoint')
+			# inventory = configure(hwnd)
+			# t = threading.Thread(target=inventory.enhance, args=(hwnd,))
+			t = threading.Thread(target=simple_farm, args=(hwnd,))
 		if t:
 			time.sleep(2)
 			t.start()

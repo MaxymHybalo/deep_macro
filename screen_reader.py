@@ -6,7 +6,7 @@ from win32.lib import win32con as con
 from win32 import win32api
 import time
 
-from utils import get_window_coord
+from utils.deep_utils import get_window_coord
 
 def get_active_windows(handle):
 	process_whandles = []
