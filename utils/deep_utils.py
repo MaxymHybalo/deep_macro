@@ -1,3 +1,4 @@
+import cv2
 from win32 import win32gui as api
 
 def get_window_coord(whandle):
@@ -6,3 +7,24 @@ def get_window_coord(whandle):
 	w = r - l
 	h = b - t
 	return l, t, w, h
+
+
+def draw_grid(whandle, image=None):
+	from screen_reader import get_window_image
+	img = image if image is not None else get_window_image(whandle)
+	_, _, w, h = get_window_coord(whandle)
+	color = (19, 233, 50)
+	thickness = 1
+	delta = 5
+	w_range = int(w / delta)
+	for x in range(w_range + 1):
+		dx = x * delta
+		cv2.line(img, (dx, 0), (dx, h), color, thickness)
+	
+	for y in range(int(h / delta) + 1):
+		dy = y * delta
+		cv2.line(img, (0, dy), (w, dy), color, thickness)
+	
+	return img
+	# cv2.imshow('test', img)
+	# cv2.waitKey(0)

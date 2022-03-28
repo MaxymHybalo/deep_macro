@@ -1,3 +1,4 @@
+from tabnanny import check
 import time
 import threading	
 
@@ -9,12 +10,13 @@ from driver import click, press, slide,send
 from screen_reader import get_window_image
 from numbers_validate import get_numbers_from_img
 import open_cards_job
+from utils.deep_utils import draw_grid
 
 from enhancer.invetory_dispatcher import InventoryDispatcher
 
 CONFIG_FILE = 'config.yml'
 CFG = config.load_config(CONFIG_FILE)
-NUMBERS_AREA = (890, 290, 80, 30)
+NUMBERS_AREA = (890, 290, 45, 25)
 
 # whandle = w.FindWindow(None, CFG['whandle']) 
 
@@ -39,7 +41,6 @@ def get_window_coord(whandle):
 def simple_farm(*args):
 	whandle = args[0]
 	print(args)
-	notify = None
 	x, y = get_window_coord(whandle)
 
 	while True:
@@ -49,10 +50,10 @@ def simple_farm(*args):
 		time.sleep(1)
 		press(whandle, '1')
 		time.sleep(1)
-		check_numbers(whandle, notify)
+		check_numbers(whandle)
 		slide(x, y, x + 45, y, whandle)
 
-def check_numbers(handle, notify):
+def check_numbers(handle):
 	img = get_window_image(handle)
 	x, y, w, h = NUMBERS_AREA
 	cv2.rectangle(img, (x, y), (x + w, y + h), (255,0,0), 2)
@@ -60,7 +61,6 @@ def check_numbers(handle, notify):
 	numbers = get_numbers_from_img(img, handle=handle)
 
 	if numbers:
-		# notify(hwnd=handle, data=numbers)
 		send(handle, numbers)
 
 def configure(handle):
@@ -71,27 +71,17 @@ def polling(**kwargs):
 
 	whandles = get_active_windows(CFG['whandle'])
 	
-	# handle = whandles[0]
-	
-	# print(numbers)
-
 	for hwnd in whandles:
 		t = None
-		# if hwnd == 2820856:
-		# from taming import taming
-			# t = threading.Thread(target=taming, args=(hwnd,))
-		# t = threading.Thread(target=open_cards_job.open, args=(hwnd,))
-		# if hwnd != 1969744:
-		# if hwnd != 2820856:
 		if hwnd != 0:
 			print('breakpoint')
+			# draw_grid(hwnd)
 			# inventory = configure(hwnd)
 			# t = threading.Thread(target=inventory.enhance, args=(hwnd,))
-			t = threading.Thread(target=simple_farm, args=(hwnd,))
-		if t:
-			time.sleep(2)
-			t.start()
-
+			# t = threading.Thread(target=simple_farm, args=(hwnd,))
+		# if t:
+		# 	time.sleep(2)
+		# 	t.start()
 
 if __name__ == "__main__":
 	polling()	
