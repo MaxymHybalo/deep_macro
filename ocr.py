@@ -2,8 +2,10 @@ import pytesseract
 import cv2
 from datetime import datetime
 
-NUMBERS_AREA = (605, 290, 80, 30)
-
+ALPHABET = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
+# ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+NUMBERS_AREA = (890, 290, 45, 25)
+CHARNAME_AREA = (45, 30, 150, 15)
 def crop_roi(img, roi):
 	x,y, w,h = roi
 	return img[y:y+h, x:x+w]
@@ -17,11 +19,16 @@ def pre_process_number_reading(img):
 	return img
 
 
-def get_numbers_from_img(img, handle=0):
+def _prepare_recognizing(img, roi):
 	if img is None:
 		return None
-	img = crop_roi(img, NUMBERS_AREA)
+	img = crop_roi(img, roi)
 	img = pre_process_number_reading(img)
+	return img
+
+
+def get_numbers_from_img(img, handle=0):
+	img = _prepare_recognizing(img, NUMBERS_AREA)
 	# change lang  to specified
 	text = pytesseract.image_to_string(img, config='-c tessedit_char_whitelist=0123456789')
 	text = ''.join(text.strip())
@@ -32,6 +39,14 @@ def get_numbers_from_img(img, handle=0):
 		cv2.imwrite('logs/' + imname, img)
 	print('Tesseract text extracted: ', text, 'length', len(text))
 	return text if len(text) == 3 else None
+
+
+def get_char_name(img):
+	img = _prepare_recognizing(img, CHARNAME_AREA)
+	text = pytesseract.image_to_string(img, config='-c tessedit_char_whitelist=' + ALPHABET)
+	text = ''.join(text.strip())
+	print('Tesseract Charname extracted: ', text, len(text))
+	return text
 
 # img = cv2.imread('numbers.png')
 
