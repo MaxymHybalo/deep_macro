@@ -22,7 +22,7 @@ def get_active_windows(handle):
 
 
 
-hwnd = get_active_windows('Rappelz')[0]
+# hwnd = get_active_windows('Rappelz')[0]
 # # hwnd = api.GetDesktopWindow()
 
 # api.SetActiveWindow(hwnd)

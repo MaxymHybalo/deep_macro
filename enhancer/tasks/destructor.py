@@ -21,19 +21,20 @@ class Destructor(Operator):
         self.log.info('End destruction')
     
     def destroy(self):
-        for container in self.split_in_buckets():
+        # for container in self.split_in_buckets():
+        for _ in range(1):
             self.log.info('Destructor items {0}'.format(len(self.inventory.working_cells)))
-            for cell in container:
+            for cell in self.inventory.working_cells[:20]:
                 x, y = self.finder.point(cell.center())
                 Click(x,y, 'double').make_click()
                 Wait(self.select_delay).delay()
             
             x, y = self._get_destruct_point()
-            Click(x,y, 'double').make_click()
-            Wait(2).delay()
+            Click(180, 488, 'double').make_click()
+            Wait(3).delay()
 
-            self.update_inventory()
-            self.log.info('Destructor rest items {0}'.format(len(self.inventory.working_cells)))
+            # self.update_inventory()
+        self.log.info('Destructor rest items {0}'.format(len(self.inventory.working_cells)))
         
     def split_in_buckets(self):
         buckets = math.ceil(len(self.inventory.working_cells) / 20)

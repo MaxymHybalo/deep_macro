@@ -10,7 +10,7 @@ combination:
 debug: true
 enhancement:
   await: 1.5
-  cube: ['1', '2']
+  cube: ['1', '1']
   cycles: '1'
 mode: disassamble
 recognize:

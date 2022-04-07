@@ -26,8 +26,8 @@ def press(whandle, key):
 
 def click(x, y, whandle):
 	point = win32api.MAKELONG(x, y)
-	w.PostMessage(whandle, con.WM_LBUTTONDOWN, 0, point)
-	w.PostMessage(whandle, con.WM_LBUTTONUP, 0, point)
+	w.PostMessage(whandle, con.WM_LBUTTONDOWN, con.MK_LBUTTON, point)
+	w.PostMessage(whandle, con.WM_LBUTTONUP, None, point)
 
 def move(x, y, trigger, whandle):
 	point = win32api.MAKELONG(x, y)

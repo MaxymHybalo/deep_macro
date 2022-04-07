@@ -47,6 +47,7 @@ def simple_farm(*args):
 	x, y = get_window_coord(whandle)
 
 	while True:
+		time.sleep(1)
 		press(whandle, '2')
 		time.sleep(1)
 		press(whandle, '1')
@@ -58,8 +59,9 @@ def simple_farm(*args):
 def check_numbers(handle):
 	img = get_window_image(handle)
 	x, y, w, h = NUMBERS_AREA
-	cv2.rectangle(img, (x, y), (x + w, y + h), (255,0,0), 2)
-	cv2.imwrite('logs/' + str(handle) + '.png', img)
+	if img is not None:
+		cv2.rectangle(img, (x, y), (x + w, y + h), (255,0,0), 2)
+		cv2.imwrite('logs/' + str(handle) + '.png', img)
 	numbers = get_numbers_from_img(img, handle=handle)
 
 	if numbers:
@@ -74,13 +76,17 @@ def start(**kwargs):
 	for hwnd in whandles:
 		t = None
 		if hwnd != 0:
-			# draw_grid(hwnd)
-			# inventory = configure(hwnd)
-			# t = threading.Thread(target=inventory.enhance, args=(hwnd,))
 			char_name = get_char_name(get_window_image(hwnd))
 			print('PID, Char: ', str(hwnd), char_name)
 			if char_name in state['farmers']:
 				t = threading.Thread(target=simple_farm, args=(hwnd,))
+			# draw_grid(hwnd)
+			else:
+				from taming import taming 
+				# inventory = configure(hwnd)
+				# t = threading.Thread(target=inventory.destroy)
+				t = threading.Thread(target=taming, args=(hwnd,))
+				
 		if t:
 			time.sleep(2)
 			t.start()

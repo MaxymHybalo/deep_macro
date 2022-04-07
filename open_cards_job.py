@@ -3,9 +3,9 @@ from driver import click
 from win32 import win32gui as w
 
 
-P1 = (741, 309 - 28)
+P1 = (690, 309 - 28)
 P2 = (734, 245 - 28)
-DELAY = 6
+DELAY = 5
 
 def open(wnd):
 	while True:

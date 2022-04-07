@@ -4,8 +4,8 @@ from datetime import datetime
 
 ALPHABET = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
 # ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
-NUMBERS_AREA = (890, 290, 45, 25)
-CHARNAME_AREA = (45, 30, 150, 15)
+NUMBERS_AREA = (730, 290, 45, 25)
+CHARNAME_AREA = (45, 28, 170, 16)
 def crop_roi(img, roi):
 	x,y, w,h = roi
 	return img[y:y+h, x:x+w]
@@ -30,7 +30,11 @@ def _prepare_recognizing(img, roi):
 def get_numbers_from_img(img, handle=0):
 	img = _prepare_recognizing(img, NUMBERS_AREA)
 	# change lang  to specified
-	text = pytesseract.image_to_string(img, config='-c tessedit_char_whitelist=0123456789')
+	try:
+		text = pytesseract.image_to_string(img, config='-c tessedit_char_whitelist=0123456789')
+	except:
+		print('ERROR IMAGE', img)
+		return None
 	text = ''.join(text.strip())
 	text = text[:3]
 	if len(text) > 0:
