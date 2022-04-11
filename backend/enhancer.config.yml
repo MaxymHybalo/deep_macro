@@ -1,0 +1,26 @@
+combination:
+  armor: [2, 8, 0]
+  atack: [5, 6, 0]
+  cell_0: [429, 449]
+  cell_1: [467, 448]
+  cycles: 20
+  enhance: [339, 490]
+  mode: armor
+  partials: [7, 0]
+debug: true
+enhancement:
+  await: 1.5
+  cube: ['1', '1']
+  cycles: '1'
+mode: disassamble
+recognize:
+  destructor:
+    button_of_start: [-150, 400]
+  enhance: {close: enhance_close, disassamble: enhancer/disassamble, make: enhancer/make_enhance,
+    menu: enhance_menu, slot: enhance_main_slot}
+  grid:
+    eoi: end_of_inventory
+    image: enhancer/grid_identifier
+    size: [9, 11]
+  prefix: {image_suffix: .png, path: assets/}
+  remove: {clear: clear, close: close_remove_menu, confirm: confirm, menu: remove_menu}

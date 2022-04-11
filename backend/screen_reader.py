@@ -6,12 +6,7 @@ from win32.lib import win32con as con
 from win32 import win32api
 import time
 
-def get_window_coord(whandle):
-	rect = api.GetWindowRect(whandle)
-	l,t,r,b = rect
-	w = r - l
-	h = b - t
-	return l, t, w, h
+from utils.deep_utils import get_window_coord
 
 def get_active_windows(handle):
 	process_whandles = []
@@ -27,7 +22,7 @@ def get_active_windows(handle):
 
 
 
-hwnd = get_active_windows('Rappelz')[0]
+# hwnd = get_active_windows('Rappelz')[0]
 # # hwnd = api.GetDesktopWindow()
 
 # api.SetActiveWindow(hwnd)
@@ -44,6 +39,8 @@ def get_window_image(hwnd):
 		return None
 	try:
 		bmp.CreateCompatibleBitmap(srcdc, width, height)
+		memdc.SelectObject(bmp)
+		memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
 	except Exception as e:
 		print('error', width, height)
 		return
