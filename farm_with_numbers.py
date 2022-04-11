@@ -81,11 +81,11 @@ def start(**kwargs):
 			if char_name in state['farmers']:
 				t = threading.Thread(target=simple_farm, args=(hwnd,))
 			# draw_grid(hwnd)
-			else:
-				from taming import taming 
+			# else:
+				# from taming import taming 
 				# inventory = configure(hwnd)
 				# t = threading.Thread(target=inventory.destroy)
-				t = threading.Thread(target=taming, args=(hwnd,))
+				# t = threading.Thread(target=taming, args=(hwnd,))
 				
 		if t:
 			time.sleep(2)

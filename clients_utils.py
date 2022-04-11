@@ -58,4 +58,6 @@ def justify_games():
         x, y = grid[i]
         _, _, w, h = coord
         api.SetWindowPos(g, con.HWND_TOP, x, y, w, h, 0)
-
+        
+# run_clients()
+justify_games()
