@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="dracula">
   <head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="dist/output.css">
+    <script src="handlers.js"></script>
     <title>Deep Macro</title>
   </head>
   <body>
-    <h1>Hello Deep Macro!</h1>
+    <h1 class="font-mono">Hello Deep Macro!</h1>
+    <button class="btn btn-primary" data-run-clients data-command="run">Run clients</button>
+    <button class="btn btn-primary" data-run-clients data-command="justify">Justify clients</button>
   </body>
 </html>

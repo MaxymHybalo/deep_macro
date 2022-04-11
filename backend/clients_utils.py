@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from win32 import win32gui as api
@@ -59,5 +60,14 @@ def justify_games():
         _, _, w, h = coord
         api.SetWindowPos(g, con.HWND_TOP, x, y, w, h, 0)
         
+launch_map = {
+    'run': run_clients,
+    'justify': justify_games
+}
+
+print(sys.argv)
+command = sys.argv[1]
+
+launch_map[command]()
 # run_clients()
-justify_games()
+# justify_games()
