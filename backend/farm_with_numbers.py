@@ -1,6 +1,5 @@
-from tabnanny import check
 import time
-import threading    
+import threading
 
 import cv2
 from numpy import char
@@ -11,28 +10,18 @@ from driver import click, press, slide,send
 from screen_reader import get_window_image
 from ocr import get_numbers_from_img, get_char_name
 import open_cards_job
-from utils.deep_utils import draw_grid
+from utils.deep_utils import draw_grid, get_active_windows
 
 from enhancer.invetory_dispatcher import InventoryDispatcher
+
 
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
 CFG = config.load_config(CONFIG_FILE)
 state = config.load_config(STATE_FILE)
 NUMBERS_AREA = (890, 290, 45, 25)
-
+working = True
 # whandle = w.FindWindow(None, CFG['whandle']) 
-
-def get_active_windows(handle):
-    process_whandles = []
-    
-    def handleWindow(hwnd, ctx):
-        if w.GetWindowText(hwnd) == 'Rappelz':
-            process_whandles.append(hwnd)
-            
-    w.EnumWindows(handleWindow, None)
-    print(process_whandles)
-    return process_whandles
 
 def get_window_coord(whandle):
     rect = w.GetWindowRect(whandle)
@@ -41,17 +30,20 @@ def get_window_coord(whandle):
     y = int((b-t)/2)
     return x, y
 
-def simple_farm(*args):
+def farming(*args):
     whandle = args[0]
-    print(args)
     x, y = get_window_coord(whandle)
 
-    while True:
+    while working:
         time.sleep(1)
         press(whandle, '2')
-        time.sleep(1)
+        time.sleep(0.5)
         press(whandle, '1')
-        time.sleep(1.5)
+        time.sleep(0.5)
+        press(whandle, '1')
+        time.sleep(0.5)
+        press(whandle, '1')
+        time.sleep(0.5)
         press(whandle, '1')
         check_numbers(whandle)
         slide(x, y, x + 70, y, whandle)
@@ -70,26 +62,29 @@ def check_numbers(handle):
 def configure(handle):
     return InventoryDispatcher('enhancer.config.yml', handle)
 
+
+def stop():
+    working = False
+
 def start(**kwargs):
     whandles = get_active_windows(CFG['whandle'])
-    print(state)    
+    print(state)
     for hwnd in whandles:
         t = None
         if hwnd != 0:
             char_name = get_char_name(get_window_image(hwnd))
             print('PID, Char: ', str(hwnd), char_name)
             if char_name in state['farmers']:
-                t = threading.Thread(target=simple_farm, args=(hwnd,))
-            # draw_grid(hwnd)
+                t = threading.Thread(target=farming, args=(hwnd,))
             # else:
-                # from taming import taming 
-                # inventory = configure(hwnd)
-                # t = threading.Thread(target=inventory.destroy)
-                # t = threading.Thread(target=taming, args=(hwnd,))
+            #     from taming import taming 
+            #     inventory = configure(hwnd)
+            #     t = threading.Thread(target=inventory.enhance, args=(hwnd,))
+            #     # t = threading.Thread(target=taming, args=(hwnd,))
                 
         if t:
             time.sleep(2)
             t.start()
 
 if __name__ == "__main__":
-    start()    
+    start()

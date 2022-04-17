@@ -9,8 +9,8 @@ combination:
   partials: [7, 0]
 debug: true
 enhancement:
-  await: 1.5
-  cube: ['1', '1']
+  await: 2.5
+  cube: ['5', '9']
   cycles: '1'
 mode: disassamble
 recognize:
