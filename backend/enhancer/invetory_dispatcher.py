@@ -5,21 +5,22 @@ from enhancer.tasks.unpacker import Unpacker
 from enhancer.tasks.destructor import Destructor
 class InventoryDispatcher:
     
-    def __init__(self, config, handle):
+    def __init__(self, config, cfg):
         if type(config) is dict:
             self.config = config
         else:
             self.config = Configurator(config).from_yaml()
-        self.handle = handle
-        self.inventory = Inventory(self.config, handle)
+        self.handle = cfg['handle']
+        self.inventory = Inventory(self.config, cfg)
+        self.config['enhancement']['cycles'] = cfg['cycles']
         self.enhancers_setup = {
             'options': self.config['enhancement'],
             'assets': self.config['recognize'],
             'mode': self.config['mode']
         }
 
-    def enhance(self, hwnd):
-        print('Window:', hwnd)
+    def enhance(self):
+        print('Window:')
         Enhancer(self.enhancers_setup, self.inventory).proceed()
 
     def unpack(self):

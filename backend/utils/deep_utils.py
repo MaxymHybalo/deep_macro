@@ -46,3 +46,12 @@ def _drop_rect(img, start, end):
         cv2.rectangle(img, start, end, (100,100,0), 5)
     cv2.imshow('Test', img)
     cv2.waitKey(0)
+
+
+def _foreground_window(handle):
+    import win32com.client
+    import time
+    shell = win32com.client.Dispatch("WScript.Shell")
+    shell.SendKeys('%')
+    api.SetForegroundWindow(handle)
+    time.sleep(0.1)

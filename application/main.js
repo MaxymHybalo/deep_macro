@@ -9,7 +9,7 @@ const createWindow = () => {
             contextIsolation: false
         }
     });
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
     win.setMenu(null);
     win.loadFile('index.html')
 }

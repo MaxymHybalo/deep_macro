@@ -31,7 +31,7 @@ def get_window_coord(whandle):
     return x, y
 
 def farming(*args):
-    whandle = args[0]
+    whandle = args[0]['handle']
     x, y = get_window_coord(whandle)
 
     while working:
@@ -48,6 +48,15 @@ def farming(*args):
         check_numbers(whandle)
         slide(x, y, x + 70, y, whandle)
 
+def necro(*args):
+    whandle = args[0]['handle']
+
+    while working:
+        time.sleep(2)
+        press(whandle, '1')
+        time.sleep(0.5)
+        press(whandle, '2')
+
 def check_numbers(handle):
     img = get_window_image(handle)
     x, y, w, h = NUMBERS_AREA
@@ -59,12 +68,6 @@ def check_numbers(handle):
     if numbers:
         send(handle, numbers)
 
-def configure(handle):
-    return InventoryDispatcher('enhancer.config.yml', handle)
-
-
-def stop():
-    working = False
 
 def start(**kwargs):
     whandles = get_active_windows(CFG['whandle'])
@@ -76,11 +79,6 @@ def start(**kwargs):
             print('PID, Char: ', str(hwnd), char_name)
             if char_name in state['farmers']:
                 t = threading.Thread(target=farming, args=(hwnd,))
-            # else:
-            #     from taming import taming 
-            #     inventory = configure(hwnd)
-            #     t = threading.Thread(target=inventory.enhance, args=(hwnd,))
-            #     # t = threading.Thread(target=taming, args=(hwnd,))
                 
         if t:
             time.sleep(2)
