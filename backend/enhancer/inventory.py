@@ -13,12 +13,13 @@ import utils.cv2_utils as utils # used for drawing images
 FILE = 'assets/enhancer/inventory.png'
 class Inventory:
 
-    def __init__(self, config, handle):
+    def __init__(self, config, cfg):
         self.log = logging.getLogger('enhancer-v2')
         self.log.info('Created new enhancer instance')
         self.log.info('Config, {0}'.format(config))
         self.config = config
-        self.handle = handle
+        self.config['enhancement']['cube'] = cfg['cube']
+        self.handle = cfg['handle']
         self.fnd = Finder()
         self.open_source()
         self.update_grid()
@@ -37,11 +38,19 @@ class Inventory:
         self.cube = self.grid.cells[self.cube_id]
         self.empty_item = cv2.imread('assets/' + self.config['recognize']['grid']['eoi'] + '.png')
         self.eoi = self.find_first_entry(self.empty_item)
-        self.main_slot = cv2.imread('assets/' + self.config['recognize']['enhance']['slot'] + '.png')
         self.make = cv2.imread('assets/' + self.config['recognize']['enhance']['make'] + '.png')
-        self.make = Detector().find(self.make, self.source)
-        self.main_slot = Detector().find(self.main_slot, self.source)
-        
+        self.make = Detector(self.handle).find(self.make, self.source)
+        # print('self.make', self.make)
+        _ms_x, _ms_y, _, _ = self.make if self.make else (0,0,0,0)
+        self.main_slot = _ms_x - 230, _ms_y - 55, 10, 10
+
+        # print('self.cube_id', self.cube_id)
+        # print('self.cube', self.cube)
+        # print('self.eoi', self.eoi)
+        # print('self.main_slot', self.main_slot)
+        # print('self.make', self.make)
+        # print('self.main_slot', self.main_slot)
+
         end_id = self.grid.cells[-1].id
         if self.eoi:
             end_id = self.eoi.id
@@ -51,7 +60,7 @@ class Inventory:
     def find_first_entry(self, target):
         entry = None
         for cell in self.grid.cells:
-            empty = Detector().find(self.empty_item, cell.source)
+            empty = Detector(self.handle).find(self.empty_item, cell.source)
 
             if empty:
                 if entry:
@@ -70,6 +79,8 @@ class Inventory:
         self.grid =  GridIdentifier(self.source)
 
     def _source(self):
-        from shapes.window import Window
-        import numpy
-        return numpy.array(Window(self.handle).update_window())
+        from screen_reader import get_window_image
+        return get_window_image(self.handle)
+        # from shapes.window import Window
+        # import numpy
+        # return numpy.array(Window(self.handle).update_window())

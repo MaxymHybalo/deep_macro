@@ -1,5 +1,52 @@
 farmers:
-  - nvidia
+  # - nvidia
   - EGokt
   - Visual
+  # - Artifactory
+  # - Harmony
+  - Siinner
   # - Luxuria
+roles:
+  # === ENHANT ===
+
+  # Loxuria:
+  #   type: enchant
+  #   cube: ['1', '1']
+  #   cycles: '1'
+  nvidia:
+    type: enchant
+    cube: ['1', '1']
+    cycles: '2'
+  # EGokt:
+  #   type: enchant
+  #   cube: ['1', '11']
+  #   cycles: '1'
+  # Visual:
+  #   type: enchant
+  #   cube: ['1', '10']
+  #   cycles: '1'
+
+  # === DESTOY === 
+
+  # nvidia:
+  #   type: destroy
+  #   cube: ['1', '1']
+  #   cycles: '1'
+  # EGokt:
+  #   type: destroy
+  #   cube: ['1', '1']
+  #   cycles: '1'
+  # Visual:
+  #   type: destroy
+  #   cube: ['1', '1']
+  #   cycles: '1'
+
+  # === FARM === 
+  # Artifactory:
+  #   type: necro
+  EGokt:
+    type: farm
+  Visual:
+    type: farm
+  # nvidia:
+  #   type: farm

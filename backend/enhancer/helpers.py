@@ -18,9 +18,10 @@ class Finder:
         return self.matrix[y][x]
 
     def point(self, point):
-        from shapes.window import Window
-        xy = point[:2]
-        xy = Window().relative(xy)
-        if len(point) is 4:
-            return [*xy, *point[2:]]
-        return list(xy)
+        return point
+        # from shapes.window import Window
+        # xy = point[:2]
+        # xy = Window().relative(xy)
+        # if len(point) is 4:
+        #     return [*xy, *point[2:]]
+        # return list(xy)
