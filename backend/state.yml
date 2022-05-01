@@ -1,6 +1,6 @@
 farmers:
   # - nvidia
-  - EGokt
+  - EGold
   - Visual
   # - Artifactory
   # - Harmony
@@ -9,7 +9,7 @@ farmers:
 roles:
   # === ENHANT ===
 
-  # Loxuria:
+  # Luxuria:
   #   type: enchant
   #   cube: ['1', '1']
   #   cycles: '1'
@@ -17,7 +17,7 @@ roles:
   #   type: enchant
   #   cube: ['1', '2']
   #   cycles: '1'
-  # EGokt:
+  # EGold:
   #   type: enchant
   #   cube: ['1', '6']
   #   cycles: '1'
@@ -32,7 +32,7 @@ roles:
   #   type: destroy
   #   cube: ['1', '1']
   #   cycles: '1'
-  # EGokt:
+  # EGold:
   #   type: destroy
   #   cube: ['1', '1']
   #   cycles: '1'
@@ -46,13 +46,13 @@ roles:
   #   type: necro
   # Harmony:
   #   type: necro
-  EGokt:
+  EGold:
     type: farm
   Visual:
     type: farm
   # nvidia:
   #   type: farm
-  # EGokt:
+  # EGold:
   #   type: steel
   #   cube: ['1', '10']
   #   cycles: '1'
@@ -65,9 +65,19 @@ roles:
 #  === ETC ===
   # Lipeca:
   #   type: cards
-  # Loxuria:
+  # Luxuria:
   #   type: taming
   # Royalty:
   #   type: taming
+
+# === AWAKE ===
+  Luxuria:
+    type: awake
+    scroll: ['2', '11']
+    stone: ['1', '11']
+    item: ['3', '11'] # how to proceed few items?
+    state: []
+    
+
 
 

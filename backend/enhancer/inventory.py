@@ -18,7 +18,7 @@ class Inventory:
         self.log.info('Created new enhancer instance')
         self.log.info('Config, {0}'.format(config))
         self.config = config
-        self.config['enhancement']['cube'] = cfg['cube']
+        self.config['enhancement']['cube'] = cfg['cube'] if 'cube' in cfg else self.config['enhancement']['cube']
         self.handle = cfg['handle']
         self.fnd = Finder()
         self.open_source()

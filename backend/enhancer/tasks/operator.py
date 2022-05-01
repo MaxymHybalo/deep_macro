@@ -11,7 +11,7 @@ class Operator:
         self.inventory = inventory
         self.finder = Finder()
     
-    def click_at(self, key,  method='click'):
+    def click_at(self, key, method='click'):
         target = getattr(self.inventory, key)
         x,y = 0, 0
         if target is None:

@@ -7,6 +7,7 @@ from enhancer.helpers import Finder
 from enhancer.cell import Cell
 from enhancer.tasks.operator import Operator
 from driver import click, double
+
 class Enhancer(Operator):
 
     def __init__(self, config, inventory):
