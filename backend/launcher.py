@@ -8,7 +8,8 @@ from ocr import get_char_name
 from screen_reader import get_window_image
 from farm_with_numbers import farming, necro
 from enhancer.invetory_dispatcher import InventoryDispatcher
-
+from open_cards_job import open
+from taming import taming
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
 CFG = config.load_config(CONFIG_FILE)
@@ -26,11 +27,17 @@ def _destroy(*args):
     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
     return inventory.destroy()
 
+# def _steel(*args):
+#     cfg = args[0]
+#     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+
 operations = {
     'enchant': _enchant,
     'destroy': _destroy,
     'farm': farming,
-    'necro': necro
+    'necro': necro,
+    'cards': open,
+    'taming': taming
 }
 
 def threads():
@@ -49,7 +56,15 @@ def threads():
         if role:
             cfg = role
             cfg['handle'] = handle
-            print('start from ', operations[role['type']])
+            # print('start from ', operations[role['type']])
+            if role['type'] == 'steel':
+                t1 = threading.Thread(target=operations['farm'], args=(cfg,))
+                t1.daemon = True
+                t1.start()
+                t2 = threading.Thread(target=operations['destroy'], args=(cfg,))
+                t2.daemon = True
+                t2.start()
+                continue
             th = threading.Thread(target=operations[role['type']], args=(cfg,))
 
 

@@ -10,7 +10,8 @@ KILL = 2
 
 # whandle = whandles[0]
 
-def taming(whandle):
+def taming(cfg):
+	whandle = cfg['handle']
 	while True:
 	    press(whandle, '2')
 	    time.sleep(CALL_TIMEOUT)

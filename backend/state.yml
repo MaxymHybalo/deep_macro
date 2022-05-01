@@ -13,13 +13,13 @@ roles:
   #   type: enchant
   #   cube: ['1', '1']
   #   cycles: '1'
-  nvidia:
-    type: enchant
-    cube: ['1', '1']
-    cycles: '2'
+  # nvidia:
+  #   type: enchant
+  #   cube: ['1', '2']
+  #   cycles: '1'
   # EGokt:
   #   type: enchant
-  #   cube: ['1', '11']
+  #   cube: ['1', '6']
   #   cycles: '1'
   # Visual:
   #   type: enchant
@@ -27,7 +27,7 @@ roles:
   #   cycles: '1'
 
   # === DESTOY === 
-
+ 
   # nvidia:
   #   type: destroy
   #   cube: ['1', '1']
@@ -44,9 +44,30 @@ roles:
   # === FARM === 
   # Artifactory:
   #   type: necro
+  # Harmony:
+  #   type: necro
   EGokt:
     type: farm
   Visual:
     type: farm
   # nvidia:
   #   type: farm
+  # EGokt:
+  #   type: steel
+  #   cube: ['1', '10']
+  #   cycles: '1'
+
+  # Visual:
+  #   type: steel
+  #   cube: ['1', '9']
+  #   cycles: '1'
+
+#  === ETC ===
+  # Lipeca:
+  #   type: cards
+  # Loxuria:
+  #   type: taming
+  # Royalty:
+  #   type: taming
+
+
