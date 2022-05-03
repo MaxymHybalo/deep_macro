@@ -61,7 +61,9 @@ def _awaking_rect(points, i):
     return (sx + width*i + i*dx, sy, width, height)
 
 def get_awaking(img = None):
-    img = cv2.imread('logs/awaking/awaket_00_39_09_$d_$m_$Y.png')
+    if img is None:
+        img = cv2.imread('logs/awaking/awake_01_55_48_03_05_22.png')
+
     prop_location = (3, 4, 7, 73, 44)
     value_location = (23, 50, 45, 35, 22)
 
@@ -73,14 +75,25 @@ def get_awaking(img = None):
         char_roi = th1
         # cv2.imwrite('logs/awaking/prop_{}.png'.format(i), char_roi)
         res = pytesseract.image_to_string(char_roi, lang="rus")
-        res = ''.join(res.strip())
+        res = ' '.join(res.split())
+
         value_roi = crop_roi(img, _awaking_rect(value_location, i))
-        # cv2.imwrite('logs/awaking/value_{}.png'.format(i), value_roi)
-        v = pytesseract.image_to_string(value_roi, config='-c tessedit_char_whitelist=0123456789+')
+        default_number_search = '-c tessedit_char_whitelist=0123456789+'
+        v = pytesseract.image_to_string(value_roi, config=default_number_search)
+        # cv2.imshow('Image', value_roi)
+        # cv2.waitKey(0)
         v = ''.join(v.strip())
-        print(i, res, v)
+        if len(v) == 0:
+            single_digit_search = '--psm 10'
+            value_roi = crop_roi(value_roi, (17, 0, 19, 22))
+            v = pytesseract.image_to_string(value_roi, config=single_digit_search)
+
+        # cv2.imwrite('logs/awaking/value_{}__{}.png'.format(i, str(datetime.now().strftime('%H_%M_%S'))), value_roi)
+        v = ''.join(v.strip())
+
+        # print(i, res, v)
         results.append((i, res, v))
-    print(results)
+    # print(results)
     return results
 
 if __name__ == '__main__':

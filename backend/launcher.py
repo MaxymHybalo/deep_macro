@@ -1,5 +1,4 @@
 import threading
-import multiprocessing
 import config
 
 from farm_with_numbers import start
@@ -10,6 +9,7 @@ from farm_with_numbers import farming, necro
 from enhancer.invetory_dispatcher import InventoryDispatcher
 from open_cards_job import open
 from taming import taming
+
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
 CFG = config.load_config(CONFIG_FILE)
@@ -62,6 +62,7 @@ def threads():
         if role:
             cfg = role
             cfg['handle'] = handle
+            cfg['name'] = char_name
             # print('start from ', operations[role['type']])
             if role['type'] == 'steel':
                 t1 = threading.Thread(target=operations['farm'], args=(cfg,))

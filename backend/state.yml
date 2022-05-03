@@ -50,8 +50,8 @@ roles:
     type: farm
   Visual:
     type: farm
-  # nvidia:
-  #   type: farm
+  Invidia:
+    type: farm
   # EGold:
   #   type: steel
   #   cube: ['1', '10']
@@ -76,8 +76,7 @@ roles:
     scroll: ['2', '11']
     stone: ['1', '11']
     item: ['3', '11'] # how to proceed few items?
-    state: []
-    
+    state: 'configs/stats_set_1.yml'
 
 
 

@@ -8,3 +8,4 @@ logs/
 *.lnk
 *.png
 node_modules/
+reports/
