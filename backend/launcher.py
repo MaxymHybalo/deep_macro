@@ -1,5 +1,4 @@
 import threading
-import multiprocessing
 import config
 
 from farm_with_numbers import start
@@ -8,6 +7,8 @@ from ocr import get_char_name
 from screen_reader import get_window_image
 from farm_with_numbers import farming, necro
 from enhancer.invetory_dispatcher import InventoryDispatcher
+from open_cards_job import open
+from taming import taming
 
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
@@ -26,11 +27,29 @@ def _destroy(*args):
     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
     return inventory.destroy()
 
+def _combinate(*args):
+    cfg = args[0]
+    print('_destroy', cfg)
+    inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+    return inventory.combinate()
+
+def _awake(*args):
+    cfg = args[0]
+    inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+    return inventory.awake()
+# def _steel(*args):
+#     cfg = args[0]
+#     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+
 operations = {
     'enchant': _enchant,
     'destroy': _destroy,
     'farm': farming,
-    'necro': necro
+    'necro': necro,
+    'cards': open,
+    'taming': taming,
+    'awake': _awake,
+    'combine': _combinate
 }
 
 def threads():
@@ -49,32 +68,17 @@ def threads():
         if role:
             cfg = role
             cfg['handle'] = handle
-            print('start from ', operations[role['type']])
+            cfg['name'] = char_name
+            # print('start from ', operations[role['type']])
+            if role['type'] == 'steel':
+                t1 = threading.Thread(target=operations['farm'], args=(cfg,))
+                t1.daemon = True
+                t1.start()
+                t2 = threading.Thread(target=operations['destroy'], args=(cfg,))
+                t2.daemon = True
+                t2.start()
+                continue
             th = threading.Thread(target=operations[role['type']], args=(cfg,))
-
-
-        # if char_name in FARMERS['farmers']:
-        #     # print('PID, Char: ', str(hwnd), char_name)
-        #     print('handle:', str(handle), type(handle))
-        #     state[handle] = dict()
-        #     state[handle]['char'] = char_name
-        #     state[handle]['alive'] = True
-        #     state[handle]['handle'] = handle
-        #     is_pets = char_name == 'Artifactory' or char_name == 'Harmony'
-        #     th = threading.Thread(target=necro if is_pets else farming, args=(handle,))
-        #     print(th)
-        #     state[handle]['process'] = th
-
-        # else:
-        # #     pass
-        #     # from open_cards_job import open
-        #     # from taming import taming
-        #     if char_name == 'Acedia' or char_name == 'nvidia':
-        #         from enhancer.invetory_dispatcher import InventoryDispatcher
-        #         inventory = InventoryDispatcher('enhancer.config.yml', handle)
-        #         th = threading.Thread(target=inventory.enhance, args=(handle,))
-        #     # th = threading.Thread(target=open, args=(handle,))
-        #     # th = threading.Thread(target=taming, args=(handle,))
 
         if th:
             th.daemon = True

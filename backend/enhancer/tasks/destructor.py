@@ -26,8 +26,9 @@ class Destructor(Operator):
     def destroy(self):
         rounds = len(self.split_in_buckets())
         # rounds = 2
-        for i, container in enumerate(range(rounds)):
-            print('Destroying {0}/{1}'.format(i, rounds))
+        # for i, container in enumerate(range(rounds)):
+        while True:
+            # print('Destroying {0}/{1}'.format(i, rounds))
             # self.log.info('Destructor items {0}'.format(len(self.inventory.working_cells)))
             for cell in self.inventory.working_cells[:20]:
                 x, y = self.finder.point(cell.center())
