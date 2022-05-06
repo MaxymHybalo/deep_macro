@@ -27,6 +27,11 @@ def _destroy(*args):
     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
     return inventory.destroy()
 
+def _combinate(*args):
+    cfg = args[0]
+    print('_destroy', cfg)
+    inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+    return inventory.combinate()
 
 def _awake(*args):
     cfg = args[0]
@@ -43,7 +48,8 @@ operations = {
     'necro': necro,
     'cards': open,
     'taming': taming,
-    'awake': _awake
+    'awake': _awake,
+    'combine': _combinate
 }
 
 def threads():

@@ -62,7 +62,7 @@ def _awaking_rect(points, i):
 
 def get_awaking(img = None):
     if img is None:
-        img = cv2.imread('logs/awaking/awake_01_55_48_03_05_22.png')
+        img = cv2.imread('logs/awaking/awake_16_30_05_03_05_22.png')
 
     prop_location = (3, 4, 7, 73, 44)
     value_location = (23, 50, 45, 35, 22)

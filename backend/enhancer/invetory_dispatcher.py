@@ -4,6 +4,7 @@ from enhancer.tasks.enhancer import Enhancer
 from enhancer.tasks.unpacker import Unpacker
 from enhancer.tasks.destructor import Destructor
 from enhancer.tasks.awakening import Awakening
+from enhancer.tasks.combinator import Combinator
 
 class InventoryDispatcher:
 
@@ -35,3 +36,5 @@ class InventoryDispatcher:
     def awake(self):
         Awakening(self.enhancers_setup, self.inventory).proceed()
 
+    def combinate(self):
+        Combinator(self.enhancers_setup, self.inventory).proceed()

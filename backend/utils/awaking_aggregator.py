@@ -5,7 +5,7 @@ import numpy as np
 from ocr import get_awaking
 import config
 
-SUCCESS_RATE = 0.7
+SUCCESS_RATE = 0.65
 
 
 normal_props = (
@@ -15,21 +15,20 @@ normal_props = (
     'мудрость',
     'ловкость',
     'сноровка',
-    'удача',
-    'физ атака',
-    'маг атака',
-    'точность',
-    'маг точность',
-    'физ защита',
-    'маг защита',
-    'уклонение',
+    'сила удар крит',
+    'скорость передвижения',
     'магическое сопротивление',
+    'уклонение',
+    'маг точность',
+    'точность',
     'скорость каста',
     'скорость атаки',
+    'физ атака',
+    'маг атака',
+    'физ защита',
+    'маг защита',
     'шанс крит',
-    'сила удар крит',
-    'защита блок',
-    'скорость передвижения'
+    'unknown'
 )
 
 MATCH_MATRIX = {
@@ -39,21 +38,19 @@ MATCH_MATRIX = {
     'мудрость': 'wisdom',
     'ловкость': 'dexterity',
     'сноровка': 'agility',
-    'удача': 'luck',
-    'физ атака': 'p_atk',
-    'маг атака': 'm_atk',
-    'точность': 'acc',
+    'сила удар крит': 'c_rate',
+    'скорость передвижения': 'm_speed',
     'маг точность': 'm_acc',
-    'физ защита': 'p_def',
-    'маг защита': 'm_defd',
+    'точность': 'acc',
     'уклонение': 'evasion',
     'магическое сопротивление': 'm_res',
+    'физ атака': 'p_atk',
+    'маг атака': 'm_atk',
     'скорость каста': 'cast_speed',
     'скорость атаки': 'atk_speed',
-    'шанс крит': 'c_rate',
-    'сила удар крит': 'c_rate',
-    'защита блок': 'block',
-    'скорость передвижения': 'm_speed'
+    'шанс крит': 'c_chance',
+    'физ защита': 'p_def',
+    'маг защита': 'm_defd'
 }
 def compare(data, targetPath):
     targets = config.load_config(targetPath) # how to preload config?
@@ -91,10 +88,11 @@ def normalizeProp(prop):
     rates = []
     for i in normal_props:
         ratio = levenshtein_ratio_and_distance(prop, i.lower(), ratio_calc=True)
+        # print(prop, ratio)
         rates.append(ratio)
     m = max(rates)
     id = rates.index(m)
-
+    # print(prop, m)
     if m >= SUCCESS_RATE:
         return round(m, 2), normal_props[id]
     return 0, 'unknown'
