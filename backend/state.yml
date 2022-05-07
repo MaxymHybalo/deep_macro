@@ -17,14 +17,14 @@ roles:
   #   type: enchant
   #   cube: ['1', '3']
   #   cycles: '1'
-  EGold:
-    type: enchant
-    cube: ['4', '1']
-    cycles: '1'
-  Visual:
-    type: enchant
-    cube: ['1', '1']
-    cycles: '1'
+  # EGold:
+  #   type: enchant
+  #   cube: ['4', '1']
+  #   cycles: '1'
+  # Visual:
+  #   type: enchant
+  #   cube: ['1', '1']
+  #   cycles: '1'
 
   # Luxuria:
   #   type: 'combine'
@@ -52,10 +52,10 @@ roles:
   #   type: necro
   # EGold:
   #   type: farm
-  # Visual:
-  #   type: farm
-  # Invidia:
-  #   type: farm
+  Visual:
+    type: farm
+  Invidia:
+    type: farm
   # EGold:
   #   type: steel
   #   cube: ['1', '11']
