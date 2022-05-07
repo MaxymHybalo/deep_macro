@@ -11,14 +11,8 @@
 
     # reporter.report('awaking', file, (0, res, comp, 'test file name'))
 
+from gui import run
 
-from PyQt6.QtWidgets import QApplication, QWidget
-
-import sys # Только для доступа к аргументам командной строки
-
-app = QApplication(sys.argv)
-
-window = QWidget()
-window.show()  # Важно: окно по умолчанию скрыто.
-
-app.exec()
+if __name__ == '__main__':
+    run.init()
+    

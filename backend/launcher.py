@@ -1,4 +1,5 @@
 import threading
+import multiprocessing
 import config
 
 from farm_with_numbers import start
@@ -71,19 +72,26 @@ def threads():
             cfg['name'] = char_name
             # print('start from ', operations[role['type']])
             if role['type'] == 'steel':
-                t1 = threading.Thread(target=operations['farm'], args=(cfg,))
+                t1 = multiprocessing.Process(target=operations['farm'], args=(cfg,))
                 t1.daemon = True
                 t1.start()
-                t2 = threading.Thread(target=operations['destroy'], args=(cfg,))
+                t2 = multiprocessing.Process(target=operations['destroy'], args=(cfg,))
                 t2.daemon = True
                 t2.start()
+                state[char_name] = (t1, t2)
                 continue
-            th = threading.Thread(target=operations[role['type']], args=(cfg,))
+            th = multiprocessing.Process(target=operations[role['type']], args=(cfg,))
 
         if th:
             th.daemon = True
             th.start()
+            state[char_name] = (th)
+    
+    # print('Threads', state)
+    return state
 
 def shutdown():
-    for th in state:
-        state[th]['process'].stop()
+    for key, thread in state.items():
+        print('Terminating',  key, thread)
+        thread.terminate()
+        thread.join()

@@ -52,10 +52,10 @@ def necro(*args):
     whandle = args[0]['handle']
 
     while working:
-        time.sleep(1)
+        time.sleep(0.5)
         press(whandle, '1')
-        # time.sleep(0.5)
-        # press(whandle, '2')
+        time.sleep(0.5)
+        press(whandle, '2')
 
 def check_numbers(handle):
     img = get_window_image(handle)

@@ -37,7 +37,6 @@ def get_active_windows(handle):
             process_whandles.append(hwnd)
             
     api.EnumWindows(handleWindow, None)
-    print(process_whandles)
     return process_whandles
 
 
