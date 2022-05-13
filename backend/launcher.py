@@ -7,7 +7,7 @@ from ocr import get_char_name
 from screen_reader import get_window_image
 from farm_with_numbers import farming, necro
 from enhancer.invetory_dispatcher import InventoryDispatcher
-from open_cards_job import open
+from open_cards_job import open, plain
 from taming import taming
 
 CONFIG_FILE = 'config.yml'
@@ -49,7 +49,8 @@ operations = {
     'cards': open,
     'taming': taming,
     'awake': _awake,
-    'combine': _combinate
+    'combine': _combinate,
+    'plain': plain
 }
 
 def threads():

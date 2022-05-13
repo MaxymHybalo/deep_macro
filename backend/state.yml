@@ -15,15 +15,15 @@ roles:
   #   cycles: '1'
   # Invidia:
   #   type: enchant
-  #   cube: ['1', '3']
+  #   cube: ['1', '9']
   #   cycles: '1'
-  # EGold:
+  # Artifactory:
   #   type: enchant
   #   cube: ['4', '1']
   #   cycles: '1'
   # Visual:
   #   type: enchant
-  #   cube: ['1', '1']
+  #   cube: ['1', '8']
   #   cycles: '1'
 
   # Luxuria:
@@ -35,10 +35,10 @@ roles:
   # Invidia:
   #   type: destroy
   #   cube: ['1', '1']
-  #   cycles: '4'
+  #   cycles: '1'
   # EGold:
   #   type: destroy
-  #   cube: ['1', '1']
+  #   cube: ['1', '3']
   #   cycles: '1'
   # Visual:
   #   type: destroy
@@ -46,12 +46,12 @@ roles:
   #   cycles: '1'
 
   # === FARM === 
-  # Artifactory:
-  #   type: necro
-  # Royalty:
-  #   type: necro
-  # EGold:
-  #   type: farm
+  Artifactory:
+    type: necro
+  Royalty:
+    type: necro
+  EGold:
+    type: farm
   Visual:
     type: farm
   Invidia:
@@ -72,7 +72,7 @@ roles:
   #   cycles: '1'
 
 #  === ETC ===
-  # Lipeca:
+  # esMe:
   #   type: cards
   # Luxuria:
   #   type: taming
@@ -85,7 +85,8 @@ roles:
   #   scroll: ['2', '11']
   #   stone: ['1', '11']
   #   item: ['3', '11'] # how to proceed few items?
-  #   state: 'configs/stats_set_1.yml'
+    # state: 'configs/stats_set_1.yml'
 
-
+  # Liye:
+  #   type: 'plain'
 
