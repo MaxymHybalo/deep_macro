@@ -1,5 +1,5 @@
 import time
-from driver import click
+from driver import click, press
 from win32 import win32gui as w
 
 
@@ -34,12 +34,12 @@ def plain(cfg):
     wnd = cfg['handle']
     rect = w.GetWindowRect(wnd)
 
-    while 708:
+    while 2119:
             l,t, r,b = rect
             x1, y1 = PLAIN_PONT
             # x1 += l
             # y1 += t
 
-            click(x1, y1, wnd)
-
-            time.sleep(0.5)
+            # click(x1, y1, wnd)
+            press(wnd, '8')
+            time.sleep(0.01)

@@ -1,4 +1,5 @@
 import threading
+import multiprocessing
 import config
 
 from farm_with_numbers import start
@@ -52,7 +53,40 @@ operations = {
     'combine': _combinate,
     'plain': plain
 }
+def run(handle):
+    char_name = get_char_name(get_window_image(handle))
+    roles = CHAR_CFG['roles']
+    th = None
+    if char_name not in roles:
+        return None
+    role = roles[char_name]
+    if not role:
+        return None
+    cfg = role
+    cfg['handle'] = handle
+    cfg['name'] = char_name
+    # print('start from ', operations[role['type']])
+    if role['type'] == 'steel':
+        t1 = multiprocessing.Process(target=operations['farm'], args=(cfg,))
+        t1.daemon = True
+        t1.start()
+        t2 = multiprocessing.Process(target=operations['destroy'], args=(cfg,))
+        t2.daemon = True
+        t2.start()
+        return (t1, t2), cfg
+    
+    th = multiprocessing.Process(target=operations[role['type']], args=(cfg,))
 
+    if th:
+        th.daemon = True
+        th.start()
+    return th, cfg
+
+def stop(process):
+    print(process)
+    process.terminate()
+    return True
+    
 def threads():
     handles = get_active_windows(CFG['whandle'])
 

@@ -45,15 +45,15 @@ roles:
   #   cube: ['1', '1']
   #   cycles: '1'
 
-  # === FARM === 
+  # # === FARM === 
   Artifactory:
     type: necro
   Royalty:
     type: necro
-  EGold:
-    type: farm
-  Visual:
-    type: farm
+  # EGold:
+  #   type: farm
+  # Visual:
+  #   type: farm
   Invidia:
     type: farm
   # EGold:
@@ -85,8 +85,8 @@ roles:
   #   scroll: ['2', '11']
   #   stone: ['1', '11']
   #   item: ['3', '11'] # how to proceed few items?
-    # state: 'configs/stats_set_1.yml'
+  #   state: 'configs/stats_set_1.yml'
 
-  # Liye:
+  # Luxuria:
   #   type: 'plain'
 
