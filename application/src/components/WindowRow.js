@@ -1,11 +1,11 @@
 import React  from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useStore } from '../store/index';
 import axios from "axios";
 
 export default function WindowRow(props) {
     const [title, setTitle] = useState('Run!');
     const [runned, setRunned] = useState(false);
-
     const run = () => {
         if (runned) return;
         axios.post(`/run/${props.handle}`)

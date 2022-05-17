@@ -1,17 +1,17 @@
 import React  from "react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import WindowRow from "./WindowRow";
+import { useStore } from './../store/index';
+
 export default function WindowsList() {
 
-    const [windows, setWindows] = useState([]);
-    const [error, setError] = useState(null);
+    const fetchWindows = useStore(state => state.fetchWindows);
+    const windows = useStore(state => state.windows);
 
     useEffect(() => {
-        axios.get('windows')
-            .then((response) => { setWindows(response.data) })
-            .catch(setError)
+        fetchWindows()
     },[]);
+    
     const windowItem = Object.entries(windows).map(([key, value]) => {
         return <li key={value}>
             {key} : {value} <WindowRow handle={value}/>
