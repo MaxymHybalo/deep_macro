@@ -15,11 +15,11 @@ def state():
 def run(handle):
     process = windows.run(handle)
     print(process)
-    return jsonify({ 'status': 'success'})
+    return jsonify(process)
 
 
 @app.route('/stop/<int:handle>', methods=['POST'])
 def stop(handle):
     process = windows.stop(handle)
     print(process)
-    return jsonify({ 'status': 'success'})
+    return jsonify(process)

@@ -2,6 +2,8 @@ from utils.deep_utils import get_active_windows
 from screen_reader import get_window_image
 from ocr import get_char_name
 import launcher
+from models.process import Process
+
 GAME_HANDLE = 'Rappelz'
 
 class Windows():
@@ -19,12 +21,16 @@ class Windows():
 
     def run(self, handle):
         process = launcher.run(handle)
-        self.processes[handle] = process
-        return process
+        self.processes[handle] = Process(process)
+        return self.processes[handle].jsonify()
 
+    def tasks(self):
+        # returns all runned proceses
+        pass
+    
     def stop(self, handle):
-        task, _ = self.processes[handle]
-        process = launcher.stop(task)
-        self.processes[handle] = None
+        process = self.processes[handle]
+        process.stop()
+        process.destroy()
 
-        return process
+        return process.jsonify()

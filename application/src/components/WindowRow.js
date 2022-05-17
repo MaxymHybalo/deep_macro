@@ -10,7 +10,7 @@ export default function WindowRow(props) {
         if (runned) return;
         axios.post(`/run/${props.handle}`)
             .then(({data}) => {
-                if (data.status === 'success') {
+                if (data.name) {
                     setTitle('Runned!');
                     setRunned(true);
                 }
@@ -21,7 +21,7 @@ export default function WindowRow(props) {
     const stop = () => {
         axios.post(`/stop/${props.handle}`)
         .then(({data}) => {
-            if (data.status === 'success') {
+            if (!data.name) {
                 setTitle('Run!');
                 setRunned(false);
             }
