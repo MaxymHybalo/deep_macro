@@ -34,3 +34,10 @@ class Windows():
         process.destroy()
 
         return process.jsonify()
+
+    def set_prop(self, data):
+        print(data)
+        # TODO write setting
+        # task = self.processes[data['handle']]
+        # if task:
+        #     task.

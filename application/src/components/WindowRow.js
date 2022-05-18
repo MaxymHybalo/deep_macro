@@ -2,6 +2,7 @@ import React  from "react";
 import { useState } from "react";
 import { useStore } from '../store/index';
 import axios from "axios";
+import CommandType from './CommandType';
 
 export default function WindowRow(props) {
     const [title, setTitle] = useState('Run!');
@@ -31,6 +32,7 @@ export default function WindowRow(props) {
     
     return (
         <>
+            <CommandType handle={props.handle}/>
             <button className="btn" onClick={run}>{title}</button>
             <button className="btn" onClick={stop}>Stop</button>
         </>

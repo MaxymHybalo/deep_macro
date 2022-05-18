@@ -50,10 +50,10 @@ roles:
     type: necro
   Royalty:
     type: necro
-  # EGold:
-  #   type: farm
-  # Visual:
-  #   type: farm
+  EGold:
+    type: farm
+  Visual:
+    type: farm
   Invidia:
     type: farm
   # EGold:
