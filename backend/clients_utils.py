@@ -113,9 +113,9 @@ launch_map = {
     'login': login
 }
 
-print(sys.argv)
-command = sys.argv[1]
+# print(sys.argv)
+# command = sys.argv[1]
 
-launch_map[command]()
+# launch_map[command]()
 # run_clients()
 # justify_games()

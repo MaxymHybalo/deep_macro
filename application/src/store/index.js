@@ -3,13 +3,16 @@ import axios from 'axios';
 export const useStore =  create(set => ({
     windows: {},
     settings: {},
+    postClient: async(type) => {
+        await axios.post('/client', { type });
+    },
     fetchWindows: async () => {
         const { data, error } = await axios.get('/windows');
-        set({ windows: data })
+        set({ windows: data });
     },
     fetchSettings: async () => {
         const { data, error } = await axios.get('/settings');
-        set({ settings: data })
+        set({ settings: data });
 
     },
     updateSettings: async ({handle, type, value}) => {

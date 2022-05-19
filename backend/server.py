@@ -8,6 +8,7 @@ app = Flask(__name__)
 CORS(app)
 windows = Windows()
 
+SUCCESS = {"status": "success"}
 @app.route('/windows')
 def state():
     return jsonify(windows.settings())
@@ -23,7 +24,7 @@ def settings():
     else:
         windows.set_prop(request.get_json())
         
-        return jsonify({"status": "success"})
+        return jsonify(SUCCESS)
 
 @app.route('/run/<int:handle>', methods=['POST'])
 def run(handle):
@@ -37,3 +38,12 @@ def stop(handle):
     process = windows.stop(handle)
     print(process)
     return jsonify(process)
+
+
+@app.route('/client', methods=['POST'])
+def client():
+    print(request.get_json())
+    from clients_utils import launch_map
+    json = request.get_json()
+    launch_map[json['type']]()
+    return jsonify(SUCCESS)
