@@ -10,7 +10,7 @@ windows = Windows()
 
 @app.route('/windows')
 def state():
-    return jsonify(windows.instances)
+    return jsonify(windows.settings())
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -21,7 +21,6 @@ def settings():
             "types": settings.types
         })
     else:
-        print(request.get_json())
         windows.set_prop(request.get_json())
         
         return jsonify({"status": "success"})

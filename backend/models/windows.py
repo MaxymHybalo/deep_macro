@@ -1,3 +1,5 @@
+from urllib import response
+from utils.configurator import Configurator
 from utils.deep_utils import get_active_windows
 from screen_reader import get_window_image
 from ocr import get_char_name
@@ -5,6 +7,7 @@ import launcher
 from models.process import Process
 
 GAME_HANDLE = 'Rappelz'
+SETTINGS_FILE = 'configs/_commands'
 
 class Windows():
 
@@ -36,8 +39,28 @@ class Windows():
         return process.jsonify()
 
     def set_prop(self, data):
-        print(data)
-        # TODO write setting
-        # task = self.processes[data['handle']]
-        # if task:
-        #     task.
+        type, value, handle = data['type'], data['value'], data['handle']
+
+        name = list(self.instances.keys())[list(self.instances.values()).index(handle)]
+
+        config = Configurator(SETTINGS_FILE + '_' + name + '.yml')
+        settings = config.import_config()
+        if settings == None:
+            settings = dict()
+
+        if type in settings:
+            settings[type]['value'] = value
+        else:
+            value = value or {}
+            settings[type] = dict({'value': { **value}})
+        
+        config.dump_yaml(settings)
+
+    def settings(self):
+        response = dict()
+        for handle in self.instances.keys():
+            config = Configurator(SETTINGS_FILE + '_' + handle + '.yml')
+            settings = config.import_config()
+            response[handle] = settings or dict()
+            response[handle]['process_id'] = self.instances[handle]
+        return response

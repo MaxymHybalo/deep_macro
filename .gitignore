@@ -9,3 +9,5 @@ logs/
 *.png
 node_modules/
 reports/
+
+_commands_*.yml

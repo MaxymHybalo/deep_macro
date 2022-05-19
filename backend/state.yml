@@ -46,10 +46,10 @@ roles:
   #   cycles: '1'
 
   # # === FARM === 
-  Artifactory:
-    type: necro
-  Royalty:
-    type: necro
+  # Artifactory:
+  #   type: necro
+  # Royalty:
+  #   type: necro
   EGold:
     type: farm
   Visual:

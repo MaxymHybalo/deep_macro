@@ -15,11 +15,16 @@ export default function WindowRow(props) {
             <option value={o} key={o}>
                 {o}
             </option>);
-
+    
+    const changePayload = e => ({
+        handle: props.handle,
+        value: { active: true },
+        type: e.target.value
+    });
     return (
         <>
             <select className="dropdown" onChange={
-                (e) => updateCommand({handle: props.handle, value: e.target.value, type: "type" })}>
+                (e) => updateCommand(changePayload(e))}>
                 {optionsEl}
             </select>
         </>
