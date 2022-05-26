@@ -15,15 +15,15 @@ roles:
   #   cycles: '1'
   # Invidia:
   #   type: enchant
-  #   cube: ['1', '9']
-  #   cycles: '1'
-  # Artifactory:
-  #   type: enchant
-  #   cube: ['4', '1']
+  #   cube: ['1', '1']
   #   cycles: '1'
   # Visual:
   #   type: enchant
-  #   cube: ['1', '8']
+  #   cube: ['1', '1']
+  #   cycles: '1'
+  # EGold:
+  #   type: enchant
+  #   cube: ['1', '1']
   #   cycles: '1'
 
   # Luxuria:
@@ -38,7 +38,7 @@ roles:
   #   cycles: '1'
   # EGold:
   #   type: destroy
-  #   cube: ['1', '3']
+  #   cube: ['1', '1']
   #   cycles: '1'
   # Visual:
   #   type: destroy
@@ -46,15 +46,17 @@ roles:
   #   cycles: '1'
 
   # # === FARM === 
+  # Luxuria:
+  #   type: necro
   # Artifactory:
   #   type: necro
   # Royalty:
   #   type: necro
   EGold:
     type: farm
-  Visual:
-    type: farm
   Invidia:
+    type: farm
+  Visual:
     type: farm
   # EGold:
   #   type: steel
@@ -80,13 +82,13 @@ roles:
   #   type: taming
 
 # === AWAKE ===
-  # Royalty:
-  #   type: awake
-  #   scroll: ['2', '11']
-  #   stone: ['1', '11']
-  #   item: ['3', '11'] # how to proceed few items?
-  #   state: 'configs/stats_set_1.yml'
+  Royalty:
+    type: awake
+    scroll: ['2', '11']
+    stone: ['1', '11']
+    item: ['3', '11'] # how to proceed few items?
+    state: 'configs/stats_set_1.yml'
 
-  # Luxuria:
-  #   type: 'plain'
+  Luxuria:
+    type: 'plain'
 

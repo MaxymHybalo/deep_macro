@@ -32,7 +32,7 @@ export default function WindowRow(props) {
     
     return (
         <>
-            <CommandType handle={props.handle}/>
+            <CommandType handle={props.handle} name={props.name}/>
             <button className="btn" onClick={run}>{title}</button>
             <button className="btn" onClick={stop}>Stop</button>
         </>

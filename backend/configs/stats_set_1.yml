@@ -1,8 +1,8 @@
-strength: 50
+strength: 65
 vitality: 50
 int: 70
 wisdom: 70
-c_rate: 17
+c_rate: 20
 m_res: 120
 m_speed: 30
 evasion: 120

@@ -45,17 +45,27 @@ def farming(*args):
         press(whandle, '1')
         time.sleep(0.5)
         press(whandle, '1')
-        check_numbers(whandle)
+        # check_numbers(whandle)
         slide(x, y, x + 70, y, whandle)
 
 def necro(*args):
     whandle = args[0]['handle']
 
     while working:
-        time.sleep(1)
-        press(whandle, '1')
+        # time.sleep(1)
+        # press(whandle, '1')
         # time.sleep(1)
         # press(whandle, '2')
+        click(30, 418 - 25, whandle)
+        time.sleep(0.5)
+        press(whandle, '1')
+        time.sleep(22)
+        click(90, 418 - 25, whandle)
+        time.sleep(0.5)
+        press(whandle, '1')
+        time.sleep(22)
+
+
 
 def check_numbers(handle):
     img = get_window_image(handle)

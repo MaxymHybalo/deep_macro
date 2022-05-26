@@ -16,11 +16,18 @@ export const useStore =  create(set => ({
 
     },
     updateSettings: async ({handle, type, value}) => {
-        console.log(handle, type, value);
         const { data, error } = await axios.post('/settings', {
             handle, value, type
         });
-    }
+
+        set(state => {
+            const settings = {
+                ...state.windows,
+                ...data
+            }
+            return {windows: settings}
+        })
+    },
     // runTask: async (handle) => {
     //     const { data } 
     // }

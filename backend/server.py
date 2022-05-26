@@ -3,10 +3,13 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from models.windows import Windows
+# import application_launcher
 
+# application_launcher.run()
 app = Flask(__name__)
 CORS(app)
 windows = Windows()
+
 
 SUCCESS = {"status": "success"}
 @app.route('/windows')
@@ -22,9 +25,9 @@ def settings():
             "types": settings.types
         })
     else:
-        windows.set_prop(request.get_json())
-        
-        return jsonify(SUCCESS)
+        data = windows.set_prop(request.get_json())
+        print(data)
+        return jsonify(data)
 
 @app.route('/run/<int:handle>', methods=['POST'])
 def run(handle):

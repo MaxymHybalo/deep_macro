@@ -7,7 +7,6 @@ export default function WindowsList() {
 
     const fetchWindows = useStore(state => state.fetchWindows);
     const windows = useStore(state => state.windows);
-
     useEffect(() => {
         fetchWindows()
     },[]);
@@ -15,7 +14,7 @@ export default function WindowsList() {
     const windowItem = Object.entries(windows).map(([key, value]) => {
         const handle = value.process_id
         return <li key={handle}>
-            {key} : {handle} <WindowRow handle={handle}/>
+            {key} : {handle} <WindowRow name={key} handle={handle}/>
         </li>
     })
     return (
