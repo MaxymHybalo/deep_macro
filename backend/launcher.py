@@ -6,7 +6,7 @@ from farm_with_numbers import start
 from utils.deep_utils import get_active_windows
 from ocr import get_char_name
 from screen_reader import get_window_image
-from farm_with_numbers import farming, necro
+from farm_with_numbers import farming, necro, wind
 from enhancer.invetory_dispatcher import InventoryDispatcher
 from open_cards_job import open, plain
 from taming import taming
@@ -51,21 +51,21 @@ operations = {
     'taming': taming,
     'awake': _awake,
     'combine': _combinate,
-    'plain': plain
+    'plain': plain,
+    'wind': wind
 }
-def run(handle):
+
+def run(handle, role):
     char_name = get_char_name(get_window_image(handle))
-    roles = CHAR_CFG['roles']
     th = None
-    if char_name not in roles:
-        return None
-    role = roles[char_name]
+
     if not role:
         return None
+
     cfg = role
     cfg['handle'] = handle
     cfg['name'] = char_name
-    # print('start from ', operations[role['type']])
+
     if role['type'] == 'steel':
         t1 = multiprocessing.Process(target=operations['farm'], args=(cfg,))
         t1.daemon = True

@@ -7,7 +7,6 @@ from models.process import Process
 from models.settings import Settings
 
 GAME_HANDLE = 'Rappelz'
-SETTINGS_FILE = 'configs/_commands'
 
 class Windows():
 
@@ -23,7 +22,8 @@ class Windows():
             self.instances[name] = handle
 
     def run(self, handle):
-        process = launcher.run(handle)
+        props = Settings().launcher_config(self.name_by_handle(handle))
+        process = launcher.run(handle, props)
         self.processes[handle] = Process(process)
         return self.processes[handle].jsonify()
 
@@ -32,6 +32,8 @@ class Windows():
         pass
     
     def stop(self, handle):
+        if handle not in self.processes:
+            return {}
         process = self.processes[handle]
         process.stop()
         process.destroy()
@@ -50,8 +52,7 @@ class Windows():
     def settings(self):
         response = dict()
         for handle in self.instances.keys():
-            config = Configurator(SETTINGS_FILE + '_' + handle + '.yml')
-            settings = config.import_config()
+            settings = Settings().load(handle)
             response[handle] = settings or dict()
             response[handle]['process_id'] = self.instances[handle]
         return response

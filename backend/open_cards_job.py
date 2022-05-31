@@ -34,7 +34,7 @@ def plain(cfg):
     wnd = cfg['handle']
     rect = w.GetWindowRect(wnd)
 
-    while 2119:
+    while 200:
             l,t, r,b = rect
             x1, y1 = PLAIN_PONT
             # x1 += l

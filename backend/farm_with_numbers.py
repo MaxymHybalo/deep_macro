@@ -52,19 +52,24 @@ def necro(*args):
     whandle = args[0]['handle']
 
     while working:
-        # time.sleep(1)
-        # press(whandle, '1')
-        # time.sleep(1)
-        # press(whandle, '2')
-        click(30, 418 - 25, whandle)
-        time.sleep(0.5)
+        time.sleep(1)
         press(whandle, '1')
-        time.sleep(22)
-        click(90, 418 - 25, whandle)
-        time.sleep(0.5)
-        press(whandle, '1')
-        time.sleep(22)
+        time.sleep(1)
+        press(whandle, '2')
 
+
+def wind(*args):
+    whandle = args[0]['handle']
+
+    while working:
+        click(30, 406 - 25, whandle)
+        time.sleep(0.5)
+        press(whandle, '1')
+        time.sleep(22)
+        click(90, 406 - 25, whandle)
+        time.sleep(0.5)
+        press(whandle, '1')
+        time.sleep(22)
 
 
 def check_numbers(handle):

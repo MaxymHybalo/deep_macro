@@ -47,7 +47,7 @@ roles:
 
   # # === FARM === 
   # Luxuria:
-  #   type: necro
+  #   type: wind
   # Artifactory:
   #   type: necro
   # Royalty:
@@ -89,6 +89,17 @@ roles:
     item: ['3', '11'] # how to proceed few items?
     state: 'configs/stats_set_1.yml'
 
-  Luxuria:
-    type: 'plain'
+  # Royalty:
+  #   type: taming
 
+  # Invidia:
+  #   type: taming
+  Luxuria:
+    type: awake
+    scroll: ['2', '11']
+    stone: ['1', '11']
+    item: ['3', '11'] # how to proceed few items?
+    state: 'configs/stats_set_1.yml'
+
+  # Luxuria:
+  #   type: plain

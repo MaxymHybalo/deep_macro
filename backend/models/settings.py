@@ -33,10 +33,25 @@ class Settings():
         
         return settings
 
+    def launcher_config(self, name):
+        settings = self.load(name)
+        for type, v in settings.items():
+            if v['value']['active'] == True:
+                props = v['value']
+                props['type'] = type
+                return props
+        return {}
 
-    def _disable_all(self, settins):
-        for key, value in settins.items():
+    def load(self, name):
+        config = Configurator(SETTINGS_FILE + '_' + name + '.yml')
+        return config.import_config()
+
+    def _disable_all(self, settings):
+        print('disable', settings)
+        if settings is None:
+            return settings
+        for key, value in settings.items():
             print('disable_all', key, value)
             if 'active' in value['value']:
-                settins[key]['value']['active'] = False
-        return settins
+                settings[key]['value']['active'] = False
+        return settings
