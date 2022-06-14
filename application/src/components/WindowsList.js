@@ -13,8 +13,9 @@ export default function WindowsList() {
     
     const windowItem = Object.entries(windows).map(([key, value]) => {
         const handle = value.process_id
-        return <li key={handle}>
-            {key} : {handle} <WindowRow name={key} handle={handle}/>
+        return <li className="grid gap-4 grid-cols-4 grid-rows-1" key={handle}>
+            <span className="flex p-1 justify-center items-center">{key} : {handle}</span>
+            <WindowRow name={key} handle={handle}/>
         </li>
     })
     return (

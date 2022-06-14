@@ -27,10 +27,12 @@ export default function WindowRow(props) {
     });
     return (
         <>
-            <select className="dropdown" value={selected} onChange={
-                (e) => updateCommand(changePayload(e))}>
-                {optionsEl}
-            </select>
+            <div className="flex p-1 justify-center items-center"> 
+                <select className="dropdown" value={selected} onChange={
+                    (e) => updateCommand(changePayload(e))}>
+                    {optionsEl}
+                </select>
+            </div>
         </>
     )
 }
