@@ -4,14 +4,16 @@ import { useStore } from '../store/index';
 
 export default function WindowRow(props) {
 
-    const {settings, windows, updateCommand } = useStore(state => ({
+    const {settings, windows, updateCommand, getActiveProp } = useStore(state => ({
         settings: state.settings,
         windows: state.windows,
-        updateCommand: state.updateSettings
+        updateCommand: state.updateSettings,
+        getActiveProp: state.getActiveProp
     }));
 
     if (!settings.types) return <></>
-    let selected = Object.entries(windows[props.name]).find(([, value]) => value.value && value.value.active)?.[0] || settings.types[0];
+    // let selected = Object.entries(windows[props.name]).find(([, value]) => value.value && value.value.active)?.[0] || settings.types[0];
+    let selected = getActiveProp(props.name);
     const optionsEl = settings.types.map(o => 
             <option value={o} key={o}>
                 {o}

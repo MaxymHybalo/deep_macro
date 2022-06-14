@@ -5,8 +5,15 @@ import axios from "axios";
 import CommandType from './CommandType';
 
 export default function WindowRow(props) {
-    const [title, setTitle] = useState('Run!');
-    const [runned, setRunned] = useState(false);
+
+    const { windows, getActiveProp } = useStore(state => ({
+        windows: state.windows,
+        getActiveProp: state.getActiveProp
+    }));
+    const operation = getActiveProp(props.name);
+    const status = windows[props.name]?.[operation]?.value;
+    const [title, setTitle] = useState(status.run ? 'Runned!' : 'Run!');
+    const [runned, setRunned] = useState(status);
     const run = () => {
         if (runned) return;
         axios.post(`/run/${props.handle}`)

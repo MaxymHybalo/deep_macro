@@ -1,8 +1,12 @@
 import create from 'zustand';
 import axios from 'axios';
-export const useStore =  create(set => ({
+export const useStore =  create((set, get) => ({
     windows: {},
     settings: {},
+    getActiveProp: (handle) => {
+        const state = get();
+        return Object.entries(state.windows[handle]).find(([, value]) => value.value && value.value.active)?.[0] || state.settings.types[0];;
+    },
     postClient: async(type) => {
         await axios.post('/client', { type });
     },
