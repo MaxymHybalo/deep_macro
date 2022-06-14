@@ -62,11 +62,11 @@ def wind(*args):
     whandle = args[0]['handle']
 
     while working:
-        click(30, 406 - 25, whandle)
+        click(1180, 418 - 25, whandle)
         time.sleep(0.5)
         press(whandle, '1')
         time.sleep(22)
-        click(90, 406 - 25, whandle)
+        click(1250, 418 - 25, whandle)
         time.sleep(0.5)
         press(whandle, '1')
         time.sleep(22)

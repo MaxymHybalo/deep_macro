@@ -20,7 +20,8 @@ class Process():
             self.thread = task
             self.name = task.name
             self.pid = task.pid
-            self.type = cfg['type']
+            self.type = cfg['type'],
+            self.cfg = cfg
     
     def stop(self):
         self.thread.terminate()

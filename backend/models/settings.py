@@ -12,7 +12,7 @@ class Settings():
     
     def save(self, data, instances):
         type, value, handle = data['type'], data['value'], data['handle']
-
+        print('instances', instances)
         name = list(instances.keys())[list(instances.values()).index(handle)]
 
         config = Configurator(SETTINGS_FILE + '_' + name + '.yml')

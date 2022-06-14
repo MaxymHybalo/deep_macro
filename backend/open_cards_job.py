@@ -3,7 +3,7 @@ from driver import click, press
 from win32 import win32gui as w
 
 
-P1 = (690, 309 - 28)
+P1 = (690, 310 - 28)
 P2 = (734, 245 - 28)
 PLAIN_PONT = (729, 247 - 28)
 
@@ -19,16 +19,16 @@ def open(cfg):
         # x1 += l
         # y1 += t
 
-        click(x1, y1, wnd)
+        # click(x1, y1, wnd)
 
-        time.sleep(DELAY)
+        # time.sleep(DELAY)
 
         x2, y2 = P2
         # x2 += l
         # y2 += t
         
         click(x2, y2, wnd)
-        time.sleep(1)
+        time.sleep(0.3)
 
 def plain(cfg):
     wnd = cfg['handle']
