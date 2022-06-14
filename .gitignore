@@ -11,3 +11,4 @@ node_modules/
 reports/
 
 _commands_*.yml
+application/src/styles/build.css
