@@ -8,8 +8,6 @@ class Settings():
     def __init__(self) -> None:
         self.types = [*launcher.operations]
 
-        print(self.types)
-    
     def save(self, data, instances):
         type, value, handle = data['type'], data['value'], data['handle']
         print('instances', instances)
@@ -43,6 +41,7 @@ class Settings():
         return {}
 
     def load(self, name):
+        print('SETTINGS_FILE', SETTINGS_FILE + '_' + name + '.yml')
         config = Configurator(SETTINGS_FILE + '_' + name + '.yml')
         return config.import_config()
 

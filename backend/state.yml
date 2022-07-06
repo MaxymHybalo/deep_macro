@@ -15,7 +15,7 @@ roles:
   #   cycles: '1'
   # Invidia:
   #   type: enchant
-  #   cube: ['1', '1']
+  #   cube: ['3', '1']
   #   cycles: '1'
   # Visual:
   #   type: enchant
@@ -58,8 +58,8 @@ roles:
     type: farm
   Visual:
     type: farm
-  Hooka:
-    type: farm
+  # Hooka:
+  #   type: farm
   # EGold:
   #   type: steel
   #   cube: ['1', '11']
@@ -84,24 +84,26 @@ roles:
   #   type: taming
 
 # === AWAKE ===
-  # Royalty:
+  PurpleWave:
+    type: awake
+    scroll: ['2', '8']
+    stone: ['1', '8']
+    item: ['3', '8'] # how to proceed few items?
+    state: 'configs/stats_set_1.yml'
+
+  # PurpleWave:
+  #   type: taming
+
+  esMe:
+    type: taming
+  # Solution:
   #   type: awake
   #   scroll: ['2', '11']
   #   stone: ['1', '11']
   #   item: ['3', '11'] # how to proceed few items?
   #   state: 'configs/stats_set_1.yml'
 
-  # Royalty:
-  #   type: taming
-
-  # Luxuria:
-  #   type: taming
-  # Royalty:
-  #   type: awake
-  #   scroll: ['2', '11']
-  #   stone: ['1', '11']
-  #   item: ['3', '11'] # how to proceed few items?
-  #   state: 'configs/stats_set_1.yml'
-
-  # Liye:
+  # Moro:
   #   type: cards
+  # Luxuria:
+  #   type: plain

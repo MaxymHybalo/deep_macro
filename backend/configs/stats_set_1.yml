@@ -1,9 +1,10 @@
 strength: 55
 vitality: 50
 int: 70
-wisdom: 70
+wisdom: 60
 c_rate: 20
-m_res: 130
+# m_res: 130
+m_res: 160
 m_speed: 30
 evasion: 120
 dexterity: 70

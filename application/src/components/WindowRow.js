@@ -10,12 +10,13 @@ export default function WindowRow(props) {
         windows: state.windows,
         getActiveProp: state.getActiveProp
     }));
+    if (!windows) return <></>
     const operation = getActiveProp(props.name);
     const status = windows[props.name]?.[operation]?.value;
     const [title, setTitle] = useState(status.run ? 'Runned!' : 'Run!');
     const [runned, setRunned] = useState(status);
     const run = () => {
-        if (runned) return;
+        // if (status.run) return;
         axios.post(`/run/${props.handle}`)
             .then(({data}) => {
                 if (data.name) {

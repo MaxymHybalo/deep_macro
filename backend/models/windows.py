@@ -22,6 +22,7 @@ class Windows():
             self.instances[name] = handle
 
     def run(self, handle):
+        print('self.instances', self.instances)
         props = Settings().launcher_config(self.name_by_handle(handle))
         process = launcher.run(handle, props)
         self.processes[handle] = Process(process)
@@ -56,7 +57,10 @@ class Windows():
     def settings(self):
         response = dict()
         for handle in self.instances.keys():
+            if handle == '':
+                continue
             settings = Settings().load(handle)
+            print('/settings', settings, handle)
             response[handle] = settings or dict()
             response[handle]['process_id'] = self.instances[handle]
         return response

@@ -34,9 +34,9 @@ def _to_absolute(pt, coords):
     x1, y1 = pt
     return x + x1, y + y1
 
-def run_clients():
+def run_clients(count=3):
     os.chdir(path)
-    for _ in range(3):
+    for _ in range(count):
         os.popen(launcher_name)
     time.sleep(1)
     wnd = get_active_windows(launcher_name)
@@ -51,6 +51,10 @@ def run_clients():
         api.SetActiveWindow(handle)
         time.sleep(1)
         Click(l + w - 50, t + h - 25).make_click()
+
+def one():
+    run_clients(1)
+
 # print(os.getcwd())
 def fill_games_grid(coord):
     desktop_x, desktop_y = desktop
@@ -110,7 +114,8 @@ def login():
 launch_map = {
     'run': run_clients,
     'justify': justify_games,
-    'login': login
+    'login': login,
+    'one': one
 }
 
 # print(sys.argv)

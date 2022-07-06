@@ -7,10 +7,10 @@ class Configurator:
         self.filepath = filepath
 
     def import_config(self):
-        try:
-            config = open(self.filepath, 'r')
-        except:
-            return None
+        # try:
+        config = open(self.filepath, 'r')
+        # except e:
+        # return None
         configuration = yaml.safe_load(config)
         config.close()
         return configuration
