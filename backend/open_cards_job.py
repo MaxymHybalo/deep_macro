@@ -19,9 +19,9 @@ def open(cfg):
         # x1 += l
         # y1 += t
 
-        # click(x1, y1, wnd)
+        click(x1, y1, wnd)
 
-        # time.sleep(DELAY)
+        time.sleep(DELAY)
 
         x2, y2 = P2
         # x2 += l

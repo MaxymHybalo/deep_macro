@@ -2,7 +2,7 @@ strength: 55
 vitality: 50
 int: 70
 wisdom: 60
-c_rate: 20
+c_rate: 15
 # m_res: 130
 m_res: 160
 m_speed: 30

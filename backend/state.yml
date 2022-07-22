@@ -19,7 +19,7 @@ roles:
   #   cycles: '1'
   # Visual:
   #   type: enchant
-  #   cube: ['1', '1']
+  #   cube: ['1', '7']
   #   cycles: '1'
   # EGold:
   #   type: enchant
@@ -56,13 +56,13 @@ roles:
     type: farm
   Invidia:
     type: farm
-  Visual:
-    type: farm
+  # Visual:
+  #   type: farm
   # Hooka:
   #   type: farm
   # EGold:
   #   type: steel
-  #   cube: ['1', '11']
+  #   cube: ['1', '1']
   #   cycles: '1'
 
   # Invidia:
@@ -70,10 +70,10 @@ roles:
   #   cube: ['1', '11']
   #   cycles: '1'
 
-  # Visual:
-  #   type: steel
-  #   cube: ['1', '11']
-  #   cycles: '1'
+  Visual:
+    type: steel
+    cube: ['1', '1']
+    cycles: '1'
 
 #  === ETC ===
   # esMe:
@@ -94,8 +94,8 @@ roles:
   # PurpleWave:
   #   type: taming
 
-  esMe:
-    type: taming
+  # esMe:
+  #   type: plain
   # Solution:
   #   type: awake
   #   scroll: ['2', '11']
@@ -103,7 +103,9 @@ roles:
   #   item: ['3', '11'] # how to proceed few items?
   #   state: 'configs/stats_set_1.yml'
 
-  # Moro:
+  # Liye:
   #   type: cards
-  # Luxuria:
+  # EGold:
   #   type: plain
+  Artifactory:
+    type: plain
