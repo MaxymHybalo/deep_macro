@@ -2,6 +2,7 @@ __pychahe__/*
 *.png
 *.pyc
 *.txt
+!freeze.txt
 assets/
 logs/
 *.tb
