@@ -4,7 +4,7 @@ import math
 from enhancer.tasks.operator import Operator
 from processes.click import Click
 from processes.wait import Wait
-from driver import click, double
+from driver import click, double, press
 
 class Destructor(Operator):
 
@@ -12,6 +12,8 @@ class Destructor(Operator):
         super().__init__(config, inventory)
         self.log = logging.getLogger('enhancer')
         self.destruct_button = self.config['assets']['destructor']['button_of_start']
+        print(self.config)
+        # self.type = 
         self.dx, self.dy = self.destruct_button
         self.dx, self.dy = int(self.dx), int(self.dy)
         self.select_delay = 0.1
@@ -20,9 +22,31 @@ class Destructor(Operator):
         # import pdb; pdb.set_trace()
 
     def proceed(self):
-        self.destroy()
+        print('self.config[]',self.config['config'])
+        if self.config['config']['option'] == 'cards':
+            self.cart_destructor()
+        else:
+            self.destroy()
         self.log.info('End destruction')
-    
+
+    def cart_destructor(self):
+        while True:
+            cell = self.inventory.working_cells[0]
+            x, y = self.finder.point(cell.center())
+            y = y - 25
+            double(x,y, self.handle)
+            Wait(0.5).delay()
+
+            all_x, all_y = 700, 420
+            click(all_x, all_y, self.handle)
+            Wait(0.3).delay()
+            ok_x, ok_y = 650, 445 - 25
+            click(ok_x, ok_y, self.handle)
+            Wait(0.3).delay()
+            x, y = self._get_destruct_point()
+            click(x,y, self.handle)
+            Wait(1).delay()
+
     def destroy(self):
         rounds = len(self.split_in_buckets())
         # rounds = 2

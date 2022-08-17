@@ -84,12 +84,12 @@ roles:
   #   type: taming
 
 # === AWAKE ===
-  PurpleWave:
-    type: awake
-    scroll: ['2', '8']
-    stone: ['1', '8']
-    item: ['3', '8'] # how to proceed few items?
-    state: 'configs/stats_set_1.yml'
+  # PurpleWave:
+  #   type: awake
+  #   scroll: ['2', '8']
+  #   stone: ['1', '8']
+  #   item: ['3', '8'] # how to proceed few items?
+  #   state: 'configs/stats_set_1.yml'
 
   # PurpleWave:
   #   type: taming
@@ -107,5 +107,8 @@ roles:
   #   type: cards
   # EGold:
   #   type: plain
-  Artifactory:
-    type: plain
+  PurpleWave:
+    type: destroy
+    option: cards
+    cube: ['1', '10']
+    cycles: '1'
