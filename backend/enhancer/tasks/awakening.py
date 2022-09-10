@@ -69,7 +69,6 @@ class Awakening(Operator):
         window = self.inventory._source()
         img = crop_roi(window, roi_rect)
         cv2.imwrite('logs/awaking/{0}'.format(log_name), img)
-
         data = normalize(get_awaking(img))
         stats = compare(data, self.goals)
         report('awaking', self.report_file, (counter, data, stats, log_name))
