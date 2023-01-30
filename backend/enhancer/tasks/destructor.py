@@ -31,21 +31,22 @@ class Destructor(Operator):
 
     def cart_destructor(self):
         while True:
-            cell = self.inventory.working_cells[0]
-            x, y = self.finder.point(cell.center())
-            y = y - 25
-            double(x,y, self.handle)
-            Wait(0.5).delay()
+            for cell in self.inventory.working_cells[:20]:
+                x, y = self.finder.point(cell.center())
+                y = y - 25
+                double(x,y, self.handle)
+                Wait(0.3).delay()
 
-            all_x, all_y = 700, 420
-            click(all_x, all_y, self.handle)
-            Wait(0.3).delay()
-            ok_x, ok_y = 650, 445 - 25
-            click(ok_x, ok_y, self.handle)
-            Wait(0.3).delay()
+                all_x, all_y = 700, 420
+                click(all_x, all_y, self.handle)
+                Wait(0.3).delay()
+                ok_x, ok_y = 650, 445 - 25
+                click(ok_x, ok_y, self.handle)
+                Wait(0.3).delay()
             x, y = self._get_destruct_point()
             click(x,y, self.handle)
-            Wait(1).delay()
+            Wait(1.5).delay()
+
 
     def destroy(self):
         rounds = len(self.split_in_buckets())
