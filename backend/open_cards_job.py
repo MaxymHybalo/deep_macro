@@ -1,10 +1,12 @@
 import time
-from driver import click
+from driver import click, press
 from win32 import win32gui as w
 
 
-P1 = (690, 309 - 28)
+P1 = (690, 310 - 28)
 P2 = (734, 245 - 28)
+PLAIN_PONT = (729, 247 - 28)
+
 DELAY = 2
 
 def open(cfg):
@@ -26,4 +28,18 @@ def open(cfg):
         # y2 += t
         
         click(x2, y2, wnd)
-        time.sleep(1)
+        time.sleep(0.3)
+
+def plain(cfg):
+    wnd = cfg['handle']
+    rect = w.GetWindowRect(wnd)
+
+    while 1125:
+            l,t, r,b = rect
+            x1, y1 = PLAIN_PONT
+            # x1 += l
+            # y1 += t
+
+            # click(x1, y1, wnd)
+            press(wnd, '8')
+            time.sleep(0.01)

@@ -7,10 +7,13 @@ class Configurator:
         self.filepath = filepath
 
     def import_config(self):
+        # try:
         config = open(self.filepath, 'r')
-        configuration = config.read()
+        # except e:
+        # return None
+        configuration = yaml.safe_load(config)
         config.close()
-        return json.loads(configuration)
+        return configuration
 
     def generate_objects(self):
         config = self.import_config()

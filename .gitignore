@@ -2,10 +2,15 @@ __pychahe__/*
 *.png
 *.pyc
 *.txt
+!freeze.txt
 assets/
 logs/
 *.tb
 *.lnk
 *.png
+*.csv
 node_modules/
 reports/
+
+_commands_*.yml
+styles/build.css
