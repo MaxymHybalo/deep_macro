@@ -38,6 +38,11 @@ class Enhancer(Operator):
             double(x,y, self.handle)
 
             Wait(0.3).delay()
+            # x1, y1 = self.finder.point(self.inventory.working_cells[0].center())
+            # y1 = y1 - 25
+            # double(x1, y1, self.handle)
+            # Wait(0.3).delay()
+
             self.click_at('cube', 'double')
             if self.config['mode'] == 'binary':
                 second_item = self.inventory.working_cells[i+1]

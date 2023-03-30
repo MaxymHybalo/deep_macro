@@ -15,7 +15,8 @@ CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
 CFG = config.load_config(CONFIG_FILE)
 CHAR_CFG = config.load_config(STATE_FILE)
-state = dict()
+
+print('Create launchere')
 
 def _enchant(*args):
     cfg = args[0]
@@ -80,13 +81,30 @@ def run(handle, role):
     if th:
         th.daemon = True
         th.start()
-    return th, cfg
+        print('thread started')
+    return th, cfg, handle
 
 def stop(process):
     print(process)
     process.terminate()
     return True
-    
+
+def clients_state():
+    handles = get_active_windows(CFG['whandle'])
+    state = dict()
+    for handle in handles:
+        if handle == 0:
+           continue
+        char_name = get_char_name(get_window_image(handle))
+        roles = CHAR_CFG['roles']
+        if char_name not in roles:
+            continue
+        role = roles[char_name]
+        role['char_name'] = char_name
+        state[handle] = role
+        print(state)
+    return state
+
 def threads():
     handles = get_active_windows(CFG['whandle'])
 
@@ -119,6 +137,5 @@ def threads():
             th.daemon = True
             th.start()
 
-def shutdown():
-    for th in state:
-        state[th]['process'].stop()
+def shutdown(th):
+    th.stop()

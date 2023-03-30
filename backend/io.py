@@ -9,7 +9,7 @@ if __name__ == '__main__':
         command = input()
         if command == '1':
             out = threads()
-            print(out)
+            print('out', out)
         elif command == '2':
             out = shutdown()
         else:
