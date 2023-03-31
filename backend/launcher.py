@@ -56,33 +56,20 @@ operations = {
     'wind': wind
 }
 
-def run(handle, role):
+def run(handle, char_name):
     char_name = get_char_name(get_window_image(handle))
     th = None
 
-    if not role:
-        return None
+    roles = CHAR_CFG['roles']
 
+    if char_name not in roles:
+        return
+    role = roles[char_name]
     cfg = role
     cfg['handle'] = handle
     cfg['name'] = char_name
 
-    if role['type'] == 'steel':
-        t1 = multiprocessing.Process(target=operations['farm'], args=(cfg,))
-        t1.daemon = True
-        t1.start()
-        t2 = multiprocessing.Process(target=operations['destroy'], args=(cfg,))
-        t2.daemon = True
-        t2.start()
-        return (t1, t2), cfg
-    
-    th = multiprocessing.Process(target=operations[role['type']], args=(cfg,))
-
-    if th:
-        th.daemon = True
-        th.start()
-        print('thread started')
-    return th, cfg, handle
+    operations[role['type']](cfg)
 
 def stop(process):
     print(process)

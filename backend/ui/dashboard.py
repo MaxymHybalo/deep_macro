@@ -8,7 +8,8 @@ class DashboardWindow(QMainWindow):
         super().__init__()
         self.env = env
         self.state = env['state']()
-        print(env['state']())
+        self.threads = dict()
+        # print(env['state']())
         self.setWindowTitle("Rappelz Wizard")
 
         self.pidLabel = QLabel('PID')
@@ -25,28 +26,66 @@ class DashboardWindow(QMainWindow):
         layout.addWidget(self.actionLabel, 0, 4)
 
 
-        for index, handle in enumerate(self.state):
+        for handle in enumerate(self.state):
             print(self.state)
             layout.addWidget(QLabel(str(handle)))
             layout.addWidget(QLabel(str(self.state[handle]['char_name'])))
             layout.addWidget(QLabel(str(self.state[handle]['type'])))
+            
             activate = QPushButton('Activate')
-            activate.clicked.connect(partial(self.activate, handle))
-            layout.addWidget(activate)
 
             deactivate = QPushButton('Deactivate')
-            deactivate.clicked.connect(self.deactivate)
+            deactivate.setEnabled(False)
+
+            activate.clicked.connect(partial(self.activate, handle, self.state[handle]['char_name'], deactivate))
+            deactivate.clicked.connect(partial(self.deactivate, handle, activate))
+            
+            layout.addWidget(activate)
             layout.addWidget(deactivate)
 
+        enableAllButton = QPushButton('Activate All')
+        enableAllButton.clicked.connect(self.enable_all)
+
+        killAllButton = QPushButton('Disable All')
+        killAllButton.clicked.connect(self.kill_all)
+        
+        layout.addWidget(enableAllButton, layout.rowCount() -1, 3)
+        layout.addWidget(killAllButton, layout.rowCount() -1 , 4)
+
+        self.layout = layout
         container = QWidget()
         container.setLayout(layout)
 
+        
         self.setCentralWidget(container)
 
-    def activate(self, handle):
+    def activate(self, handle, char_name, deactivate):
+        sender = self.sender()
+        thread = QProcess()
+        thread.start('python',  ['invoke.py', str(handle), char_name])
+        deactivate.setEnabled(True)
+        sender.setEnabled(False)
+        self.threads[handle] = thread
 
-        self.thread = QProcess()
-        self.thread.start('python',  ['io.py'])
+    def deactivate(self, handle, activate):
+        sender = self.sender()
+        self.threads[handle].kill()
+        activate.setEnabled(True)
+        sender.setEnabled(False)
 
-    def deactivate(self):
-        self.thread.kill()
+    def enable_all(self):
+        for i in range(self.layout.count()):
+            widget = self.layout.itemAt(i).widget()
+            if widget.text().lower() == 'activate':
+                widget.clicked.emit()
+
+    def kill_all(self):
+        for i in range(self.layout.count()):
+            widget = self.layout.itemAt(i).widget()
+            if widget.text().lower() == 'activate':
+                widget.setEnabled(True)
+            if widget.text().lower() == 'deactivate':
+                widget.setEnabled(False)
+            
+        for handle in self.threads:
+            self.threads[handle].kill()
