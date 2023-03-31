@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QMainWindow, QLabel, QGridLayout, QPushButton
-from PyQt6.QtCore import QProcess
+from PyQt6.QtCore import QProcess, Qt
 
 from functools import partial
 
@@ -26,7 +26,7 @@ class DashboardWindow(QMainWindow):
         layout.addWidget(self.actionLabel, 0, 4)
 
 
-        for handle in enumerate(self.state):
+        for _, handle in enumerate(self.state):
             print(self.state)
             layout.addWidget(QLabel(str(handle)))
             layout.addWidget(QLabel(str(self.state[handle]['char_name'])))
@@ -43,16 +43,17 @@ class DashboardWindow(QMainWindow):
             layout.addWidget(activate)
             layout.addWidget(deactivate)
 
-        enableAllButton = QPushButton('Activate All')
-        enableAllButton.clicked.connect(self.enable_all)
+        self.enableAllButton = QPushButton('Activate All')
+        self.enableAllButton.clicked.connect(self.enable_all)
 
-        killAllButton = QPushButton('Disable All')
-        killAllButton.clicked.connect(self.kill_all)
+        self.killAllButton = QPushButton('Disable All')
+        self.killAllButton.clicked.connect(self.kill_all)
         
-        layout.addWidget(enableAllButton, layout.rowCount() -1, 3)
-        layout.addWidget(killAllButton, layout.rowCount() -1 , 4)
+        layout.addWidget(self.enableAllButton, layout.rowCount() -1, 3)
+        layout.addWidget(self.killAllButton, layout.rowCount() -1 , 4)
 
         self.layout = layout
+        self._alignWidgets()
         container = QWidget()
         container.setLayout(layout)
 
@@ -78,6 +79,8 @@ class DashboardWindow(QMainWindow):
             widget = self.layout.itemAt(i).widget()
             if widget.text().lower() == 'activate':
                 widget.clicked.emit()
+        self.killAllButton.setEnabled(True)
+        self.sender().setEnabled(False)
 
     def kill_all(self):
         for i in range(self.layout.count()):
@@ -89,3 +92,12 @@ class DashboardWindow(QMainWindow):
             
         for handle in self.threads:
             self.threads[handle].kill()
+        
+        self.enableAllButton.setEnabled(True)
+        self.sender().setEnabled(False)
+
+    def _alignWidgets(self):
+        for i in range(self.layout.count()):
+            widget = self.layout.itemAt(i).widget()
+            if isinstance(widget, QLabel):
+                widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
