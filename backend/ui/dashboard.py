@@ -49,8 +49,8 @@ class DashboardWindow(QMainWindow):
         self.killAllButton = QPushButton('Disable All')
         self.killAllButton.clicked.connect(self.kill_all)
         
-        layout.addWidget(self.enableAllButton, layout.rowCount() -1, 3)
-        layout.addWidget(self.killAllButton, layout.rowCount() -1 , 4)
+        layout.addWidget(self.enableAllButton, 5, 3)
+        layout.addWidget(self.killAllButton, 5, 4)
 
         self.layout = layout
         self._alignWidgets()
