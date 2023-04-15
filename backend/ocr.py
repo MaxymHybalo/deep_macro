@@ -55,6 +55,10 @@ def get_char_name(img):
     print('Tesseract Charname extracted: ', text, len(text))
     return text
 
+def get_text(img, lang='rus'):
+    res = pytesseract.image_to_string(img, lang=lang)
+    res = ' '.join(res.split())
+    return res
 
 def _awaking_rect(points, i):
     sx, sy, dx, width, height = points

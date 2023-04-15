@@ -3,7 +3,8 @@ from driver import click, press
 from win32 import win32gui as w
 
 
-P1 = (690, 310 - 28)
+# P1 = (690, 310 - 28)
+P1 = (734, 265 - 28)
 P2 = (734, 245 - 28)
 PLAIN_PONT = (729, 247 - 28)
 
