@@ -61,13 +61,13 @@ def wind(*args):
     whandle = args[0]['handle']
 
     while working:
-        click(1180, 372 - 25, whandle)
+        click(1180, 473 - 25, whandle)
         # click(1250, 455 - 25, whandle)
 
         time.sleep(1)
         press(whandle, '1')
         time.sleep(24)
-        click(1250, 457 - 25, whandle)
+        click(1250, 473 - 25, whandle)
 
         time.sleep(1)
         press(whandle, '1')
@@ -77,15 +77,6 @@ def wind(*args):
 def check_numbers(handle, name):
     img = get_window_image(handle)
     detect(img, handle, name)
-    # x, y, w, h = NUMBERS_AREA
-    # if img is not None:
-    #     cv2.rectangle(img, (x, y), (x + w, y + h), (255,0,0), 2)
-    #     cv2.imwrite('logs/' + str(handle) + '.png', img)
-    # numbers = get_numbers_from_img(img, handle=handle)
-
-    # if numbers:
-    #     send(handle, numbers)
-
 
 def start(**kwargs):
     whandles = get_active_windows(CFG['whandle'])
