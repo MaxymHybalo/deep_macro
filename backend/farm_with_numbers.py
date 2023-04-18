@@ -46,6 +46,7 @@ def farming(*args):
         press(whandle, '2')
         check_numbers(whandle, char_name)
         slide(x, y, x + 90, y, whandle)
+        press(whandle, 'tab')
 
 def necro(*args):
     whandle = args[0]['handle']
