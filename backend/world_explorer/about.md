@@ -4,3 +4,9 @@
 4. generate instruction for navigation ?
 5. search stage boss and defeat
 6. methods to avoid obstruction
+
+#1
+
+1. Extrude pointer color 
+2. Try use invariant matching
+3. in case if its not work try to use features track algo
