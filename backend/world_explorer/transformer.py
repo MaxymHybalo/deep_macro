@@ -1,8 +1,11 @@
+import math
 import cv2
 import numpy as np
+
 from world_explorer.utils import frames
 from jobs.helpers.extruder import Extruder
 from world_explorer.invariant_template_matching import invariantMatchTemplate
+
 FILES_PATH = 'logs/world_explorer'
 OUT_PATH = 'logs/we_out'
 
@@ -16,7 +19,10 @@ WIDTH, HEIGHT = 1286, 797
 def find_features(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    corners = cv2.goodFeaturesToTrack(gray, 10, 0.9, 25)
+    corners = cv2.goodFeaturesToTrack(gray, 5, 0.6, 1)
+    if isinstance(corners, type(None)):
+        return img
+    
     corners = np.int0(corners)
 
     for i in corners:
@@ -49,16 +55,31 @@ def hide_panes(img):
     return img
 
 def find_pointer(img):
-    # e = Extruder(img)
+
     template = cv2.imread(CHAR_POINTER)
+
     roi = img[120 - 18 - 2:120 + 18 + 2, 129 - 15 - 2:129 + 15 + 2]
-    roi = find_features(roi)
-    cv2.imshow('Image', roi)
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # cv2.imshow('Image', img)
+    # cv2.waitKey(0)
+    
+    e = Extruder(img)
+    # cv2.cvtColor(np.uint8([[[84,237, 255]]]), cv2.COLOR_RGB2HSV) cvt pixel to hsv
+    lower = (0,140,0)
+    upper = (255,255,255)
+    hsvImg = e.filterByColor(roi, lower, upper)
+    gray = cv2.cvtColor(hsvImg, cv2.COLOR_RGB2GRAY)
+    _, threshold = cv2.threshold(gray, 49, 255, cv2.THRESH_BINARY)
+    fImg = cv2.bitwise_and(roi, roi, mask = threshold)
+    # features = find_features(fImg)
+    # roi = find_features(roi)
+    # hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    # cv2.imshow('Image', fImg)
     cv2.waitKey(0)
     
-    # res = invariantMatchTemplate(roi, template, 'TM_CCOEFF_NORMED', 0.4, 500, [0,360], 1, [100, 110], 10, True, True)
-    # print('res,', res)
-    return []
+    roi = fImg
+    res = invariantMatchTemplate(roi, template, 'TM_CCOEFF_NORMED', 0.4, 500, [0,360], 1, [100, 110], 10, True, True)
+    return res
 
 def search():
 
@@ -70,15 +91,21 @@ def search():
         # img = find_features(img)
         # img = segmantation(img)
         res = find_pointer(img)
+        # print(res)
         if len(res) > 0:
             res = res[0]
             _, angle, _ ,k = res
-            print(angle, k)
+            # print(angle, k)
             x, y = 129, 119
 
+            a = angle * math.pi / 180
+            x1 = int(x + 15 * math.cos(a))
+            y1 = int(y + 15 * math.sin(a))
             cv2.circle(img, (x,y) , 15, [0,0,255], 1)
-            cv2.imshow('Image', img)
-            cv2.waitKey(0)
+            cv2.line(img, (x,y), (x1, y1), [0, 255, 10], 1)
+            cv2.circle(img, (x1,y1), 3, [0, 255, 10], -1)
+        #     cv2.imshow('Image', img)
+        #     cv2.waitKey(0)
             
 
         # print(x, y, w, h)

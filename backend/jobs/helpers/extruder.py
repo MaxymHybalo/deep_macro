@@ -19,12 +19,10 @@ class Extruder:
     def filtredImgByColor(self, config):
         return self.filterByColor(self.image, config)
 
-    def filterByColor(self, image, colorSpace):
+    def filterByColor(self, image, lower, upper):
         # color space object with light and dark tupels
         # image as bgr color scheme
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        lower = tuple(colorSpace.light)
-        upper = tuple(colorSpace.dark)
         mask = cv2.inRange(hsv, lower, upper)
         filtered = cv2.bitwise_and(image, image, mask=mask)
         return filtered

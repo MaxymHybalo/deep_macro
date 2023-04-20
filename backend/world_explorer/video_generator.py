@@ -2,7 +2,7 @@ import os
 import cv2
 
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-fps = 25
+fps = 14
 width, height = 256, 255
 
 source_path = 'logs/we_out'

@@ -4,6 +4,7 @@
 4. generate instruction for navigation ?
 5. search stage boss and defeat
 6. methods to avoid obstruction
+    - test YOLO or smth like that
 
 #1
 
