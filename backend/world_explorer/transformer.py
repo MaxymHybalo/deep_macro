@@ -71,9 +71,8 @@ def hide_panes(img):
     cv2.rectangle(img, (0, 600 + offset), (WIDTH, HEIGHT), black, -1)
     return img
 
-def find_pointer(img, lower, upper, pointer):
+def find_pointer(img, lower, upper, pointer, withMatch=True):
 
-    template = cv2.imread(pointer)
     roi = img
     
     e = Extruder(img)
@@ -82,20 +81,26 @@ def find_pointer(img, lower, upper, pointer):
     gray = cv2.cvtColor(hsvImg, cv2.COLOR_RGB2GRAY)
     _, threshold = cv2.threshold(gray, 49, 255, cv2.THRESH_BINARY)
     fImg = cv2.bitwise_and(roi, roi, mask = threshold)
-    # print(cv2.cvtColor(np.uint8([[[209,211, 212]]]), cv2.COLOR_RGB2HSV))\
-
+    # print(cv2.cvtColor(np.uint8([[[209,211, 212]]]), cv2.COLOR_RGB2HSV))
+    
     roi = fImg
-
+    if withMatch is False:
+        return roi, threshold
+    
+    template = cv2.imread(pointer)
+    
     res = invariantMatchTemplate(roi, template, 'TM_CCOEFF_NORMED', 0.4, 500, [0,360], 1, [100, 110], 10, True, True)
     return res
 
 def correct_cam_pointer(img, threshold):
+
+    
     e_kernel = np.ones((2,2),np.uint8)
     d_kernel = np.ones((4,4),np.uint8)
 
     erosion = cv2.erode(threshold, e_kernel, iterations = 2)
     dilation = cv2.dilate(erosion, d_kernel, iterations = 1) 
-    
+
     return dilation
 
 
@@ -133,9 +138,22 @@ def search():
         res_chr = find_pointer(img[CP_Y1:CP_Y2, CP_X1:CP_X2], CP_LOWER, CP_UPPER, CHAR_POINTER)
         img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
 
-        # res_cam_th = find_pointer(img[CM_Y1:CM_Y2, CM_X1:CM_X2], CM_LOWER, CM_UPPER, CM_POINTER, corrector=correct_cam_pointer)
-        # contours, hierarchy = cv2.findContours(res_cam_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        # cv2.drawContours(img, contours, 0, (0,255,0), 3)
+        rc_roi, rc_th = find_pointer(img[CM_Y1:CM_Y2, CM_X1:CM_X2], CM_LOWER, CM_UPPER, CM_POINTER, withMatch=False)
+        # cv2.imshow('Image', rc_th)
+        # cv2.waitKey(0)
+        
+        rc_th = correct_cam_pointer(img, rc_th)
+
+        contours, hierarchy = cv2.findContours(rc_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # print(np.max(contours, axis=1))
+        for c in contours[0]:
+            # cv2.circle(img, c)
+            x, y = p = c[0]
+            cv2.circle(img, (x + 129, y + 120), 1, (255, 100, 0), 1)
+        # cv2.imshow('Image', img)
+        # cv2.waitKey(0)
+        
+        cv2.drawContours(img, contours, 0, (0,255,0), 3)
 
         # print(res_cam)
         # res = res_cam
