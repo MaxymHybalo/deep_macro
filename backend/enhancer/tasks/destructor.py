@@ -63,7 +63,7 @@ class Destructor(Operator):
             
             x, y = self._get_destruct_point()
             click(x,y, self.handle)
-            Wait(3).delay()
+            Wait(5).delay()
 
             # self.update_inventory()
         self.log.info('Destructor rest items {0}'.format(len(self.inventory.working_cells)))

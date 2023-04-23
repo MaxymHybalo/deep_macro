@@ -10,8 +10,25 @@ FILES_PATH = 'logs/world_explorer'
 OUT_PATH = 'logs/we_out'
 
 CHAR_POINTER = 'assets/char_pointer1.png'
+CM_POINTER = 'assets/cam_pointer.png'
+
+CP_X1 = 129 - 15 - 2
+CP_X2 = 129 + 15 + 2
+CP_Y1 = 120 - 18 - 2
+CP_Y2 = 120 + 18 + 2
+
+CM_X1 = 129 - 29 - 2
+CM_X2 = 129 + 29 + 2
+CM_Y1 = 120 - 29 - 2
+CM_Y2 = 120 + 29 + 2
+
+CP_LOWER = (0,140,0)
+CP_UPPER = (255,255,255)
+
+CM_LOWER = (0,0,100)
+CM_UPPER = (255,9,255)
+
 files_count = frames(FILES_PATH)
-print(files_count)
 
 black = (255, 255, 255)
 WIDTH, HEIGHT = 1286, 797
@@ -19,7 +36,7 @@ WIDTH, HEIGHT = 1286, 797
 def find_features(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    corners = cv2.goodFeaturesToTrack(gray, 5, 0.6, 1)
+    corners = cv2.goodFeaturesToTrack(gray, 3, 0.6, 10)
     if isinstance(corners, type(None)):
         return img
     
@@ -54,32 +71,55 @@ def hide_panes(img):
     cv2.rectangle(img, (0, 600 + offset), (WIDTH, HEIGHT), black, -1)
     return img
 
-def find_pointer(img):
+def find_pointer(img, lower, upper, pointer):
 
-    template = cv2.imread(CHAR_POINTER)
-
-    roi = img[120 - 18 - 2:120 + 18 + 2, 129 - 15 - 2:129 + 15 + 2]
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    # cv2.imshow('Image', img)
-    # cv2.waitKey(0)
+    template = cv2.imread(pointer)
+    roi = img
     
     e = Extruder(img)
     # cv2.cvtColor(np.uint8([[[84,237, 255]]]), cv2.COLOR_RGB2HSV) cvt pixel to hsv
-    lower = (0,140,0)
-    upper = (255,255,255)
     hsvImg = e.filterByColor(roi, lower, upper)
     gray = cv2.cvtColor(hsvImg, cv2.COLOR_RGB2GRAY)
     _, threshold = cv2.threshold(gray, 49, 255, cv2.THRESH_BINARY)
     fImg = cv2.bitwise_and(roi, roi, mask = threshold)
-    # features = find_features(fImg)
-    # roi = find_features(roi)
-    # hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-    # cv2.imshow('Image', fImg)
-    cv2.waitKey(0)
-    
+    # print(cv2.cvtColor(np.uint8([[[209,211, 212]]]), cv2.COLOR_RGB2HSV))\
+
     roi = fImg
+
     res = invariantMatchTemplate(roi, template, 'TM_CCOEFF_NORMED', 0.4, 500, [0,360], 1, [100, 110], 10, True, True)
     return res
+
+def correct_cam_pointer(img, threshold):
+    e_kernel = np.ones((2,2),np.uint8)
+    d_kernel = np.ones((4,4),np.uint8)
+
+    erosion = cv2.erode(threshold, e_kernel, iterations = 2)
+    dilation = cv2.dilate(erosion, d_kernel, iterations = 1) 
+    
+    return dilation
+
+
+def draw_direction_enities(img, resource, area, direction):
+    ''' area is tuple [point, color, radius]'''
+    '''direction is  a tuple [color, length]'''
+    if not len(resource):
+        return img
+        
+    res = resource[0]
+    _, angle, _ ,k = res
+    point, color, radius = area
+    x,y = point
+    d_color, length = direction
+
+    a = angle * math.pi / 180
+    x1 = int(x + length * math.cos(a))
+    y1 = int(y + length * math.sin(a))
+    cv2.circle(img, (x,y) , radius, color, 1)
+    cv2.line(img, (x,y), (x1, y1), d_color, 1)
+    cv2.circle(img, (x1, y1), 3, d_color, -1)
+    cv2.putText(img, '{} : {}'.format(str(angle), str(k)), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
+    return img
+
 
 def search():
 
@@ -90,24 +130,25 @@ def search():
         # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # img = find_features(img)
         # img = segmantation(img)
-        res = find_pointer(img)
-        # print(res)
-        if len(res) > 0:
-            res = res[0]
-            _, angle, _ ,k = res
-            # print(angle, k)
-            x, y = 129, 119
+        res_chr = find_pointer(img[CP_Y1:CP_Y2, CP_X1:CP_X2], CP_LOWER, CP_UPPER, CHAR_POINTER)
+        img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
 
-            a = angle * math.pi / 180
-            x1 = int(x + 15 * math.cos(a))
-            y1 = int(y + 15 * math.sin(a))
-            cv2.circle(img, (x,y) , 15, [0,0,255], 1)
-            cv2.line(img, (x,y), (x1, y1), [0, 255, 10], 1)
-            cv2.circle(img, (x1,y1), 3, [0, 255, 10], -1)
-        #     cv2.imshow('Image', img)
-        #     cv2.waitKey(0)
-            
+        # res_cam_th = find_pointer(img[CM_Y1:CM_Y2, CM_X1:CM_X2], CM_LOWER, CM_UPPER, CM_POINTER, corrector=correct_cam_pointer)
+        # contours, hierarchy = cv2.findContours(res_cam_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # cv2.drawContours(img, contours, 0, (0,255,0), 3)
 
+        # print(res_cam)
+        # res = res_cam
+
+        h, w, _ = img.shape
+
+        imgSpectre = np.zeros((h*2, w*2,3), np.uint8)
+        imgSpectre[0:h,0:w] = img
+        imgSpectre[0:h, w:w+w] = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        imgSpectre[h:h+h,0:w] = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
+
+        
         # print(x, y, w, h)
         # cv2.rectangle(img, (x,y), (x+w, y+h), [0,0,255], 1)
-        cv2.imwrite('{}/{}.png'.format(OUT_PATH, str(i)), img)
+        cv2.imwrite('{}/{}.png'.format(OUT_PATH, str(i)), imgSpectre)
