@@ -2,7 +2,7 @@ import math
 import cv2
 import numpy as np
 
-from world_explorer.utils import frames
+from world_explorer.utils import frames, calc_cm_angle
 from jobs.helpers.extruder import Extruder
 from world_explorer.invariant_template_matching import invariantMatchTemplate
 
@@ -17,10 +17,10 @@ CP_X2 = 129 + 15 + 2
 CP_Y1 = 120 - 18 - 2
 CP_Y2 = 120 + 18 + 2
 
-CM_X1 = 129 - 29 - 2
-CM_X2 = 129 + 29 + 2
-CM_Y1 = 120 - 29 - 2
-CM_Y2 = 120 + 29 + 2
+CM_X1 = 128 - 15 - 2
+CM_X2 = 128 + 15 + 2
+CM_Y1 = 128 - 15 - 2
+CM_Y2 = 128 + 15 + 2
 
 CP_LOWER = (0,140,0)
 CP_UPPER = (255,255,255)
@@ -145,15 +145,24 @@ def search():
         rc_th = correct_cam_pointer(img, rc_th)
 
         contours, hierarchy = cv2.findContours(rc_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # img = calc_cm_angle(img, contours[0])
         # print(np.max(contours, axis=1))
+        cnt = []
         for c in contours[0]:
             # cv2.circle(img, c)
             x, y = p = c[0]
-            cv2.circle(img, (x + 129, y + 120), 1, (255, 100, 0), 1)
+            # print('({}, {})'.format(str(x),str(y)))
+            # cv2.circle(img, (x + 129, y + 120), 1, (255, 100, 0), 1)
+            cnt.append((x,y))
+        
+        cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (0,0, 255), 2)
+
+        img = calc_cm_angle(img, cnt, absolute=(98, 89))
+
         # cv2.imshow('Image', img)
         # cv2.waitKey(0)
         
-        cv2.drawContours(img, contours, 0, (0,255,0), 3)
+        # cv2.drawContours(img, contours, 0, (0,255,0), 3)
 
         # print(res_cam)
         # res = res_cam
