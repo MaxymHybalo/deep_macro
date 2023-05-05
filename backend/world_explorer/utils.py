@@ -1091,7 +1091,7 @@ def calc_cm_angle(img, corners, absolute=(0,0)):
     _candidates = set()
     for i in candidates:
         for j in candidates:
-            # TODO try to find triangles square diffine etalon trigangle and draw it.
+            # TODO try to find triangles square define etalon trigangle and draw it.
             xi, yi = i
             xi, yi = ax + xi, yi + ay
             
