@@ -12,7 +12,7 @@ from ocr import get_numbers_from_img, get_char_name
 from utils.deep_utils import draw_grid, get_active_windows
 
 from enhancer.invetory_dispatcher import InventoryDispatcher
-from exam import detect
+from exam_v2 import detect
 
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'

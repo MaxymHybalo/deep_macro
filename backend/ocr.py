@@ -55,6 +55,10 @@ def get_char_name(img):
     print('Tesseract Charname extracted: ', text, len(text))
     return text
 
+
+def get_numbers(img):
+    return pytesseract.image_to_string(img, config='--oem 2 -c tessedit_char_whitelist=0123456789', lang='rus')
+
 def get_text(img, lang='rus'):
     res = pytesseract.image_to_string(img, lang=lang)
     res = ' '.join(res.split())
