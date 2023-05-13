@@ -29,7 +29,7 @@ CAPCHA_ROI = (482, 301, C_WIDTH, C_HEIGHT) # centralize captcha
 
 EXAM_HEIGHT = 28
 
-OPTIONS_START = (34, 34)
+OPTIONS_START = (36, 38)
 OPTION_SHAPE = (249, 28)
 
 img = cv2.imread(EXAMPLE)
@@ -52,32 +52,29 @@ def detect(img, handle, name):
     if isinstance(img, type(None)):
         print(img)
         return 
-    res, img = _find_exam_window(img)
-    # TODO validate res 
+    res, img = _find_exam_window(img, file=name)
     originImg = img
-    print('exam pointer', res)
+    # print('exam pointer', res)
+    if res is None:
+        return
 
-    
     img = _crop(img)
     if DEV_MODE:
         cv2.rectangle(originImg, (CAPCHA_ROI[0], CAPCHA_ROI[1]), (CAPCHA_ROI[0] + C_WIDTH, CAPCHA_ROI[1] + C_HEIGHT), [100, 0, 100], 1)
-    
-    
+
     exam_row = img[0:EXAM_HEIGHT, 0:C_WIDTH]
 
-    # cv2.imshow('Image', exam_row)
-    # cv2.waitKey(0)
-    
     text = get_text(exam_row)
-    print(text)
     if not len(text):
         _save(originImg, '{}_original'.format(name), handle)
         return
     value = re.findall('[0-9]+', text)
     value = value[0] if len(value) > 0 else None
-    print('value, text, ratio', value, text)
+    print('[value, text]', value, text)
 
     options = gen_options_matrix()
+    resulted = -1
+
     for i, o in enumerate(options):
         x, y = o
         w,h = OPTION_SHAPE
@@ -89,7 +86,6 @@ def detect(img, handle, name):
         ret, th1 = cv2.threshold(opt_img, 160, 255, cv2.THRESH_BINARY)
         # cv2.putText(opt_img, 'Мокд текст', (x, y+h), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 190, 200], 1)
         opt_value = get_numbers(th1)
-        resulted = False
         if not len(opt_value):
             scale_percent = 220 # percent of original size
             width = int(th1.shape[1] * scale_percent / 100)
@@ -105,114 +101,64 @@ def detect(img, handle, name):
             opt_value = get_numbers(th1)
             # cv2.imshow('Image', th1)
             # cv2.waitKey(0)
-            
-            
+
         opt_value= opt_value.strip()
-        print(opt_value)
+        # print(opt_value)
         if opt_value == value:
             if DEV_MODE:
                 cv2.circle(img, (x + int(w/2), y + int(h/2)), 3, COLOR_RESULT, 2)
-            # TODO click
-            resulted = True
-            print('finded', i)
-    if not resulted:
-        _save(img, name, handle)
+            resulted = i
+            print('[FINDED] ', i)
+
+    if resulted == -1:
         _save(originImg, '{}_original'.format(name), handle)
-    # if value and ratio > 0.7:
-    #     time.sleep(6 + randint(1, 4)) # add some correction
-    #     exam_roi, img = _find_exam_window(originImg)
-    #     ex, ey, ew, eh = exam_roi
-    #     originImg = img
-    #     if ex > 1:
-    #         dial_img, dial = get_dial(originImg)
-    #         originImg = dial_img
-    #         originImg = insert_exam(handle, value, dial, img=originImg)
+        return
 
+    ax, ay = options[resulted]
+    opt_w, opt_h = OPTION_SHAPE
+    print('CAPCHA_ROI[0:1]', CAPCHA_ROI[0:2])
+    ox, oy = CAPCHA_ROI[0:2]
+    ox, oy = ox + ax + int(opt_w / 2), oy + ay - 25 + int(opt_h / 2)
+    cv2.circle(originImg, (ox, oy), 3, COLOR_OPTION, -1)
+    _save(originImg, name, handle)
 
-    #         ok_x = 650 + randint(-20, 20)
-    #         ok_y = 445 - 25 + randint(-5, 5)
-    #         cv2.circle(originImg, (ok_x, ok_y), 2, (0, 200, 0), 1)
-    #         delay = 1 + 1 / randint(2, 5)
-    #         time.sleep(delay)
-    #         print('try to click ok', delay, ok_x, ok_y)
-    #         click(ok_x, ok_y, handle)
-    #         _save(originImg, name, handle)
+    time.sleep(2 + randint(1, 2))
+    click(ox, oy, handle)
+    time.sleep(0.5)
+    click(ox, oy, handle)
 
-    # cv2.imshow('Image', originImg)
-    # cv2.waitKey(0)
+    print('[CLICKED AT OPTION]', resulted)
 
-def insert_exam(handle, value, dial, img=None):
-    digits = [int(i) for i in str(value)]
-    print(digits)
+def _find_exam_window(img, file=''):
+    template = cv2.imread(DECLIHE_EXAM)
+    grayImage = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 
-    for d in digits:
-        x, y = dial[d]
-        px = x + 8 + randint(-5, 5)
-        py = y + 8 + randint(-5, 5)
-
-        cv2.circle(img, (px, py), 2, [10, 10, 234], 1)
-
-        delay = 1 / randint(1, 4) + 1 / randint(6, 20)
-        time.sleep(delay)
-        # print(delay)
-        click(px, py - 25, handle)
-    return img
-    # cv2.imshow('Image', img)
-    # cv2.waitKey(0)
-    
-def get_dial(img):
-    w, h = DIAL_ROI
-    x,y = DIAL_POINT
-    dial = []
-    dial_map = []
-    counter = 0
-    for row in range(4):
-        for col in range(3):
-            dy = row*16 + y + 3*row
-            dx = col*16 + x + 4*col
-            cv2.rectangle(img, (dx, dy), (dx+16, dy+16), (255, 0,244), 1)
-            if counter not in [9, 11]:
-                cv2.putText(img, str(counter), (dx + 3 + w + 10, dy + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 190, 200], 1)
-                dial.append((dx, dy))
-            counter = counter + 1
-
-    for i in DIAL_MAP:
-        dial_map.append(dial[i])
-
-    for i, p in enumerate(dial_map):
-        cv2.putText(img, str(i), (p[0] + 3 , p[1] + 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
-
-    return img, dial_map
-
-def _find_exam_window(img):
-    res = Extruder(img).match_by_template(cv2.imread(DECLIHE_EXAM))
-    x, y, w, h = res
-
+    res = cv2.matchTemplate(grayImage, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(res >= threshold)
+    loc = list(zip(*loc[::-1]))
+    if not len(loc):
+        return None, img
+    x, y = loc[0]
+    h, w = template.shape
+    # print('matchTemplate loc', loc, file)
     cv2.rectangle(img, (x,y), (x + w, y + h), (122, 0,244), 2)
-    # cv2.imshow('Image', img)
-    # cv2.waitKey(0)
-    return res, img
+
+    return (x, y, w, h), img
 
 def _save(img, name, handle):
     date = datetime.now().strftime('%H_%M_%S_%d_%m_%y')
-    print('try to save')
     try:
         os.mkdir('logs/{}'.format(name))
     except FileExistsError:
-        print('logs path created')
-    cv2.imwrite('logs/{}/{}_{}.png'.format(name, str(handle), date), img)
+        pass
+    cv2.imwrite('logs/examples_results/{}_{}.png'.format(name, str(handle), date), img)
 
-# from win10toast import ToastNotifier
+if __name__ == '__main__':    
+    RESOURCES = 'logs/captcha_examples'
+    files = os.listdir(RESOURCES)
 
-# toast = ToastNotifier()
-
-# toast.show_toast(
-#     "Notification",
-#     "Notification body",
-#     duration = 20,
-#     icon_path = "icon.ico",
-#     threaded = True,
-# )
-
-if __name__ == '__main__':
-    detect(img, 12421451, 'test1')
+    for f in files:
+        img = cv2.imread('{}/{}'.format(RESOURCES, f))
+        detect(img, 12421451, f)

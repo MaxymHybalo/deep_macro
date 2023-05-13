@@ -15,6 +15,7 @@ KEYS = {
     '7': 0x37,
     '8': 0x38,
     '9': 0x39,
+    'tab': 0x09
 }
 
 CHAT_FREE_X, CHAT_FREE_Y = (50, 650)
