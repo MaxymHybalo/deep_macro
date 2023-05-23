@@ -31,21 +31,28 @@ def get_window_coord(whandle):
 def farming(*args):
     whandle = args[0]['handle']
     char_name = args[0]['name']
+
     x, y = get_window_coord(whandle)
+
+    t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
+    t.start()
 
     while working:
         # time.sleep(1)
-        press(whandle, '1')
-        time.sleep(0.5)
-        press(whandle, '1')
-        time.sleep(0.5)
-        press(whandle, '1')
-        time.sleep(0.5)
-        press(whandle, '1')
-        time.sleep(0.5)
-        press(whandle, '2')
-        check_numbers(whandle, char_name)
-        slide(x, y, x + 90, y, whandle)
+        for i in range(2):
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '2')
+        # check_numbers(whandle, char_name)
+        slide(x, y, x + 150, y, whandle)
         press(whandle, 'tab')
         press(whandle, '3')
         time.sleep(0.5)
@@ -82,8 +89,11 @@ def wind(*args):
 
 
 def check_numbers(handle, name):
-    img = get_window_image(handle)
-    detect(img, handle, name)
+    while working:
+        img = get_window_image(handle)
+        detect(img, handle, name)
+        time.sleep(0.5)
+        # print('[EXAM TICK]')
 
 def start(**kwargs):
     whandles = get_active_windows(CFG['whandle'])

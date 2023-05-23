@@ -27,6 +27,7 @@ C_WIDTH = 318
 C_HEIGHT = 218
 CAPCHA_ROI = (482, 301, C_WIDTH, C_HEIGHT) # centralize captcha
 
+SEARCHING_AREA = (475, 265, C_WIDTH + 14, C_HEIGHT + 75)
 EXAM_HEIGHT = 28
 
 OPTIONS_START = (36, 38)
@@ -35,8 +36,10 @@ OPTION_SHAPE = (249, 28)
 img = cv2.imread(EXAMPLE)
 
 
-def _crop(img):
-    return img[CAPCHA_ROI[1]:CAPCHA_ROI[1] + CAPCHA_ROI[3], CAPCHA_ROI[0]:CAPCHA_ROI[0] + CAPCHA_ROI[2]]
+def _crop(img, roi=CAPCHA_ROI):
+    x,y,w,h = roi
+    # return img[CAPCHA_ROI[1]:CAPCHA_ROI[1] + CAPCHA_ROI[3], CAPCHA_ROI[0]:CAPCHA_ROI[0] + CAPCHA_ROI[2]]
+    return img[y:y+h, x:x+w]
 
 
 def gen_options_matrix():
@@ -51,14 +54,19 @@ def detect(img, handle, name):
     originImg = np.copy(img)
     if isinstance(img, type(None)):
         print(img)
-        return 
-    res, img = _find_exam_window(img, file=name)
+        return
+    
     originImg = img
+    res, img = _find_exam_window(_crop(img, roi=SEARCHING_AREA), file=name)
+    
     # print('exam pointer', res)
     if res is None:
         return
 
-    img = _crop(img)
+    img = _crop(originImg)
+    # cv2.imshow('Image', img)
+    # cv2.waitKey(0)
+    
     if DEV_MODE:
         cv2.rectangle(originImg, (CAPCHA_ROI[0], CAPCHA_ROI[1]), (CAPCHA_ROI[0] + C_WIDTH, CAPCHA_ROI[1] + C_HEIGHT), [100, 0, 100], 1)
 
@@ -153,12 +161,14 @@ def _save(img, name, handle):
         os.mkdir('logs/{}'.format(name))
     except FileExistsError:
         pass
-    cv2.imwrite('logs/examples_results/{}_{}.png'.format(name, str(handle), date), img)
+    cv2.imwrite('logs/{}/{}_{}.png'.format(name, str(handle), date), img)
 
-if __name__ == '__main__':    
-    RESOURCES = 'logs/captcha_examples'
-    files = os.listdir(RESOURCES)
+if __name__ == '__main__':
+    # RESOURCES = 'logs/captcha_examples'
+    # files = os.listdir(RESOURCES)
 
-    for f in files:
-        img = cv2.imread('{}/{}'.format(RESOURCES, f))
-        detect(img, 12421451, f)
+    # for f in files:
+        # img = cv2.imread('{}/{}'.format(RESOURCES, f))
+    img = cv2.imread(EXAMPLE)
+
+    detect(img, 12421451, 'test')
