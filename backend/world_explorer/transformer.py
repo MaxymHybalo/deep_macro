@@ -2,7 +2,7 @@ import math
 import cv2
 import numpy as np
 
-from world_explorer.utils import frames, calc_cm_angle
+from world_explorer.utils import frames, cm_triangle, angle_from_triangle
 from jobs.helpers.extruder import Extruder
 from world_explorer.invariant_template_matching import invariantMatchTemplate
 
@@ -129,6 +129,7 @@ def draw_direction_enities(img, resource, area, direction):
 def search():
 
     for i in range(files_count):
+        # i = 363
         img = '{}/{}.png'.format(FILES_PATH, str(i))
         img = cv2.imread(img)
         # img = hide_panes(img)
@@ -155,10 +156,10 @@ def search():
             # cv2.circle(img, (x + 129, y + 120), 1, (255, 100, 0), 1)
             cnt.append((x,y))
         
-        cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (0,0, 255), 2)
+        cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (120,100, 0), 1)
 
-        img = calc_cm_angle(img, cnt, absolute=(98, 89))
-
+        res, img = cm_triangle(img, cnt, absolute=(98, 89))
+        img = angle_from_triangle(res, img)
         # cv2.imshow('Image', img)
         # cv2.waitKey(0)
         

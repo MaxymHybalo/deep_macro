@@ -51,10 +51,8 @@ def farming(*args):
             press(whandle, '1')
             time.sleep(0.5)
             press(whandle, '2')
-        # check_numbers(whandle, char_name)
 
-        check_numbers(whandle, char_name)
-        slide(x, y, x + 90, y, whandle)
+        slide(x, y, x + 150, y, whandle)
         press(whandle, 'tab')
         press(whandle, '3')
         time.sleep(0.5)
