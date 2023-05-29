@@ -105,8 +105,8 @@ def correct_cam_pointer(img, threshold):
 
 
 def draw_direction_enities(img, resource, area, direction):
-    ''' area is tuple [point, color, radius]'''
-    '''direction is  a tuple [color, length]'''
+    ''' area is tuple [point, color, radius] '''
+    ''' direction is  a tuple [color, length] '''
     if not len(resource):
         return img
         
@@ -122,7 +122,7 @@ def draw_direction_enities(img, resource, area, direction):
     cv2.circle(img, (x,y) , radius, color, 1)
     cv2.line(img, (x,y), (x1, y1), d_color, 1)
     cv2.circle(img, (x1, y1), 3, d_color, -1)
-    cv2.putText(img, '{} : {}'.format(str(angle), str(k)), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
+    cv2.putText(img, '{} : {}'.format(str(round(angle, 2)), str(round(k,2))), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
     return img
 
 
@@ -136,18 +136,12 @@ def search():
         # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # img = find_features(img)
         # img = segmantation(img)
-        res_chr = find_pointer(img[CP_Y1:CP_Y2, CP_X1:CP_X2], CP_LOWER, CP_UPPER, CHAR_POINTER)
-        img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
 
         rc_roi, rc_th = find_pointer(img[CM_Y1:CM_Y2, CM_X1:CM_X2], CM_LOWER, CM_UPPER, CM_POINTER, withMatch=False)
-        # cv2.imshow('Image', rc_th)
-        # cv2.waitKey(0)
         
         rc_th = correct_cam_pointer(img, rc_th)
 
         contours, hierarchy = cv2.findContours(rc_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        # img = calc_cm_angle(img, contours[0])
-        # print(np.max(contours, axis=1))
         cnt = []
         for c in contours[0]:
             # cv2.circle(img, c)
@@ -159,14 +153,17 @@ def search():
         cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (120,100, 0), 1)
 
         res, img = cm_triangle(img, cnt, absolute=(98, 89))
-        img = angle_from_triangle(res, img)
-        # cv2.imshow('Image', img)
-        # cv2.waitKey(0)
-        
-        # cv2.drawContours(img, contours, 0, (0,255,0), 3)
+        angle, img = angle_from_triangle(res, img)
 
-        # print(res_cam)
-        # res = res_cam
+        a = angle * math.pi / 180
+        x, y = (129, 119)
+        x1 = int(x + 30 * math.cos(a))
+        y1 = int(y + 30 * math.sin(a))
+        cv2.line(img, (x, y), (x1, y1), (200, 100, 40), 2)
+        cv2.circle(img, (x1, y1), 3, (200, 100, 40), -1)
+
+        res_chr = find_pointer(img[CP_Y1:CP_Y2, CP_X1:CP_X2], CP_LOWER, CP_UPPER, CHAR_POINTER)
+        img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
 
         h, w, _ = img.shape
 

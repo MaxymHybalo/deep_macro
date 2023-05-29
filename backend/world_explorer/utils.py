@@ -118,7 +118,7 @@ def cm_triangle(img, corners, absolute=(0,0)):
     #     # print(j)
     #     cv2.circle(img, j, 1, (0, 255, 0), 1)
 
-    # cv2.circle(img, CENTRAL, 2, (0, 0, 255), 1)
+    # cv2.circle(img, CENTRAL, 2, (0, 0, 255), 1)  
     # cv2.rectangle(img, (0,0), (34, 34), (100, 255, 20), 1)
     # cv2.imshow('Image', img)
     # cv2.waitKey(0)
@@ -126,15 +126,33 @@ def cm_triangle(img, corners, absolute=(0,0)):
 def angle_from_triangle(data, img):
     import cv2
     if not len(data):
-        return img
+        return 0, img
     p1, p2, p, l = data
-    
+
     bisec = (int((p1[0] + p2[0]) / 2), int((p1[1] + p2[1]) / 2))
-    cosa, _ = calc_vect_angle(bisec, (C_VAL * 2, C_VAL))
-    angle = math.degrees(cosa)
-    print(angle)
+
+    bx, by = bisec
+    vb = bx - C_VAL, by - C_VAL
+    va = C_VAL * 2 - C_VAL, C_VAL - C_VAL
+
+    vbx, vby =  vb
+    vax, vay = va
+    ab = vax*vbx + vay*vby
+    ma = math.sqrt(vax**2 + vay**2)
+    mb = math.sqrt(vbx**2 + vby**2)
+    cosa = ab / (ma * mb)
+    # angle = math.degrees(cosa)
+    angle = math.acos(cosa) * 180 / math.pi
+    if by < C_VAL:
+        angle = 360 - angle
+
+    # print(ab, ma, mb, cosa, angle)
+
     cv2.line(img, CENTRAL, bisec, (10, 240, 150), 1)
-    return img
+    cv2.line(img, CENTRAL, (C_VAL * 2, C_VAL), (10, 290, 150), 1)
+
+    cv2.putText(img, str(round(angle, 2)), (0, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
+    return angle, img
 
 
 def frames(path):
