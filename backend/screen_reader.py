@@ -41,12 +41,12 @@ def get_window_image(hwnd):
         bmp.CreateCompatibleBitmap(srcdc, width, height)
         memdc.SelectObject(bmp)
         memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
+        memdc.SelectObject(bmp)
+        memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
     except Exception as e:
         print('error', width, height)
-        return
-        raise e
-    memdc.SelectObject(bmp)
-    memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
+        
+        return None
     signedInts = bmp.GetBitmapBits(True)
     # cv2 magic
     img = np.fromstring(signedInts, dtype='uint8')

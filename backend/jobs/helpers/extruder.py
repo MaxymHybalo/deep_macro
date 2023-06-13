@@ -12,6 +12,7 @@ class Extruder:
     def set_image(self, image):
         if not isinstance(image, np.ndarray):
             image = np.array(image)
+            print('[img]', image)
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         self.image = image
