@@ -60,6 +60,16 @@ def slide(x1, y1, x2, y2, whandle):
 
     w.PostMessage(whandle, con.WM_RBUTTONUP, 0, p2)
 
+def drag(x1, y1, x2, y2, whandle):
+    p1 = win32api.MAKELONG(x1, y1)
+    p2 = win32api.MAKELONG(x2, y2)
+    move(x1, y1, 0, whandle)
+    w.PostMessage(whandle, con.WM_LBUTTONDOWN, con.MK_LBUTTON, p1)
+    time.sleep(1)
+    move(x2, y2, con.MK_LBUTTON, whandle)
+
+    w.PostMessage(whandle, con.WM_LBUTTONUP, 0, p2)
+
 def send(whandle, message):
 
     import pyautogui as u
