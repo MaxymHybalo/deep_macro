@@ -14,6 +14,8 @@ from ocr import crop_roi
 # from utils.reporter import buildFileName, report, initialize
 
 ETHER_INPUT = 'assets/ether_input.png'
+ETHER_ROI_WIDTH = 135
+
 class Searcher(Operator):
     def __init__(self, config, inventory):
         super().__init__(config, inventory)
@@ -45,8 +47,23 @@ class Searcher(Operator):
 
             print(res)
             rx, ry, _, _ = res
-            img = crop_roi(img, (rx, ry + 18, 135, 52))
+            img = crop_roi(img, (rx, ry + 18, ETHER_ROI_WIDTH, 52))
             cv2.imwrite('logs/searching/{0}'.format(f'ring_{i}.png'), img)
 
             # click(x + 12,y - 25 + 5, self.handle)
+def capture(img):
+    firstEntry = crop_roi(img, (0,0, ETHER_ROI_WIDTH, 17))
+    secondEntry = crop_roi(img, (0,0, ETHER_ROI_WIDTH, 17*2))
+    thirdEntry = crop_roi(img, (0,0, ETHER_ROI_WIDTH, 17*3))
+    cv2.imshow('Image', firstEntry)
+    cv2.waitKey(0)
+    cv2.imshow('Image', secondEntry)
+    cv2.waitKey(0)
+    cv2.imshow('Image', thirdEntry)
+    cv2.waitKey(0)
+    
 
+if __name__ == '__main__':
+    for i in range(96):
+        img = cv2.imread(f'ring_{i}')
+        capture(img)
