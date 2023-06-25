@@ -39,22 +39,25 @@ def _find_stat_name(source):
             temp += chr
     return temp
 
-def compare(stat, value):
-    for ring in cfg['config']:
-        # print(ring)
-        for line in ring.items():
-            target, t_value = line
-            k = match_map[target]
-            ratio = levenshtein_ratio_and_distance(k, stat, ratio_calc=True)
+def compare(ring):
+    # print(ring)
+    for c in cfg['config']:
+        # print(c)
+        matches = 0
+        for i, line in enumerate(c.items()):
+            t_k, t_v = line
+            key = match_map[t_k]
+            present_key, present_value = ring[i]
+            ratio = levenshtein_ratio_and_distance(key, present_key, ratio_calc=True)
+            # print(i, line, present_key, present_value, ratio)
             if ratio > RATIO:
-                print(stat, k, t_value, value)
-                return 1 if value >= t_value else 0
-            # for k, v in match_map.items():
-            #     print(v, target)
-            #     ratio = levenshtein_ratio_and_distance( v, target, ratio_calc=True)
-            #     if ratio > RATIO:
-            #         print(stat, v, t_value)
-    return 0
+                if present_value >= t_v:
+                    matches = matches + 1
+        
+        if matches == 3:
+            print('Match: ', c, ring)
+            return True
+    return False
 
 def capture(img):
     firstEntry = crop_roi(img, (0,0, ETHER_ROI_WIDTH, 17))
@@ -63,9 +66,8 @@ def capture(img):
     field1 = pytesseract.image_to_string(firstEntry, lang="rus")
     field2 = pytesseract.image_to_string(secondEntry, lang="rus")
     field3 = pytesseract.image_to_string(thirdEntry, lang="rus")
-    # print(field1)
-    # print(field2)
-    # print(field3)
+    ring = []
+
     for i in [field1, field2, field3]:
         # print(i)
         if len(i) < 2:
@@ -78,15 +80,21 @@ def capture(img):
         value = ''.join(value)
         if value == '':
             value = 0
-            
-        # print(stat, value)
-        match = compare(stat, float(value))
-        print('match', match)
+
+        ring.append((stat, float(value)))
+        # print('match', match)
+    if len(ring) < 3:
+        return False
+    return compare(ring)
+    
 
 if __name__ == '__main__':
-    
-    for i in range(1):
-        i = 6
+    import time
+    s = time.time()
+    for i in range(96):
+        # i = 6
         img = cv2.imread(f'logs/searching/ring_{i}.png')
         capture(img)
-        print('__________________')
+        # print('__________________')
+
+    print(time.time() - s)
