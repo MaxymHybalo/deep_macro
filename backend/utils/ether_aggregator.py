@@ -1,16 +1,17 @@
+from datetime import datetime
 import cv2
 import pytesseract
-from ocr import crop_roi
+from ocr import crop_roi, get_text
 import re
 import config
 from utils.awaking_aggregator import levenshtein_ratio_and_distance
+from utils.reporter import report, initialize
 
 ETHER_ROI_WIDTH = 135
 CONFIG = 'configs/ring_config.yml'
-RATIO = 0.8
+RATIO = 0.7
 
 cfg = config.load_config(CONFIG)
-print(cfg)
 
 match_map = {
     'strength': 'сила',
@@ -28,8 +29,16 @@ match_map = {
     'cast': 'скор. заклинаний',
     'speed': 'скор. атаки',
     'pb': 'полный блок',
-    'rate': 'шанс крит удара'
+    'rate': 'шанс крит удара',
+    'deff': 'физ. защита'
 }
+
+normal_props = list(match_map.values())
+report_name = 'rings_reports.csv'
+
+def init_report():
+    print('init')
+    initialize('rings', report_name, props=normal_props)
 
 def _find_stat_name(source):
     temp = ''
@@ -53,13 +62,14 @@ def compare(ring):
             if ratio > RATIO:
                 if present_value >= t_v:
                     matches = matches + 1
-        
+
         if matches == 3:
-            print('Match: ', c, ring)
+            print('[Match]: ', c, ring)
             return True
     return False
 
 def capture(img):
+    logImg = img.copy()
     firstEntry = crop_roi(img, (0,0, ETHER_ROI_WIDTH, 17))
     secondEntry = crop_roi(img, (0, 17, ETHER_ROI_WIDTH, 17))
     thirdEntry = crop_roi(img, (0, 17*2, ETHER_ROI_WIDTH, 17))
@@ -80,13 +90,43 @@ def capture(img):
         value = ''.join(value)
         if value == '':
             value = 0
-
         ring.append((stat, float(value)))
         # print('match', match)
+    log_data(ring, logImg)
+
     if len(ring) < 3:
         return False
+    print('Ring, ', ring)
     return compare(ring)
+
+def is_back_caption(img):
+    img = crop_roi(img, (715, 235, 48, 20))
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, img = cv2.threshold(img, 130, 255, cv2.THRESH_BINARY)
+    # cv2.imshow('Image', img)
+    # cv2.waitKey(0)
     
+    text = get_text(img)
+    ratio = levenshtein_ratio_and_distance('Назад', text, ratio_calc=True)
+    return ratio > RATIO
+
+init_report()
+
+def log_data(ring, img):
+    time = datetime.now().strftime('%H_%M_%S_%d_%m_%y')
+    filename = f'ring_{time}'
+
+    
+    cv2.imwrite(f'logs/searching/{filename}.png', img)
+    l = []
+    for r in ring:
+        s, v = r
+        for m in match_map.values():
+            ratio = levenshtein_ratio_and_distance(s, m, ratio_calc=True)
+            if ratio > RATIO:
+                l.append([m, v])
+    report('rings', report_name, [l, filename], props=normal_props)
+
 
 if __name__ == '__main__':
     import time

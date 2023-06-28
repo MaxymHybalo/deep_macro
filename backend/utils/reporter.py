@@ -2,9 +2,21 @@ import csv
 from datetime import datetime
 
 from utils import awaking_aggregator
-def report(type, filename, data):
+
+def report(type, filename, data, props=[]):
     if type == 'awaking':
         reportAwake(filename, data)
+    if type == 'rings':
+        reportRings(filename, data, props=props)
+
+
+def reportRings(filename, data, props=[]):
+    with open(filename, mode='a', encoding='utf-8', newline='') as file:
+        writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        d, f = data
+        row = [*_build_awaking_props_row(d, props=props), f]
+        writer.writerow(row)
+
 
 def reportAwake(filename, data):
     # write
@@ -19,18 +31,21 @@ def reportAwake(filename, data):
         writer.writerow(row)
         print(row)
 
-def initialize(type, filename):
+def initialize(type, filename, props=awaking_aggregator.normal_props):
     with open(filename, mode='w', encoding='utf-8', newline='') as file:
         heading = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        heading.writerow(['#', *awaking_aggregator.normal_props, 'Done?','Value', 'Attempt status', 'Time'])
+        if type == 'rings':
+            heading.writerow([*props, 'File'])
+        else:
+            heading.writerow(['#', *props, 'Done?','Value', 'Attempt status', 'Time'])
 
 def buildFileName(name):
     date = datetime.now().strftime('%H_%M_%S_%d_%m_%y')
     return 'reports/{}_{}.csv'.format(name, date)
 
-def _build_awaking_props_row(data):
+def _build_awaking_props_row(data, props=awaking_aggregator.normal_props):
     row = []
-    for prop in awaking_aggregator.normal_props:
+    for prop in props:
         value = ''
         for r in data:
             if r[0] == prop:
