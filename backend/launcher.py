@@ -39,6 +39,12 @@ def _awake(*args):
     cfg = args[0]
     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
     return inventory.awake()
+
+def _ether(*args):
+    cfg = args[0]
+    inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+    return inventory.search()
+
 # def _steel(*args):
 #     cfg = args[0]
 #     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
@@ -53,7 +59,8 @@ operations = {
     'awake': _awake,
     'combine': _combinate,
     'plain': plain,
-    'wind': wind
+    'wind': wind,
+    'ether': _ether
 }
 
 def run(handle, char_name):
