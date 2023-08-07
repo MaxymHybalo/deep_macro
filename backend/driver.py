@@ -23,7 +23,9 @@ KEYS = {
     'f5': 0x74,
     'f6': 0x75,
     'f7': 0x76,
-    'f7': 0x77
+    'f7': 0x77,
+    'i': 0x49,
+    'l': 0x4c
 }
 
 CHAT_FREE_X, CHAT_FREE_Y = (50, 650)
@@ -59,6 +61,16 @@ def slide(x1, y1, x2, y2, whandle):
     move(x2, y2, con.MK_RBUTTON, whandle)
 
     w.PostMessage(whandle, con.WM_RBUTTONUP, 0, p2)
+
+def drag(x1, y1, x2, y2, whandle):
+    p1 = win32api.MAKELONG(x1, y1)
+    p2 = win32api.MAKELONG(x2, y2)
+    move(x1, y1, 0, whandle)
+    w.PostMessage(whandle, con.WM_LBUTTONDOWN, con.MK_LBUTTON, p1)
+    time.sleep(1)
+    move(x2, y2, con.MK_LBUTTON, whandle)
+
+    w.PostMessage(whandle, con.WM_LBUTTONUP, 0, p2)
 
 def send(whandle, message):
 

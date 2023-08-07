@@ -1,21 +1,21 @@
-farmers:
-  # - nvidia
-  - EGold
-  - Visual
-  # - Artifactory
-  # - Harmony
-  - Siinner
-  # - Luxuria
 roles:
   # === ENHANT ===
 
-  # Luxuria:
+  Superbia:
+    type: enchant
+    cube: ['1', '1']
+    cycles: '5'
+  # LuFarm:
   #   type: enchant
-  #   cube: ['1', '1']
+  #   cube: ['1', '10']
   #   cycles: '1'
-  # Invidia:
+  # SuFarm:
   #   type: enchant
-  #   cube: ['3', '1']
+  #   cube: ['1', '9']
+  #   cycles: '1'
+  # Solution:
+  #   type: enchant
+  #   cube: ['7', '7']
   #   cycles: '1'
   # Visual:
   #   type: enchant
@@ -31,11 +31,12 @@ roles:
   #   cycles: 10
 
   # === DESTOY === 
- 
-  # Invidia:
+
+  # Superbia:
   #   type: destroy
-  #   cube: ['1', '1']
+  #   cube:  ['3', '1']
   #   cycles: '1'
+  #   option: 'ca1s'
   # EGold:
   #   type: destroy
   #   cube: ['2', '1']
@@ -45,19 +46,19 @@ roles:
   #   cube: ['1', '1']
   #   cycles: '1'
 
-  # # === FARM === 
+  # === FARM === 
   # Luxuria:
   #   type: wind
-  # Artifactory:
-  #   type: necro
-  # Royalty:
-  #   type: necro
-  EGold:
+  Artifactory:
+    type: necro
+  Queue:
+    type: necro
+  Zeta:
     type: farm
-  Invidia:
+  Delta:
     type: farm
-  # Visual:
-  #   type: farm
+  Upsilon:
+    type: farm
   # Hooka:
   #   type: farm
   # EGold:
@@ -70,10 +71,8 @@ roles:
   #   cube: ['1', '11']
   #   cycles: '1'
 
-  Visual:
-    type: steel
-    cube: ['1', '1']
-    cycles: '1'
+  # Superbia:
+  #   type: taming
 
 #  === ETC ===
   # esMe:
@@ -86,9 +85,9 @@ roles:
 # === AWAKE ===
   # PurpleWave:
   #   type: awake
-  #   scroll: ['2', '8']
-  #   stone: ['1', '8']
-  #   item: ['3', '8'] # how to proceed few items?
+  #   scroll: ['2', '6']
+  #   stone: ['1', '6']
+  #   item: ['3', '6'] # how to proceed few items?
   #   state: 'configs/stats_set_1.yml'
 
   # PurpleWave:
@@ -96,19 +95,41 @@ roles:
 
   # esMe:
   #   type: plain
-  # Solution:
-  #   type: awake
-  #   scroll: ['2', '11']
-  #   stone: ['1', '11']
-  #   item: ['3', '11'] # how to proceed few items?
-  #   state: 'configs/stats_set_1.yml'
-
+  Lycoris:
+    type: awake
+    scroll: ['2', '11']
+    stone: ['1', '11']
+    item: ['3', '11'] # how to proceed few items?
+    state: 'configs/stats_set_1.yml'
+  # Superbia:
+  #   type: farm
+  SuFarm:
+    type: taming
+  # Superbia:
+  #   type: farm
+  LuFarm:
+    type: farm
   # Liye:
   #   type: cards
   # EGold:
   #   type: plain
-  PurpleWave:
-    type: destroy
-    option: cards
-    cube: ['1', '10']
-    cycles: '1'
+  # Royalty:
+  #   type: farm
+  # SuFarm:
+  #   type: steel
+  #   cube: ['1', '11']
+  #   cycles: '1'
+  #   option: '1'
+  # sliymMaunaKea:
+  #   type: destroy
+  #   cube: ['1', '1']
+  #   cycles: '1'
+  #   option: '1'
+  # MaunaLoa:
+  #   type: wind
+  # Liye:
+  #   type: cards
+
+  Invidia:
+    type: ether
+    cube: ['1', '1']

@@ -7,7 +7,6 @@ import config
 
 SUCCESS_RATE = 0.65
 
-
 normal_props = (
     'сила',
     'энергия',
