@@ -45,7 +45,7 @@ def farming(*args):
 
     while working:
         # time.sleep(1)
-        for i in range(2):
+        for i in range(1):
             press(whandle, '1')
             time.sleep(0.5)
             press(whandle, '1')
@@ -58,7 +58,7 @@ def farming(*args):
             time.sleep(0.5)
             press(whandle, '2')
 
-        slide(x, y, x + 150, y, whandle)
+        slide(x, y, x + 200, y, whandle)
         press(whandle, 'tab')
         press(whandle, '3')
         time.sleep(0.5)

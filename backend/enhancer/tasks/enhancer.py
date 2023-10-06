@@ -37,7 +37,8 @@ class Enhancer(Operator):
             # Click(x,y, 'double', handle).make_click()
             double(x,y, self.handle)
 
-            Wait(0.3).delay()
+            # Dust enchant
+            # Wait(0.3).delay()
             # x1, y1 = self.finder.point(self.inventory.working_cells[0].center())
             # y1 = y1 - 25
             # double(x1, y1, self.handle)
@@ -47,11 +48,13 @@ class Enhancer(Operator):
             if self.config['mode'] == 'binary':
                 second_item = self.inventory.working_cells[i+1]
                 x2, y2 = self.finder.point(second_item.center())
-                Click(x2,y2, 'double').make_click()
+                y2 = y2 - 25
+                double(x2, y2, self.handle)
             Wait(0.4).delay()
             self.click_at('make')
             Wait(self.delay).delay()
             self.click_at('main_slot', 'double')
+
 
     def setup(self, cycle):
         self.current_cycle = cycle

@@ -92,9 +92,9 @@ class Enhancer:
             make.make_click()
 
             
-        #     if i < size - 1:
-        #         item2 = Rect(slots[i+1]).click().make_click()
-        #         self.log.info('Item 1 {0}, item 2 {1}'.format(s, slots[i+1]))
+            if i < size - 1:
+                item2 = Rect(slots[i+1]).click().make_click()
+                self.log.info('Item 1 {0}, item 2 {1}'.format(s, slots[i+1]))
 
             # cube.make_click()
             # make.make_click()

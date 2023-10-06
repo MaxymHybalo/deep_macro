@@ -3,8 +3,8 @@ from driver import click, press, slide
 from main import get_active_windows, CFG
 
 CALL_TIMEOUT = 1
-TAMING = 4
-KILL = 2
+TAMING = 3
+KILL = 1
 
 # whandles = get_active_windows(CFG['whandle'])
 
