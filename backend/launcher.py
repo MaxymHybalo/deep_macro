@@ -45,6 +45,9 @@ def _ether(*args):
     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
     return inventory.search()
 
+def _farm(*args):
+    return farming(args[0])
+
 # def _steel(*args):
 #     cfg = args[0]
 #     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
@@ -52,7 +55,7 @@ def _ether(*args):
 operations = {
     'enchant': _enchant,
     'destroy': _destroy,
-    'farm': farming,
+    'farm': _farm,
     'necro': necro,
     'cards': open,
     'taming': taming,

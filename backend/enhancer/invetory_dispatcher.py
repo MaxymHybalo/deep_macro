@@ -6,6 +6,7 @@ from enhancer.tasks.destructor import Destructor
 from enhancer.tasks.awakening import Awakening
 from enhancer.tasks.combinator import Combinator
 from enhancer.tasks.searcher import Searcher
+from enhancer.tasks.keeper import Keeper
 
 class InventoryDispatcher:
 
@@ -23,6 +24,9 @@ class InventoryDispatcher:
             'mode': self.config['mode'],
             'config': cfg
         }
+
+    def refresh(self):
+        self.inventory = Inventory(self.config, cfg)
 
     def enhance(self):
         print('Window:')
@@ -42,3 +46,6 @@ class InventoryDispatcher:
 
     def search(self):
         Searcher(self.enhancers_setup, self.inventory).proceed()
+
+    def keeper(self):
+        Keeper(self.enhancers_setup, self.inventory).proceed()

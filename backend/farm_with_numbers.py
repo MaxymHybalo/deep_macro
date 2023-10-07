@@ -12,6 +12,8 @@ from ocr import get_numbers_from_img, get_char_name
 from utils.deep_utils import draw_grid, get_active_windows
 
 from jobs.helpers.extruder import Extruder
+from enhancer.invetory_dispatcher import InventoryDispatcher
+
 from exam_v2 import detect
 
 CONFIG_FILE = 'config.yml'
@@ -24,6 +26,7 @@ working = True
 LUNA = 'assets/luna_marker.png'
 SEARCH_TEMPLATE = 'assets/search.png'
 FEATHER_TEMPLATE = 'assets/feather.png'
+INVENTORY_CONFIG = 'enhancer.config.yml'
 OL_DELAY = 0.3
 LEADER_KEY = 'f2'
 
@@ -35,37 +38,43 @@ def get_window_coord(whandle):
     return x, y
 
 def farming(*args):
-    whandle = args[0]['handle']
-    char_name = args[0]['name']
+    print('[args]', args)
+    keeper(args[0])
+    # whandle = args[0]['handle']
+    # char_name = args[0]['name']
 
-    x, y = get_window_coord(whandle)
+    # x, y = get_window_coord(whandle)
 
-    t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
-    t.start()
+    # t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
+    # t.start()
 
-    while working:
-        # time.sleep(1)
-        for i in range(1):
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '2')
+    # while working:
+    #     # time.sleep(1)
+    #     for i in range(1):
+    #         press(whandle, '1')
+    #         time.sleep(0.5)
+    #         press(whandle, '1')
+    #         time.sleep(0.5)
+    #         press(whandle, '1')
+    #         time.sleep(0.5)
+    #         press(whandle, '1')
+    #         time.sleep(0.5)
+    #         press(whandle, '1')
+    #         time.sleep(0.5)
+    #         press(whandle, '2')
 
-        slide(x, y, x + 200, y, whandle)
-        press(whandle, 'tab')
-        press(whandle, '3')
-        time.sleep(0.5)
-        press(whandle, '4')
-        time.sleep(0.5)
-        press(whandle, '5')
-        time.sleep(0.5)
+    #     slide(x, y, x + 200, y, whandle)
+    #     press(whandle, 'tab')
+    #     press(whandle, '3')
+    #     time.sleep(0.5)
+    #     press(whandle, '4')
+    #     time.sleep(0.5)
+    #     press(whandle, '5')
+    #     time.sleep(0.5)
+
+def keeper(cfg):
+    inventory = InventoryDispatcher(INVENTORY_CONFIG, cfg)
+    inventory.keeper()
 
 def necro(*args):
     handle = args[0]['handle']

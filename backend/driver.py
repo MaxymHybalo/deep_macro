@@ -25,7 +25,9 @@ KEYS = {
     'f7': 0x76,
     'f7': 0x77,
     'i': 0x49,
-    'l': 0x4c
+    'l': 0x4c,
+    'alt': 0xA5,
+    'enter': 0x0D
 }
 
 CHAT_FREE_X, CHAT_FREE_Y = (50, 650)
@@ -33,11 +35,22 @@ CHAT_FREE_X, CHAT_FREE_Y = (50, 650)
 def press(whandle, key):
     w.PostMessage(whandle, con.WM_KEYDOWN, KEYS[key])
     w.PostMessage(whandle, con.WM_KEYUP, KEYS[key])
+
+def alt(whandle, x, y):
+    time.sleep(0.1)
+
+    w.PostMessage(whandle, con.WM_KEYDOWN, KEYS['alt'])
+    time.sleep(0.1)
+    click(x,y, whandle)
+    time.sleep(0.1)
+    w.PostMessage(whandle, con.WM_KEYUP, KEYS['alt'])
+    time.sleep(0.1)
+
 # WM_LBUTTONDOWN
 
 def click(x, y, whandle):
     point = win32api.MAKELONG(x, y)
-    
+
     w.PostMessage(whandle, con.WM_LBUTTONDOWN, con.MK_LBUTTON, point)
     w.PostMessage(whandle, con.WM_LBUTTONUP, None, point)
 
