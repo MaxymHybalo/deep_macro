@@ -28,7 +28,9 @@ CP_UPPER = (255,255,255)
 CM_LOWER = (0,0,100)
 CM_UPPER = (255,9,255)
 
-files_count = frames(FILES_PATH)
+# files_count = frames(FILES_PATH)
+files_count = 100
+
 
 black = (255, 255, 255)
 WIDTH, HEIGHT = 1286, 797
@@ -92,9 +94,35 @@ def find_pointer(img, lower, upper, pointer, withMatch=True):
     res = invariantMatchTemplate(roi, template, 'TM_CCOEFF_NORMED', 0.4, 500, [0,360], 1, [100, 110], 10, True, True)
     return res
 
-def correct_cam_pointer(img, threshold):
+def pointer_angle(img):
+    rc_roi, rc_th = find_pointer(img[CM_Y1:CM_Y2, CM_X1:CM_X2], CM_LOWER, CM_UPPER, CM_POINTER, withMatch=False)
+    rc_th = correct_cam_pointer(img, rc_th)
 
-    
+    contours, hierarchy = cv2.findContours(rc_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cnt = []
+    for c in contours[0]:
+        # cv2.circle(img, c)
+        x, y = p = c[0]
+        # print('({}, {})'.format(str(x),str(y)))
+        # cv2.circle(img, (x + 129, y + 120), 1, (255, 100, 0), 1)
+        cnt.append((x,y))
+
+    res, img = cm_triangle(img, cnt, absolute=(98, 89))
+    angle, img = angle_from_triangle(res, img)
+
+    a = angle * math.pi / 180
+    return a, img
+
+def camera_angle(img):
+    r = find_pointer(img[CP_Y1:CP_Y2, CP_X1:CP_X2], CP_LOWER, CP_UPPER, CHAR_POINTER)
+    if not len(r):
+        return 0, img
+
+    r = r[0]
+    _, angle, _ ,k = r
+    return angle, img
+
+def correct_cam_pointer(img, threshold):
     e_kernel = np.ones((2,2),np.uint8)
     d_kernel = np.ones((4,4),np.uint8)
 
@@ -103,28 +131,10 @@ def correct_cam_pointer(img, threshold):
 
     return dilation
 
-
-def draw_direction_enities(img, resource, area, direction):
-    ''' area is tuple [point, color, radius] '''
-    ''' direction is  a tuple [color, length] '''
-    if not len(resource):
-        return img
-        
-    res = resource[0]
-    _, angle, _ ,k = res
-    point, color, radius = area
-    x,y = point
-    d_color, length = direction
-
-    a = angle * math.pi / 180
-    x1 = int(x + length * math.cos(a))
-    y1 = int(y + length * math.sin(a))
-    cv2.circle(img, (x,y) , radius, color, 1)
-    cv2.line(img, (x,y), (x1, y1), d_color, 1)
-    cv2.circle(img, (x1, y1), 3, d_color, -1)
-    cv2.putText(img, '{} : {}'.format(str(round(angle, 2)), str(round(k,2))), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
-    return img
-
+def adjustImage(img):
+    alpha = 2
+    beta = 15
+    return cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
 
 def search():
 
@@ -132,38 +142,29 @@ def search():
         # i = 363
         img = '{}/{}.png'.format(FILES_PATH, str(i))
         img = cv2.imread(img)
-        # img = hide_panes(img)
-        # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # img = find_features(img)
-        # img = segmantation(img)
-
-        rc_roi, rc_th = find_pointer(img[CM_Y1:CM_Y2, CM_X1:CM_X2], CM_LOWER, CM_UPPER, CM_POINTER, withMatch=False)
-        
-        rc_th = correct_cam_pointer(img, rc_th)
-
-        contours, hierarchy = cv2.findContours(rc_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        cnt = []
-        for c in contours[0]:
-            # cv2.circle(img, c)
-            x, y = p = c[0]
-            # print('({}, {})'.format(str(x),str(y)))
-            # cv2.circle(img, (x + 129, y + 120), 1, (255, 100, 0), 1)
-            cnt.append((x,y))
-        
-        cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (120,100, 0), 1)
-
-        res, img = cm_triangle(img, cnt, absolute=(98, 89))
-        angle, img = angle_from_triangle(res, img)
-
-        a = angle * math.pi / 180
+        originalImg = np.copy(img)
+        a, _ = pointer_angle(img)
+        # draw pointer assets
         x, y = (129, 119)
         x1 = int(x + 30 * math.cos(a))
         y1 = int(y + 30 * math.sin(a))
+
         cv2.line(img, (x, y), (x1, y1), (200, 100, 40), 2)
         cv2.circle(img, (x1, y1), 3, (200, 100, 40), -1)
+        cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (120,100, 0), 1)
 
-        res_chr = find_pointer(img[CP_Y1:CP_Y2, CP_X1:CP_X2], CP_LOWER, CP_UPPER, CHAR_POINTER)
-        img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
+        angle, _ = camera_angle(img)
+        # draw camera angle
+        a = angle * math.pi / 180
+
+        length = 20
+        x1 = int(x + length * math.cos(a))
+        y1 = int(y + length * math.sin(a))
+        cv2.circle(img, (x,y) , 20, (0, 0, 255), 1)
+        cv2.line(img, (x,y), (x1, y1), (0, 255, 0), 1)
+        cv2.circle(img, (x1, y1), 3, (0, 255, 0), -1)
+        cv2.putText(img, '{}'.format(str(angle)), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
+        # img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
 
         h, w, _ = img.shape
 
@@ -173,7 +174,4 @@ def search():
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         imgSpectre[h:h+h,0:w] = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
 
-        
-        # print(x, y, w, h)
-        # cv2.rectangle(img, (x,y), (x+w, y+h), [0,0,255], 1)
         cv2.imwrite('{}/{}.png'.format(OUT_PATH, str(i)), imgSpectre)
