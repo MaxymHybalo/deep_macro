@@ -39,38 +39,43 @@ def get_window_coord(whandle):
 
 def farming(*args):
     print('[args]', args)
-    keeper(args[0])
-    # whandle = args[0]['handle']
-    # char_name = args[0]['name']
+    whandle = args[0]['handle']
+    char_name = args[0]['name']
+    t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
+    t.start()
+    while True:
+        fight(whandle)
+        time.sleep(1)
+        keeper(args[0])
 
-    # x, y = get_window_coord(whandle)
 
-    # t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
-    # t.start()
+def fight(whandle):
+    x, y = get_window_coord(whandle)
+    working = 0
+    while working < 200:
+        # time.sleep(1)
+        for i in range(1):
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '1')
+            time.sleep(0.5)
+            press(whandle, '2')
 
-    # while working:
-    #     # time.sleep(1)
-    #     for i in range(1):
-    #         press(whandle, '1')
-    #         time.sleep(0.5)
-    #         press(whandle, '1')
-    #         time.sleep(0.5)
-    #         press(whandle, '1')
-    #         time.sleep(0.5)
-    #         press(whandle, '1')
-    #         time.sleep(0.5)
-    #         press(whandle, '1')
-    #         time.sleep(0.5)
-    #         press(whandle, '2')
-
-    #     slide(x, y, x + 200, y, whandle)
-    #     press(whandle, 'tab')
-    #     press(whandle, '3')
-    #     time.sleep(0.5)
-    #     press(whandle, '4')
-    #     time.sleep(0.5)
-    #     press(whandle, '5')
-    #     time.sleep(0.5)
+        slide(x, y, x + 200, y, whandle)
+        press(whandle, 'tab')
+        press(whandle, '3')
+        time.sleep(0.5)
+        press(whandle, '4')
+        time.sleep(0.5)
+        press(whandle, '5')
+        time.sleep(0.5)
+        working = working + 1
 
 def keeper(cfg):
     inventory = InventoryDispatcher(INVENTORY_CONFIG, cfg)
@@ -155,20 +160,14 @@ def check_numbers(handle, name):
         time.sleep(0.5)
         # print('[EXAM TICK]')
 
-def start(**kwargs):
-    whandles = get_active_windows(CFG['whandle'])
-    print(state)
-    for hwnd in whandles:
-        t = None
-        if hwnd != 0:
-            char_name = get_char_name(get_window_image(hwnd))
-            print('PID, Char: ', str(hwnd), char_name)
-            if char_name in state['farmers']:
-                t = threading.Thread(target=farming, args=(hwnd,))
+# def start(**kwargs):
+#     whandles = get_active_windows(CFG['whandle'])
+#     print(state)
+#     char_name = get_char_name(get_window_image(hwnd))
+#     if hwnd != 0:
+#         for hwnd in whandles:
+#             t = None
+#             print('PID, Char: ', str(hwnd), char_name)
+#             if char_name in state['farmers']:
+#                 t = threading.Thread(target=farming, args=(hwnd,))
                 
-        if t:
-            time.sleep(2)
-            t.start()
-
-if __name__ == "__main__":
-    start()

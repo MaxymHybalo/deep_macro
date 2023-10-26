@@ -2,7 +2,6 @@ import threading
 import multiprocessing
 import config
 
-from farm_with_numbers import start
 from utils.deep_utils import get_active_windows
 from ocr import get_char_name
 from screen_reader import get_window_image

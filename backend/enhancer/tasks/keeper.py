@@ -40,6 +40,9 @@ class Keeper(Operator):
                 Wait(0.1).delay()
             self.refresh()
         press(self.handle, 'i')
+        Wait(0.4).delay()
+        press(self.handle, 'i')
+
 
     def refresh(self):
         self.inventory.open_source()
