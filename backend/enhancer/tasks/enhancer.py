@@ -43,7 +43,7 @@ class Enhancer(Operator):
             # y1 = y1 - 25
             # double(x1, y1, self.handle)
             # Wait(0.3).delay()
-
+            # End Dust enchant
             self.click_at('cube', 'double')
             if self.config['mode'] == 'binary':
                 second_item = self.inventory.working_cells[i+1]

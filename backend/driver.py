@@ -30,7 +30,7 @@ KEYS = {
     'enter': 0x0D
 }
 
-CHAT_FREE_X, CHAT_FREE_Y = (50, 650)
+CHAT_FREE_X, CHAT_FREE_Y = (214, 562)
 
 def press(whandle, key):
     w.PostMessage(whandle, con.WM_KEYDOWN, KEYS[key])
@@ -53,6 +53,10 @@ def click(x, y, whandle):
 
     w.PostMessage(whandle, con.WM_LBUTTONDOWN, con.MK_LBUTTON, point)
     w.PostMessage(whandle, con.WM_LBUTTONUP, None, point)
+
+def pclick(point, whandle):
+    x, y = point
+    click(x, y, whandle)
 
 
 def double(x,y, whandle):

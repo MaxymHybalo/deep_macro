@@ -29,49 +29,11 @@ CM_LOWER = (0,0,100)
 CM_UPPER = (255,9,255)
 
 # files_count = frames(FILES_PATH)
-files_count = 100
+files_count = 1
 
 
 black = (255, 255, 255)
 WIDTH, HEIGHT = 1286, 797
-
-def find_features(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    corners = cv2.goodFeaturesToTrack(gray, 3, 0.6, 10)
-    if isinstance(corners, type(None)):
-        return img
-    
-    corners = np.int0(corners)
-
-    for i in corners:
-        x,y = i.ravel()
-
-        cv2.circle(img, (x,y), 3, (255, 100, 20), -1)
-    return img
-
-def segmantation(img):
-    twoDimage = img.reshape((-1,3))
-    twoDimage = np.float32(twoDimage)
-
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-    K = 4
-    attempts = 5
-
-    ret,label,center=cv2.kmeans(twoDimage,K,None,criteria,attempts,cv2.KMEANS_PP_CENTERS)
-    center = np.uint8(center)
-    res = center[label.flatten()]
-    result_image = res.reshape((img.shape))
-    return result_image
-
-def hide_panes(img):
-    # offset = 27
-    offset = 0
-    cv2.rectangle(img, (0, offset), (240, 150 + offset), black, -1)
-    cv2.rectangle(img, (240, offset), (240 + 240, 70 + offset), black, -1)
-    cv2.rectangle(img, (0, 380 + offset), (440, 600 + offset), black, -1)
-    cv2.rectangle(img, (0, 600 + offset), (WIDTH, HEIGHT), black, -1)
-    return img
 
 def find_pointer(img, lower, upper, pointer, withMatch=True):
 
@@ -136,42 +98,52 @@ def adjustImage(img):
     beta = 15
     return cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
 
+def angle(img): # pass the mini cart image 
+        # pointer_a, _ = pointer_angle(img)
+        camera_a, _ = pointer_angle(img)
+        return camera_a * 180 / math.pi
+
 def search():
 
     for i in range(files_count):
         # i = 363
         img = '{}/{}.png'.format(FILES_PATH, str(i))
         img = cv2.imread(img)
-        originalImg = np.copy(img)
-        a, _ = pointer_angle(img)
-        # draw pointer assets
-        x, y = (129, 119)
-        x1 = int(x + 30 * math.cos(a))
-        y1 = int(y + 30 * math.sin(a))
+        res = draw_angle_features(img)
+        cv2.imwrite('{}/{}.png'.format(OUT_PATH, str(i)), res)
 
-        cv2.line(img, (x, y), (x1, y1), (200, 100, 40), 2)
-        cv2.circle(img, (x1, y1), 3, (200, 100, 40), -1)
-        cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (120,100, 0), 1)
+def draw_angle_features(img):
+    originalImg = np.copy(img)
+    a, _ = pointer_angle(img)
+    # draw pointer assets
+    x, y = (129, 119)
+    x1 = int(x + 30 * math.cos(a))
+    y1 = int(y + 30 * math.sin(a))
 
-        angle, _ = camera_angle(img)
-        # draw camera angle
-        a = angle * math.pi / 180
+    cv2.line(img, (x, y), (x1, y1), (200, 100, 40), 2)
+    cv2.circle(img, (x1, y1), 3, (200, 100, 40), -1)
+    cv2.rectangle(img, (CM_X1, CM_Y1), (CM_X2, CM_Y2), (120,100, 0), 1)
 
-        length = 20
-        x1 = int(x + length * math.cos(a))
-        y1 = int(y + length * math.sin(a))
-        cv2.circle(img, (x,y) , 20, (0, 0, 255), 1)
-        cv2.line(img, (x,y), (x1, y1), (0, 255, 0), 1)
-        cv2.circle(img, (x1, y1), 3, (0, 255, 0), -1)
-        cv2.putText(img, '{}'.format(str(angle)), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
-        # img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
+    angle, _ = camera_angle(img)
+    # draw camera angle
+    a = angle * math.pi / 180
 
-        h, w, _ = img.shape
+    length = 20
+    x1 = int(x + length * math.cos(a))
+    y1 = int(y + length * math.sin(a))
+    cv2.circle(img, (x,y) , 20, (0, 0, 255), 1)
+    cv2.line(img, (x,y), (x1, y1), (0, 255, 0), 1)
+    cv2.circle(img, (x1, y1), 3, (0, 255, 0), -1)
+    print(angle)
+    cv2.putText(img, '{}'.format(str(angle)), (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [250, 190, 200], 1)
+    # img = draw_direction_enities(img, res_chr, ((129, 119), (0, 0, 255), 20), ((0, 255, 0), 20))
 
-        imgSpectre = np.zeros((h*2, w*2,3), np.uint8)
-        imgSpectre[0:h,0:w] = img
-        imgSpectre[0:h, w:w+w] = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        imgSpectre[h:h+h,0:w] = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
+    h, w, _ = img.shape
 
-        cv2.imwrite('{}/{}.png'.format(OUT_PATH, str(i)), imgSpectre)
+    imgSpectre = np.zeros((h*2, w*2,3), np.uint8)
+    imgSpectre[0:h,0:w] = img
+    imgSpectre[0:h, w:w+w] = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    imgSpectre[h:h+h,0:w] = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
+
+    return imgSpectre

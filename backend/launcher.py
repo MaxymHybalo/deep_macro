@@ -47,9 +47,9 @@ def _ether(*args):
 def _farm(*args):
     return farming(args[0])
 
-# def _steel(*args):
-#     cfg = args[0]
-#     inventory = InventoryDispatcher('enhancer.config.yml', cfg)
+def _steel(*args):
+    cfg = args[0]
+    inventory = InventoryDispatcher('enhancer.config.yml', cfg)
 
 operations = {
     'enchant': _enchant,
@@ -62,7 +62,8 @@ operations = {
     'combine': _combinate,
     'plain': plain,
     'wind': wind,
-    'ether': _ether
+    'ether': _ether,
+    'steel': _steel
 }
 
 def run(handle, char_name):
@@ -91,6 +92,10 @@ def clients_state():
     for handle in handles:
         if handle == 0:
            continue
+        # import cv2
+        # cv2.imshow('Image', get_window_image(handle))
+        # cv2.waitKey(0)
+        
         char_name = get_char_name(get_window_image(handle))
         roles = CHAR_CFG['roles']
         if char_name not in roles:

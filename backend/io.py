@@ -1,6 +1,5 @@
-
-
 from launcher import threads, shutdown
+
 if __name__ == '__main__':
     out = threads()
 

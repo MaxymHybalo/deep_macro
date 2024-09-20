@@ -44,9 +44,10 @@ def get_window_image(hwnd):
         memdc.SelectObject(bmp)
         memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
     except Exception as e:
-        print('error', width, height)
-        
-        return None
+        print('error', e, width, height)
+        # print('get_window_image retry start')
+        # i = get_window_image(hwnd)
+        # print('get_window_image retry end')
     signedInts = bmp.GetBitmapBits(True)
     # cv2 magic
     img = np.fromstring(signedInts, dtype='uint8')

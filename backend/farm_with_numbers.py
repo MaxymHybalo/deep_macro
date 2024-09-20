@@ -6,7 +6,7 @@ from numpy import char
 from win32 import win32gui as w
 
 import config
-from driver import click, press, slide,send
+from driver import click, pclick, press, slide, send, double
 from screen_reader import get_window_image
 from ocr import get_numbers_from_img, get_char_name
 from utils.deep_utils import draw_grid, get_active_windows
@@ -46,7 +46,7 @@ def farming(*args):
     while True:
         fight(whandle)
         time.sleep(1)
-        keeper(args[0])
+        # keeper(args[0])
 
 
 def fight(whandle):
@@ -135,22 +135,54 @@ def necro(*args):
         if trigger_present(img, feather, (630, 0, 750, 0)):
             time.sleep(OL_DELAY)
             click(685, 450 - 25, handle)
-            
+
+def support(handle):
+    # send(handle, '1')
+    pclick((460, 330 - 25), handle)
+    time.sleep(0.5)
+
+    for i in range(5):
+        pclick((370, 610 - 25), handle)
+        time.sleep(0.4)
+    
+    pclick((540, 330 - 25), handle)
+    time.sleep(0.5)
+
+    pclick((597, 605 - 25), handle)
+    time.sleep(0.5)
+
+    for i in range(5):
+        pclick((370, 530 - 25), handle)
+        time.sleep(0.4)
+
+    double(30, 300 - 25, handle)
+    time.sleep(3)
+    
+    PET_POINT = (135, 130 - 25)
+    pclick(PET_POINT, handle)
+    time.sleep(0.5)
+
+    press(handle, '2')
+    time.sleep(0.5)
+
 def wind(*args):
     whandle = args[0]['handle']
 
     while working:
-        click(1180, 614 - 25, whandle)
+        click(1180, 291 - 25, whandle)
         # click(1250, 455 - 25, whandle)
 
         time.sleep(1)
         press(whandle, '1')
+        # support(whandle)
         time.sleep(24)
-        click(1250, 614 - 25, whandle)
+        click(1250, 291 - 25, whandle)
 
         time.sleep(1)
         press(whandle, '1')
+        # support(whandle)
         time.sleep(24)
+
 
 
 def check_numbers(handle, name):
