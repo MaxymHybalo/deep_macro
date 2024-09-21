@@ -86,7 +86,8 @@ def camera_angle(img):
 
     # print(sight_start, sight_end, sights)
     rad, angle = calc_angle([sight_start, sight_end], ANGLE_BASE_LINE)
-    print('Angle', rad, angle)
+    # print('Angle', rad, angle)
+    return rad, angle
     # cv2.imshow('Image', img)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()

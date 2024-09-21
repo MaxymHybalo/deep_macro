@@ -166,6 +166,13 @@ def frames(path):
             frames = f
     return frames
 
+def window_center(whandle):
+    from win32 import win32gui as w
+    rect = w.GetWindowRect(whandle)
+    l,t, r,b = rect
+    x = int((r-l)/2)
+    y = int((b-t)/2)
+    return x, y
 
 if __name__ == '__main__':
     # calc_cm_angle(None, corners)
