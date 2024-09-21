@@ -4,6 +4,7 @@ import numpy as np
 from world_explorer.utils import cm_triangle, angle_from_triangle
 from jobs.helpers.extruder import Extruder
 from world_explorer.invariant_template_matching import invariantMatchTemplate
+from sklearn.cluster import KMeans
 
 CM_POINTER = 'assets/cam_pointer.png'
 
@@ -61,14 +62,17 @@ def correct_sight(sights):
         return [CENTER, CENTER], end
     else:
         return [CENTER, CENTER], start
+def extrude_color(img, upper, lower):
+    hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    lower_blue = np.array(lower)   # Lower bound of blue in HSV
+    upper_blue = np.array(upper) # Upper bound of blue in HSV
+    mask = cv2.inRange(hsv_image, lower_blue, upper_blue)
+    extracted = cv2.bitwise_and(img, img, mask=mask)
+    return extracted
 
 def camera_angle(img):
     img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
-    hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    lower_blue = np.array([0, 120, 70])   # Lower bound of blue in HSV
-    upper_blue = np.array([10, 255, 255]) # Upper bound of blue in HSV
-    mask = cv2.inRange(hsv_image, lower_blue, upper_blue)
-    red_extracted = cv2.bitwise_and(img, img, mask=mask)
+    red_extracted = extrude_color(img, [10, 255, 255], [0, 120, 70])
     gray_image = cv2.cvtColor(red_extracted, cv2.COLOR_BGR2GRAY)
 
     # Parameters for Shi-Tomasi corner detection
@@ -88,7 +92,51 @@ def camera_angle(img):
     rad, angle = calc_angle([sight_start, sight_end], ANGLE_BASE_LINE)
     # print('Angle', rad, angle)
     return rad, angle
-    # cv2.imshow('Image', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+
+def idk(img):
+    img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
+    # get green
+    # get erode to points
+    # get corners
+    path_img = extrude_color(img, [80, 255, 255], [40, 40, 40])
+    gray = cv2.cvtColor(path_img, cv2.COLOR_BGR2GRAY)
+
+    # Threshold the image to get a binary image (optional)
+    _, binary_image = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+    # Define the erosion kernel (a 3x3 matrix of ones)
+    kernel = np.ones((3, 3), np.uint8)  # Adjust the kernel size for stronger/weaker erosion
+
+    # Apply the erosion operation
+    eroded_image = cv2.erode(binary_image, kernel, iterations=1)  # Change iterations for stronger erosion
+    points = cv2.findNonZero(binary_image)
+    points = points.reshape(points.shape[0], -1)
+
+    k = 2
+
+    # Apply KMeans clustering
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(points)
+
+    # Get the cluster centers and labels for each point
+    centers = kmeans.cluster_centers_
+    labels = kmeans.labels_
+    # print('sklearn', centers)
+    # Display the original and eroded images
+    # cv2.imshow('Original Image', binary_image)
+    # cv2.imshow('Eroded Image', eroded_image)
+    # Calculate the Euclidean distance between the given point and each point in the array
+    distances = np.linalg.norm(centers - np.array([42, 42]), axis=1)
+
+    # Find the index of the closest point
+    closest_point_index = np.argmin(distances)
+
+    # Get the closest point
+    closest_point = centers[closest_point_index]
+    print(closest_point, tuple(closest_point))
+    x,y = closest_point
+    cv2.circle(img, (int(x), int(y)), radius=4, color=(0, 0, 255), thickness=2)
+    cv2.imshow('image', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     

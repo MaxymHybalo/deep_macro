@@ -11,3 +11,7 @@
 1. Extrude pointer color 
 2. Try use invariant matching
 3. in case if its not work try to use features track algo
+
+
+WANTED
+CAM DISTANCE 800
