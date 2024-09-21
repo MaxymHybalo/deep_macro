@@ -1,16 +1,15 @@
-strength: 50
-vitality: 45
+strength: 60
+vitality: 60
 int: 70
 wisdom: 60
 c_rate: 14
-# m_res: 130
-m_res: 160
-m_speed: 17
-evasion: 80
+m_res: 120
+m_speed: 16
+evasion: 120
 dexterity: 70
-agility: 70
-acc: 90
+agility: 50
+acc: 100
 # m_acc: 60
 p_atk: 600
-# m_atk: 600
+m_atk: 500
 # look at 16_30_05_03_05_22

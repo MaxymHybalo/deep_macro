@@ -1,13 +1,19 @@
+# Resolution: 1280x768
 roles:
   # === ENHANT ===
 
-  Superbia:
-    type: enchant
-    cube: ['1', '1']
-    cycles: '5'
-  # LuFarm:
+  # Entropy:
   #   type: enchant
-  #   cube: ['1', '10']
+  #   cube: ['3', '2']
+  #   cycles: '1'
+  #   mode: binary
+  # Naydra.:
+  #   type: enchant
+  #   cube: ['1', '8']
+  #   cycles: '1'
+  # Zeta:
+  #   type: enchant
+  #   cube: ['1', '1']
   #   cycles: '1'
   # SuFarm:
   #   type: enchant
@@ -32,11 +38,11 @@ roles:
 
   # === DESTOY === 
 
-  # Superbia:
+  # Tailwind:
   #   type: destroy
   #   cube:  ['3', '1']
   #   cycles: '1'
-  #   option: 'ca1s'
+  #   option: 'cards'
   # EGold:
   #   type: destroy
   #   cube: ['2', '1']
@@ -49,14 +55,16 @@ roles:
   # === FARM === 
   # Luxuria:
   #   type: wind
-  Artifactory:
-    type: necro
-  Queue:
-    type: necro
+  # Artifactory:
+  #   type: necro
+  # Queue:
+  #   type: necro
   Zeta:
     type: farm
   Delta:
     type: farm
+  # Delta:
+  #   type: farm
   Upsilon:
     type: farm
   # Hooka:
@@ -83,32 +91,28 @@ roles:
   #   type: taming
 
 # === AWAKE ===
-  # PurpleWave:
-  #   type: awake
-  #   scroll: ['2', '6']
-  #   stone: ['1', '6']
-  #   item: ['3', '6'] # how to proceed few items?
-  #   state: 'configs/stats_set_1.yml'
+  Upsilon:
+    type: awake
+    scroll: ['2', '11']
+    stone: ['1', '11']
+    item: ['3', '11'] # how to proceed few items?
+    state: 'configs/stats_set_1.yml'
 
   # PurpleWave:
   #   type: taming
 
   # esMe:
   #   type: plain
-  Lycoris:
-    type: awake
-    scroll: ['2', '11']
-    stone: ['1', '11']
-    item: ['3', '11'] # how to proceed few items?
-    state: 'configs/stats_set_1.yml'
+  # Naydra.:
+  #   type: awake
+  #   scroll: ['2', '11']
+  #   stone: ['1', '11']
+  #   item: ['3', '11'] # how to proceed few items?
+  #   state: 'configs/stats_set_1.yml'
   # Superbia:
   #   type: farm
-  SuFarm:
-    type: taming
   # Superbia:
   #   type: farm
-  LuFarm:
-    type: farm
   # Liye:
   #   type: cards
   # EGold:
@@ -125,11 +129,45 @@ roles:
   #   cube: ['1', '1']
   #   cycles: '1'
   #   option: '1'
-  # MaunaLoa:
-  #   type: wind
+  MaunaLoa:
+    type: wind
   # Liye:
   #   type: cards
 
-  Invidia:
-    type: ether
-    cube: ['1', '1']
+  Brooklyn:
+    type: farm
+    cube: ['1', '11']
+    cycles: '3'
+    # option: 'keeper'
+  # Purah:
+  #   type: farm
+  #   cube: ['1', '10']
+  #   cycles: '3'
+  #   option: 'keeper'
+  # Hideo:
+  #   type: farm
+  #   cube: ['1', '9']
+  #   cycles: '3'
+  #   option: 'keeper'
+  WhiteNoble:
+    type: farm
+  Lingxuzi:
+    type: farm
+  Entropy:
+    # type: farm
+    # type: steel
+    # cube: ['1', '1']
+    # cycles: '1'
+    # option: '1'
+    # type: awake
+    # scroll: ['2', '11']
+    # stone: ['1', '11']
+    # item: ['3', '11'] # how to proceed few items?
+    # state: 'configs/stats_set_1.yml'
+    type: enchant
+    cube: ['1', '10']
+    cycles: '6'
+  Somewhat:
+    type: enchant
+    cube: ['2', '5']
+    cycles: '1'

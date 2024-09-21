@@ -8,7 +8,7 @@ sys.path.insert(0, os.getcwd())
 from screen_reader import get_window_image
 from driver import click, double
 from angle import camera_angle
-handle = 3344134
+handle = 1116198
 # Read image
 while True:
     img = get_window_image(handle)
@@ -22,4 +22,4 @@ while True:
     a = camera_angle(mini_map)
 
     # print('Angle', a)
-    time.sleep(0.2)
+    time.sleep(0.1)

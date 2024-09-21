@@ -12,7 +12,8 @@ CM_X1 = 128 - 40 - 2
 CM_X2 = 128 + 40 + 2
 CM_Y1 = 128 - 40 - 2
 CM_Y2 = 128 + 40 + 2
-ANGLE_BASE_LINE = [(128, 128), (128 + 40, 128)]
+CENTER = 42
+ANGLE_BASE_LINE = [(CENTER, CENTER), (CENTER + 20, CENTER)]
 
 def vector(a, b):
     ax, ay = a
@@ -41,12 +42,28 @@ def calc_angle(a, b):
     mag_b = magnitude(vec_b)
     rad = float(dotprod) / float(mag_a * mag_b)
     rad = math.acos(rad)
-    angle = math.degrees(rad)
+    _, a2y = a2
+    if a2y > CENTER:
+        angle = math.degrees(2 * math.pi - rad)
+    else:
+        angle = math.degrees(rad)
     return rad, angle
+
+def correct_sight(sights):
+    start, end = sights
+    sx, sy = start
+    ex, ey = end
+    delta = 13
+    dsx = sx - CENTER
+    dsy = sy - CENTER
+    
+    if abs(dsx) < delta and abs(dsy) < delta:
+        return [CENTER, CENTER], end
+    else:
+        return [CENTER, CENTER], start
 
 def camera_angle(img):
     img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
-
     hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     lower_blue = np.array([0, 120, 70])   # Lower bound of blue in HSV
     upper_blue = np.array([10, 255, 255]) # Upper bound of blue in HSV
@@ -65,8 +82,10 @@ def camera_angle(img):
         cv2.circle(img, (x, y), 5, (0, 255, 0), 1)
         sights.append((x, y))
     # Show the result
-    sight_start, sight_end = sights
-    rad, angle = calc_angle(sights, ANGLE_BASE_LINE)
+    sight_start, sight_end = correct_sight(sights)
+
+    # print(sight_start, sight_end, sights)
+    rad, angle = calc_angle([sight_start, sight_end], ANGLE_BASE_LINE)
     print('Angle', rad, angle)
     # cv2.imshow('Image', img)
     # cv2.waitKey(0)
