@@ -1,9 +1,6 @@
 import math
 import cv2
 import numpy as np
-from world_explorer.utils import cm_triangle, angle_from_triangle
-from jobs.helpers.extruder import Extruder
-from world_explorer.invariant_template_matching import invariantMatchTemplate
 from sklearn.cluster import KMeans
 
 CM_POINTER = 'assets/cam_pointer.png'
@@ -70,8 +67,7 @@ def extrude_color(img, upper, lower):
     extracted = cv2.bitwise_and(img, img, mask=mask)
     return extracted
 
-def camera_angle(img):
-    img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
+def sight_points(img):
     red_extracted = extrude_color(img, [10, 255, 255], [0, 120, 70])
     gray_image = cv2.cvtColor(red_extracted, cv2.COLOR_BGR2GRAY)
 
@@ -86,12 +82,16 @@ def camera_angle(img):
         cv2.circle(img, (x, y), 5, (0, 255, 0), 1)
         sights.append((x, y))
     # Show the result
-    sight_start, sight_end = correct_sight(sights)
 
-    # print(sight_start, sight_end, sights)
+    sight_start, sight_end = correct_sight(sights)
+    return sight_start, sight_end
+
+def camera_angle(img):
+    img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
+    sight_start, sight_end = sight_points(img)
     rad, angle = calc_angle([sight_start, sight_end], ANGLE_BASE_LINE)
     # print('Angle', rad, angle)
-    return rad, angle
+    return (rad, sight_end), angle
 
 def idk(img):
     img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
