@@ -47,18 +47,19 @@ def calc_angle(a, b):
         angle = math.degrees(rad)
     return rad, angle
 
-def correct_sight(sights):
+def correct_sight(sights, center=CENTER):
     start, end = sights
     sx, sy = start
     ex, ey = end
     delta = 13
-    dsx = sx - CENTER
-    dsy = sy - CENTER
+    dsx = sx - center
+    dsy = sy - center
     
     if abs(dsx) < delta and abs(dsy) < delta:
-        return [CENTER, CENTER], end
+        return [center, center], end
     else:
-        return [CENTER, CENTER], start
+        return [center, center], start
+    
 def extrude_color(img, upper, lower):
     hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     lower_blue = np.array(lower)   # Lower bound of blue in HSV
@@ -67,7 +68,7 @@ def extrude_color(img, upper, lower):
     extracted = cv2.bitwise_and(img, img, mask=mask)
     return extracted
 
-def sight_points(img):
+def sight_points(img, center=CENTER):
     red_extracted = extrude_color(img, [10, 255, 255], [0, 120, 70])
     gray_image = cv2.cvtColor(red_extracted, cv2.COLOR_BGR2GRAY)
 
@@ -79,11 +80,10 @@ def sight_points(img):
     sights = []
     for corner in corners:
         x, y = corner.ravel()
-        cv2.circle(img, (x, y), 5, (0, 255, 0), 1)
         sights.append((x, y))
     # Show the result
 
-    sight_start, sight_end = correct_sight(sights)
+    sight_start, sight_end = correct_sight(sights, center=center)
     return sight_start, sight_end
 
 def camera_angle(img):

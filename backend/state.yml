@@ -150,10 +150,10 @@ roles:
   #   cycles: '3'
   #   option: 'keeper'
   WhiteNoble:
-    type: farm
+    type: taming
   Lingxuzi:
     type: farm
-  Entropy:
+  # Entropy:
     # type: farm
     # type: steel
     # cube: ['1', '1']
@@ -164,9 +164,9 @@ roles:
     # stone: ['1', '11']
     # item: ['3', '11'] # how to proceed few items?
     # state: 'configs/stats_set_1.yml'
-    type: enchant
-    cube: ['1', '10']
-    cycles: '6'
+    # type: enchant
+    # cube: ['1', '10']
+    # cycles: '6'
   Somewhat:
     type: enchant
     cube: ['2', '5']

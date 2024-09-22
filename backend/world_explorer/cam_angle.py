@@ -9,23 +9,26 @@ sys.path.insert(0, os.getcwd())
 from screen_reader import get_window_image
 from driver import click, double, slide, press
 from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
-from world_explorer.utils import window_center, levenshtein_ratio_and_distance
+from world_explorer.utils import window_center, levenshtein_ratio_and_distance, find_npc, find_entry
 from ocr import get_text
 
-handle = 854782
+handle = 1247980
 x, y = window_center(handle)
 ACC = 2 # how accurate angle
 SLIDE_DELTA = 3
+RETURN_SCROLL = 'return_scroll.png'
 BOSSES = {
     'first': 'Хранитель врат',
     'second': 'Ужасный таркин'
 }
 BREAK_POINTS = {
-    'first': 'first_boss_breakpoint.png'
+    'first': 'first_boss_breakpoint.png',
+    'second': 'second_boss_correction_1.png'
 }
 
 CORRECTORS = {
-    'first': (133, 1)
+    'first': (133, 1),
+    'second': (133, 21)
 }
 
 HP_END = (649, 67)
@@ -53,7 +56,7 @@ def slide_at_line(sight_point):
     delta = 1
     img = get_image(handle)
     img = sight_roi(img)
-    sight_p = sight_points(img)
+    sight_p = sight_points(img, 128)
     cam = sight_p[1]
     line_diff, is_p_o_line = is_point_on_line(cam, sight_point)
     dx = delta if line_diff > 0 else -delta
@@ -61,10 +64,10 @@ def slide_at_line(sight_point):
         slide(x, y, x + dx, y, handle)
         img = get_image(handle)
         img = sight_roi(img)
-        sight_p = sight_points(img)
+        sight_p = sight_points(img, 128)
         cam = sight_p[1]
-        print('Slide to line tick')
-
+        print('Slide to line tick ', cam)
+    print('End slide at line', cam, sight_p)
 def move_forward():
     click(x, y - 100, handle)
     time.sleep(0.8)
@@ -124,12 +127,7 @@ def find_breakpoint(template):
     tmp = cv2.imread('./assets/world_explorer/' + template)
     img = get_image(handle)
     img = sight_roi(img)
-    template_height, template_width = tmp.shape[:2]
-    result = cv2.matchTemplate(img, tmp, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-    top_left = max_loc
-    bottom_right = (top_left[0] + template_width, top_left[1] + template_height)
-    return top_left
+    return find_entry(img, tmp)
 
 def sight_point(breakpoint, delta):
     x,y = breakpoint
@@ -141,9 +139,10 @@ def ray(direction, x):
     bx, by = [128, 128]
     m = (dy - by) / (dx - bx)
     b = by - m * bx
+    print('Ray', m, b)
     return m * x + b
 
-def is_point_on_line(cam_point, direction_point, tolerance=2):
+def is_point_on_line(cam_point, direction_point, tolerance=1):
     # Calculate y based on x0 using the line equation y = mx + b
     y_calculated = ray(direction_point, cam_point[0])
     # Check if the difference between y0 and the calculated y is within a small tolerance
@@ -153,31 +152,100 @@ def distance(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
- 
+
+def dungeon_exit():
+    tmp = cv2.imread('./assets/world_explorer/' + RETURN_SCROLL)
+    img = get_image(handle)
+    x,y = find_entry(img, tmp)
+    print('Exit', x,y)
+    w, h = (37, 20)
+    time.sleep(0.5)
+    click(int(x + w / 2), int(y -20 + h / 2), handle) # return scoll position
+    time.sleep(0.5)
+    click(int(x + w / 2), int(y -20 + h / 2), handle) # return scoll position
+
+    time.sleep(13)
+
+def proceed_npc():
+    img = get_image(handle)
+    x, y = find_npc(img)
+    click(x, y - 25, handle)
+    time.sleep(0.1)
+    click(x, y - 25, handle)
+    time.sleep(1.5)
+    tmp = cv2.imread('./assets/world_explorer/enter_dungeon.png')
+    x, y = find_entry(img, tmp)
+    if y > 200:
+        click(x, y - 12, handle)
+    else:
+        img = get_image(handle)
+        x, y = find_npc(img)
+        click(x, y - 25, handle)
+        time.sleep(0.1)
+        click(x, y - 25, handle)
+    time.sleep(0.3)
+    img = get_image(handle)
+    tmp1 = cv2.imread('./assets/world_explorer/enter_dungeon_1.png')
+    tmp = cv2.imread('./assets/world_explorer/enter_dungeon.png')
+
+    x, y = find_entry(img, tmp1)
+    if y > 200:
+        click(x, y - 12, handle)
+    else:
+        x, y = find_entry(img, tmp)
+        click(x, y - 12, handle)
+
+    print('tmp 1', x, y)
+    time.sleep(0.5)
+    click(685, 415, handle)
+
 # move to 1th boss
 def dungeon_loop():
     for i in range(18):
-        slide_at_angle(325.0)
+        slide_at_angle(320.0)
         move_forward()
     # find boss
     find_target(BOSSES['first'])
+    # First correction
     bp = find_breakpoint(BREAK_POINTS['first'])
+    print('Break Point', bp)
     sp = sight_point(bp, CORRECTORS['first'])
     slide_at_line(sp)
     dis = distance([128, 128], sp)
     for _ in range(int(dis / 10)):
         move_forward()
-    return
+    # End first correction
     # move to 2nd boss
-    for i in range(20):
-        slide_at_angle(315.0)
+    for i in range(15):
+        slide_at_angle(317.6)
         move_forward()
+    # # correct positon remove targets
+    bp = find_breakpoint(BREAK_POINTS['second'])
+    print('Break point, ', bp)
+    sp = sight_point(bp, CORRECTORS['second'])
+    print('Sight point', sp)
+    slide_at_line(sp)
+
+    # img = get_image(handle)
+    # img = sight_roi(img)
+    # cv2.line(img, [128, 128], sp, [1,100, 243], 1)
+    
+    # cv2.circle(img, sp, 3,(244,200,0), 1)
+    # cv2.circle(img, (136, 133), 4,(144,150,0), 2)
+    # cv2.circle(img, (152, 149), 3,(244,0,100), 1)
+
+    # cv2.rectangle(img, bp, [bp[0] + 15, bp[1] + 15], [0,215, 21], 1)
+    # cv2.imshow('Image', img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    
     for i in range(10):
-        slide_at_angle(321.3)
+        # slide_at_angle(321.3)
         move_forward()
     for i in range(4):
         slide_at_angle(347.6)
         move_forward()
+    print('START 10 steps')
     for i in range(10):
         slide_at_angle(323.8)
         move_forward()
@@ -186,9 +254,19 @@ def dungeon_loop():
         move_forward()
 
     find_target(BOSSES['second'])
-dungeon_loop()
-# img = get_image(handle)
-# img = sight_roi(img)
+
+    dungeon_exit()
+    slide_at_angle(293.5)
+    for i in range(7):
+        move_forward()
+    proceed_npc()
+    time.sleep(1.5)
+
+for i in range(3):
+    dungeon_loop()
+# proceed_npc()
+img = get_image(handle)
+print(current_angle(img))
 # sight_p = sight_points(img)
 # cam = sight_p[1]
 # print('cam', cam)

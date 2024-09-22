@@ -1,14 +1,38 @@
 import os
 import math
 import numpy as np
+import cv2
+
 C_VAL = 17
 CENTRAL = (C_VAL, C_VAL)
 kernel = 4
 direct_angle = 56
 precission = 2
 
-from timeit import default_timer as timer
+def find_entry(img, tmp):
+    template_height, template_width = tmp.shape[:2]
+    result = cv2.matchTemplate(img, tmp, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+    top_left = max_loc
+    return top_left
 
+def find_npc(img):
+    bgr_color = np.uint8([[[0, 132, 255]]])  # BGR for #FF8400
+    hsv_color = cv2.cvtColor(bgr_color, cv2.COLOR_BGR2HSV)
+
+    hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    hue = hsv_color[0][0][0]  # Extract hue from the color
+    lower_bound = np.array([hue - 10, 100, 100])  # Adjust the range for hue
+    upper_bound = np.array([hue + 10, 255, 255])
+    mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
+    filtered_image = cv2.bitwise_and(img, img, mask=mask)
+    tmp = cv2.imread('./assets/world_explorer/dungeon_npc.png')
+    
+    npc = find_entry(filtered_image, tmp)
+    x, y = npc
+    return x + 57, y + 31 # static npm model offset
+    
 def calc_vect_angle(p1, p2, center=CENTRAL):
     ax, ay = center
     xi, yi = p1
