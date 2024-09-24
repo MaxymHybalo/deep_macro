@@ -12,10 +12,10 @@ from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
 from world_explorer.utils import window_center, levenshtein_ratio_and_distance, find_npc, find_entry
 from ocr import get_text
 
-handle = 1247980
+handle = 789832
 x, y = window_center(handle)
 ACC = 2 # how accurate angle
-SLIDE_DELTA = 3
+SLIDE_DELTA = 4
 RETURN_SCROLL = 'return_scroll.png'
 BOSSES = {
     'first': 'Хранитель врат',
@@ -44,13 +44,20 @@ def slide_at_angle(angle):
     img = get_image(handle)
     _, curr_a = current_angle(img)
     print(in_bounds(curr_a, angle))
-    dx = SLIDE_DELTA if curr_a < angle else -SLIDE_DELTA
+
+    dx = -SLIDE_DELTA if 360 - curr_a + angle < curr_a + angle else SLIDE_DELTA
+    print('Direction,', 360 - curr_a + angle < curr_a + angle, dx)
     while in_bounds(curr_a, angle) == False:
         slide(x, y, x + dx, y, handle)
         img = get_image(handle)
         _, curr_a = current_angle(img)
         # time.sleep(0.001)
     print('Final Angle', curr_a)
+
+def cam_vertical_align(vangle=100):
+    slide(x, y, x, y + 600, handle)
+    time.sleep(0.1)
+    slide(x, y, x, y - vangle, handle)
 
 def slide_at_line(sight_point):
     delta = 1
@@ -68,8 +75,10 @@ def slide_at_line(sight_point):
         cam = sight_p[1]
         print('Slide to line tick ', cam)
     print('End slide at line', cam, sight_p)
-def move_forward():
-    click(x, y - 100, handle)
+
+def move_forward(backward=False):
+    dx = 100 if backward else -100
+    click(x, y + dx, handle)
     time.sleep(0.8)
 
 def sight_roi(img):
@@ -93,6 +102,10 @@ def killed():
 
 def fight():
     print('Start Fight')
+
+    press(handle, 'v')
+    time.sleep(0.2)
+
     while killed() == False:
         press(handle, '1')
         time.sleep(0.1)
@@ -104,6 +117,9 @@ def fight():
         time.sleep(0.1)
     press(handle, '4')
     print('End Fight')
+    press(handle, 'v')
+    time.sleep(0.2)
+
 
 def find_target(name):
     press(handle, 'tab')
@@ -201,12 +217,22 @@ def proceed_npc():
 
 # move to 1th boss
 def dungeon_loop():
-    for i in range(18):
+    cam_vertical_align()
+    time.sleep(0.1)
+
+    for i in range(3):
         slide_at_angle(320.0)
         move_forward()
-    # find boss
+    cam_vertical_align(150)
+    time.sleep(0.1)
+
+    click(x, 145, handle)
+    time.sleep(8)
+    cam_vertical_align()
+    move_forward(True)
+    # # find boss
     find_target(BOSSES['first'])
-    # First correction
+    # # First correction
     bp = find_breakpoint(BREAK_POINTS['first'])
     print('Break Point', bp)
     sp = sight_point(bp, CORRECTORS['first'])
@@ -215,43 +241,15 @@ def dungeon_loop():
     for _ in range(int(dis / 10)):
         move_forward()
     # End first correction
-    # move to 2nd boss
-    for i in range(15):
-        slide_at_angle(317.6)
-        move_forward()
-    # # correct positon remove targets
-    bp = find_breakpoint(BREAK_POINTS['second'])
-    print('Break point, ', bp)
-    sp = sight_point(bp, CORRECTORS['second'])
-    print('Sight point', sp)
-    slide_at_line(sp)
-
-    # img = get_image(handle)
-    # img = sight_roi(img)
-    # cv2.line(img, [128, 128], sp, [1,100, 243], 1)
-    
-    # cv2.circle(img, sp, 3,(244,200,0), 1)
-    # cv2.circle(img, (136, 133), 4,(144,150,0), 2)
-    # cv2.circle(img, (152, 149), 3,(244,0,100), 1)
-
-    # cv2.rectangle(img, bp, [bp[0] + 15, bp[1] + 15], [0,215, 21], 1)
-    # cv2.imshow('Image', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    
-    for i in range(10):
-        # slide_at_angle(321.3)
-        move_forward()
-    for i in range(4):
-        slide_at_angle(347.6)
-        move_forward()
-    print('START 10 steps')
-    for i in range(10):
-        slide_at_angle(323.8)
-        move_forward()
-    for i in range(3):
-        slide_at_angle(288.4)
-        move_forward()
+    cam_vertical_align()
+    time.sleep(0.1)
+    slide_at_angle(316)
+    cam_vertical_align(200)
+    time.sleep(0.2)
+    click(x, 220, handle)
+    time.sleep(20)
+    move_forward(True) # step back to load mobs
+    print(current_angle(get_image(handle)))
 
     find_target(BOSSES['second'])
 
@@ -262,11 +260,14 @@ def dungeon_loop():
     proceed_npc()
     time.sleep(1.5)
 
-for i in range(3):
-    dungeon_loop()
+# for i in range(3):
 # proceed_npc()
+dungeon_loop()
 img = get_image(handle)
 print(current_angle(img))
+# slide_at_angle(0)
+
+# cam_vertical_align(200)
 # sight_p = sight_points(img)
 # cam = sight_p[1]
 # print('cam', cam)

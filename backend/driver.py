@@ -28,7 +28,8 @@ KEYS = {
     'l': 0x4c,
     'alt': 0xA5,
     'enter': 0x0D,
-    'w': 0x87
+    'w': 0x87,
+    'v': 0x86,
 }
 
 CHAT_FREE_X, CHAT_FREE_Y = (214, 562)
