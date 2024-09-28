@@ -12,14 +12,15 @@ from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
 from world_explorer.utils import window_center, levenshtein_ratio_and_distance, find_npc, find_entry
 from ocr import get_text
 
-handle = 789832
+handle = 3934358
 x, y = window_center(handle)
 ACC = 2 # how accurate angle
 SLIDE_DELTA = 4
 RETURN_SCROLL = 'return_scroll.png'
 BOSSES = {
     'first': 'Хранитель врат',
-    'second': 'Ужасный таркин'
+    'second': 'Ужасный таркин',
+    'third': 'Дух дракона'
 }
 BREAK_POINTS = {
     'first': 'first_boss_breakpoint.png',
@@ -105,17 +106,19 @@ def fight():
 
     press(handle, 'v')
     time.sleep(0.2)
+    press(handle, '1')
+    time.sleep(0.2)
+    press(handle, '2')
 
     while killed() == False:
-        press(handle, '1')
-        time.sleep(0.1)
-        press(handle, '2')
-        time.sleep(0.1)
-        press(handle, '3')
-        time.sleep(0.1)
-        press(handle, '4')
-        time.sleep(0.1)
-    press(handle, '4')
+        time.sleep(1)
+        # press(handle, '2')
+        # time.sleep(0.1)
+        # press(handle, '3')
+        # time.sleep(0.1)
+        # press(handle, '4')
+        # time.sleep(0.1)
+    # press(handle, '4')
     print('End Fight')
     press(handle, 'v')
     time.sleep(0.2)
@@ -252,17 +255,63 @@ def dungeon_loop():
     print(current_angle(get_image(handle)))
 
     find_target(BOSSES['second'])
+    time.sleep(0.1)
+    cam_vertical_align(160)
+    time.sleep(0.1)
+    slide_at_angle(163.14) # turn camera to 3rd boss direction
+    time.sleep(0.1)
+    cam_vertical_align(160)
+    time.sleep(0.1)
+    click(474, 476, handle)
+    time.sleep(3)
+    for _ in range(4):
+        cam_vertical_align(160)
+        time.sleep(0.1)
+        click(x, 100, handle)
+        time.sleep(5)
+    # cam_vertical_align(160)
+    # time.sleep(0.1)
+    # click(x, 100, handle)
+    # time.sleep(5)
+    # cam_vertical_align(160)
+    # time.sleep(0.1)
+    # click(x, 100, handle)
+    # time.sleep(5)
+    # cam_vertical_align(160)
+    # time.sleep(0.1)
+    # click(x, 100, handle)
+    move_forward(True) # step back to load mobs
+    time.sleep(2)
+    # # Third boss
+    time.sleep(0.1)
+    cam_vertical_align(160)
+    time.sleep(0.1)
 
+    slide_at_angle(186)
+    for _ in range(8):
+        move_forward()
+    time.sleep(1)
+    move_forward(True)
+
+    find_target(BOSSES['third'])
+    # # Third boss end 
+
+    # return
     dungeon_exit()
+    time.sleep(1)
+
+    cam_vertical_align(0)
+    time.sleep(0.1)
+
     slide_at_angle(293.5)
     for i in range(7):
         move_forward()
     proceed_npc()
     time.sleep(1.5)
 
-# for i in range(3):
+for i in range(8):
+    dungeon_loop()
 # proceed_npc()
-dungeon_loop()
 img = get_image(handle)
 print(current_angle(img))
 # slide_at_angle(0)
