@@ -37,7 +37,7 @@ class Enhancer(Operator):
             # Click(x,y, 'double', handle).make_click()
             double(x,y, self.handle)
 
-            # Dust enchant
+            # Dust enchant TODO: move to feature
             # Wait(0.3).delay()
             # x1, y1 = self.finder.point(self.inventory.working_cells[0].center())
             # y1 = y1 - 25

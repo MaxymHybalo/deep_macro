@@ -12,7 +12,7 @@ from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
 from world_explorer.utils import window_center, levenshtein_ratio_and_distance, find_npc, find_entry
 from ocr import get_text
 
-handle = 3934358
+handle = 657844
 x, y = window_center(handle)
 ACC = 2 # how accurate angle
 SLIDE_DELTA = 4
@@ -288,6 +288,10 @@ def dungeon_loop():
     time.sleep(0.1)
 
     slide_at_angle(186)
+    for i in range(3):
+        press(handle, '1')
+    time.sleep(0.2)
+
     for _ in range(8):
         move_forward()
     time.sleep(1)

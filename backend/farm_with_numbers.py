@@ -45,7 +45,7 @@ def farming(*args):
     t.start()
     while True:
         fight(whandle)
-        time.sleep(1)
+        time.sleep(0.2)
         # keeper(args[0])
 
 
@@ -54,27 +54,27 @@ def fight(whandle):
     working = 0
     while working < 200:
         # time.sleep(1)
-        for i in range(1):
+        for i in range(15):
             press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '1')
-            time.sleep(0.5)
-            press(whandle, '2')
+            time.sleep(0.3)
+            # press(whandle, '1')
+            # time.sleep(0.3)
+            # press(whandle, '1')
+            # time.sleep(0.3)
+            # press(whandle, '1')
+            # time.sleep(0.3)
+            # press(whandle, '1')
+            # time.sleep(0.3)
+            # press(whandle, '2')
 
         slide(x, y, x + 200, y, whandle)
         press(whandle, 'tab')
         press(whandle, '3')
-        time.sleep(0.5)
+        time.sleep(0.3)
         press(whandle, '4')
-        time.sleep(0.5)
+        time.sleep(0.3)
         press(whandle, '5')
-        time.sleep(0.5)
+        time.sleep(0.3)
         working = working + 1
 
 def keeper(cfg):
