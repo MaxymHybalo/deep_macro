@@ -33,7 +33,7 @@ EXAM_HEIGHT = 28
 OPTIONS_START = (36, 38)
 OPTION_SHAPE = (249, 28)
 
-img = cv2.imread(EXAMPLE)
+img = None
 
 
 def _crop(img, roi=CAPCHA_ROI):

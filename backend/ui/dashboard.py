@@ -57,7 +57,6 @@ class DashboardWindow(QMainWindow):
         container = QWidget()
         container.setLayout(layout)
 
-        
         self.setCentralWidget(container)
 
     def activate(self, handle, char_name, deactivate):

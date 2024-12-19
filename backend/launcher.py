@@ -123,7 +123,7 @@ def threads():
             cfg = role
             cfg['handle'] = handle
             cfg['name'] = char_name
-            # print('start from ', operations[role['type']])
+
             if role['type'] == 'steel':
                 t1 = threading.Thread(target=operations['farm'], args=(cfg,))
                 t1.daemon = True

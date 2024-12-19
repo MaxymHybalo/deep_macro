@@ -1,6 +1,7 @@
 import time
 import threading
-
+# from logging_config import setup_logging
+import logging
 import cv2
 from numpy import char
 from win32 import win32gui as w
@@ -15,6 +16,8 @@ from jobs.helpers.extruder import Extruder
 from enhancer.invetory_dispatcher import InventoryDispatcher
 
 from exam_v2 import detect
+
+logger = logging.getLogger(__name__)
 
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
@@ -38,7 +41,7 @@ def get_window_coord(whandle):
     return x, y
 
 def farming(*args):
-    print('[args]', args)
+    logger.info('Farming started with: {0}'.format(args))
     whandle = args[0]['handle']
     char_name = args[0]['name']
     t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
