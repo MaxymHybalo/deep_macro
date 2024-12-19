@@ -105,6 +105,7 @@ def sell_action(cfg):
             press(handle, FEATHER_BACK_KEY)
             time.sleep(6)
             logger.debug('Returning to the farm')
+            sell(handle)
         else:
             logger.debug('Weight is less than {0} - not selling'.format(WEIGHT_TRESHOLD))
     # cv2.imshow('Image', img)
