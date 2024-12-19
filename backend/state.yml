@@ -138,6 +138,7 @@ roles:
     type: farm
     cube: ['1', '11']
     cycles: '3'
+    sell_timeout: 20
     # option: 'keeper'
   # Purah:
   #   type: farm

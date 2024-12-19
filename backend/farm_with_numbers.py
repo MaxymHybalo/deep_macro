@@ -9,8 +9,9 @@ from win32 import win32gui as w
 import config
 from driver import click, pclick, press, slide, send, double
 from screen_reader import get_window_image
-from ocr import get_numbers_from_img, get_char_name
+from ocr import get_numbers_from_img, get_char_name, get_numbers
 from utils.deep_utils import draw_grid, get_active_windows
+from world_explorer.utils import find_npc
 
 from jobs.helpers.extruder import Extruder
 from enhancer.invetory_dispatcher import InventoryDispatcher
@@ -18,6 +19,12 @@ from enhancer.invetory_dispatcher import InventoryDispatcher
 from exam_v2 import detect
 
 logger = logging.getLogger(__name__)
+
+WEIGHT_MARKER = 'assets/weight_marker.png'
+WEIGHT_TRESHOLD = 10# 74
+FEATHER_BACK_KEY = '9'
+FEATHER_RETURN_KEY = '0'
+HELPER_NPC = 'assets/helper_npc.png'
 
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
@@ -46,10 +53,11 @@ def farming(*args):
     char_name = args[0]['name']
     t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
     t.start()
-    while True:
-        fight(whandle)
-        time.sleep(0.2)
-        # keeper(args[0])
+    # while True:
+        # fight(whandle)
+        # time.sleep(0.2)
+    # sell_action(args[0])
+    sell(whandle)
 
 
 def fight(whandle):
@@ -80,9 +88,52 @@ def fight(whandle):
         time.sleep(0.3)
         working = working + 1
 
-def keeper(cfg):
-    inventory = InventoryDispatcher(INVENTORY_CONFIG, cfg)
-    inventory.keeper()
+def sell_action(cfg):
+    logger.info('Sell action started with: {0}'.format(cfg))
+    handle = cfg['handle']
+    img = get_window_image(handle)
+    marker = cv2.imread(WEIGHT_MARKER)
+    e = Extruder(img)
+    res = e.match_by_template(marker, method='threshold')
+    if res is not None:
+        logger.debug('Weight marker found: {0}'.format(res))
+        x, y, w, h = res
+        weight_roi = img[y:y+h, x+w:x+w+25]
+        weight = get_numbers(weight_roi)
+        if int(weight) > WEIGHT_TRESHOLD:
+            logger.debug('Weight is more than {0} - selling'.format(WEIGHT_TRESHOLD))
+            press(handle, FEATHER_BACK_KEY)
+            time.sleep(6)
+            logger.debug('Returning to the farm')
+        else:
+            logger.debug('Weight is less than {0} - not selling'.format(WEIGHT_TRESHOLD))
+    # cv2.imshow('Image', img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+def sell(handle):
+    _step_to_helper_npc(handle)
+
+def _step_to_helper_npc(handle):
+    img = get_window_image(handle)
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+    # Moving to npc
+    x, y = find_npc(img, npc=HELPER_NPC)
+    logger.info('NPC found at: {0}, {1}'.format(x, y))
+    click(x, y, handle)
+    time.sleep(0.1)
+    click(x, y, handle)
+    time.sleep(2)
+
+    img = get_window_image(handle)
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+    # Moving to npc
+    x, y = find_npc(img, npc=HELPER_NPC)
+    logger.info('NPC found at: {0}, {1}'.format(x, y))
+    click(x, y, handle)
+    time.sleep(0.1)
+    click(x, y, handle)
+    time.sleep(2)
 
 def necro(*args):
     handle = args[0]['handle']

@@ -16,7 +16,7 @@ def find_entry(img, tmp):
     top_left = max_loc
     return top_left
 
-def find_npc(img):
+def find_npc(img, npc='./assets/world_explorer/dungeon_npc.png'):
     bgr_color = np.uint8([[[0, 132, 255]]])  # BGR for #FF8400
     hsv_color = cv2.cvtColor(bgr_color, cv2.COLOR_BGR2HSV)
 
@@ -27,8 +27,10 @@ def find_npc(img):
     upper_bound = np.array([hue + 10, 255, 255])
     mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
     filtered_image = cv2.bitwise_and(img, img, mask=mask)
-    tmp = cv2.imread('./assets/world_explorer/dungeon_npc.png')
-    
+
+    tmp = cv2.imread(npc)
+    # tmp = cv2.cvtColor(tmp, cv2.COLOR_BGR2GRAY)
+
     npc = find_entry(filtered_image, tmp)
     x, y = npc
     return x + 57, y + 31 # static npm model offset
