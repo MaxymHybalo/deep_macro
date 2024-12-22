@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 import cv2
 from win32 import win32gui as api
@@ -22,11 +23,6 @@ def get_active_windows(handle):
 
 
 
-# hwnd = get_active_windows('Rappelz')[0]
-# # hwnd = api.GetDesktopWindow()
-
-# api.SetActiveWindow(hwnd)
-# api.SetForegroundWindow(hwnd)
 def get_window_image(hwnd):
     roi = get_window_coord(hwnd)
     width = roi[0] + roi[2]
@@ -42,28 +38,18 @@ def get_window_image(hwnd):
         memdc.SelectObject(bmp)
         memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
         memdc.SelectObject(bmp)
-        memdc.BitBlt((0, 0), (width, height), srcdc, (0,0), con.SRCCOPY)
+        signedInts = bmp.GetBitmapBits(True)
+        # cv2 magic
+        img = np.frombuffer(signedInts, dtype='uint8')
+        img.shape = (height, width, 4)
+        img = img[0:roi[3], 0:roi[2]]
+        cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
     except Exception as e:
-        print('error', e, width, height)
-        # print('get_window_image retry start')
-        # i = get_window_image(hwnd)
-        # print('get_window_image retry end')
-    signedInts = bmp.GetBitmapBits(True)
-    # cv2 magic
-    img = np.fromstring(signedInts, dtype='uint8')
-    img.shape = (height, width, 4)
-    srcdc.DeleteDC()
-    memdc.DeleteDC()
-    api.ReleaseDC(hwnd, wdc)
-    api.DeleteObject(bmp.GetHandle())
-
-    img = img[0:roi[3], 0:roi[2]]
-    cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
+        logging.error('get_window_image error: %s', e)
+        img = None
+    finally:
+        srcdc.DeleteDC()
+        memdc.DeleteDC()
+        api.ReleaseDC(hwnd, wdc)
+        api.DeleteObject(bmp.GetHandle())
     return img
-
-# start = time.time()
-# i = get_window_image(hwnd)
-# end = time.time() - start
-# print('time to end ', end)
-# print(i.shape)
-# cv2.imwrite('img2.png', i)
