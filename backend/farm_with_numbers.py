@@ -11,7 +11,8 @@ from driver import click, pclick, press, slide, send, double
 from screen_reader import get_window_image
 from ocr import get_numbers_from_img, get_char_name, get_numbers
 from utils.deep_utils import draw_grid, get_active_windows
-from world_explorer.utils import find_npc
+from world_explorer.cam_angle import current_angle, slide_at_angle, cam_vertical_align
+from world_explorer.utils import find_npc, window_center
 
 from jobs.helpers.extruder import Extruder
 from enhancer.invetory_dispatcher import InventoryDispatcher
@@ -21,11 +22,11 @@ from exam_v2 import detect
 logger = logging.getLogger(__name__)
 
 WEIGHT_MARKER = 'assets/weight_marker.png'
-WEIGHT_TRESHOLD = 10# 74
+WEIGHT_TRESHOLD = 70# 74
 FEATHER_BACK_KEY = '9'
 FEATHER_RETURN_KEY = '0'
 HELPER_NPC = 'assets/helper_npc.png'
-
+HELPER_NPC_DIRECTION_ANGLE = 115
 CONFIG_FILE = 'config.yml'
 STATE_FILE = 'state.yml'
 CFG = config.load_config(CONFIG_FILE)
@@ -53,21 +54,21 @@ def farming(*args):
     char_name = args[0]['name']
     t = threading.Thread(target=check_numbers, args=(whandle, char_name,))
     t.start()
-    # while True:
-        # fight(whandle)
-        # time.sleep(0.2)
-    # sell_action(args[0])
-    sell(whandle)
+    while True:
+        fight(whandle)
+        time.sleep(0.2)
+        sell_action(args[0])
+    # sell(whandle)
 
 
 def fight(whandle):
     x, y = get_window_coord(whandle)
     working = 0
-    while working < 200:
+    while working < 30:
         # time.sleep(1)
-        for i in range(15):
-            press(whandle, '1')
-            time.sleep(0.3)
+        # for i in range(15):
+        press(whandle, '1')
+        time.sleep(0.2)
             # press(whandle, '1')
             # time.sleep(0.3)
             # press(whandle, '1')
@@ -98,14 +99,24 @@ def sell_action(cfg):
     if res is not None:
         logger.debug('Weight marker found: {0}'.format(res))
         x, y, w, h = res
-        weight_roi = img[y:y+h, x+w:x+w+25]
+        weight_roi = img[y-2:y+h+2, x+w-7:x+w+25]
         weight = get_numbers(weight_roi)
+        logger.debug('Weight: {0}'.format(weight))
+        if len(weight) == 0:
+            logger.error('Weight is not detected')
+            # cv2.imshow('Image', weight_roi)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+            
+            return
         if int(weight) > WEIGHT_TRESHOLD:
             logger.debug('Weight is more than {0} - selling'.format(WEIGHT_TRESHOLD))
             press(handle, FEATHER_BACK_KEY)
-            time.sleep(6)
+            time.sleep(9)
             logger.debug('Returning to the farm')
             sell(handle)
+            press(handle, FEATHER_RETURN_KEY)
+            time.sleep(6)
         else:
             logger.debug('Weight is less than {0} - not selling'.format(WEIGHT_TRESHOLD))
     # cv2.imshow('Image', img)
@@ -116,25 +127,35 @@ def sell(handle):
     _step_to_helper_npc(handle)
 
 def _step_to_helper_npc(handle):
+    # Align camera move to npc
+    img = get_window_image(handle)
+    time.sleep(0.2)
+    cam_vertical_align(0, handle=handle)
+    time.sleep(0.2)
+    slide_at_angle(HELPER_NPC_DIRECTION_ANGLE, handle=handle)
+    cx, cy = window_center(handle)
+    click(cx, cy - 200, handle)
+    time.sleep(2)
+    # END: Align camera move to npc
+    # Interract with npc 
     img = get_window_image(handle)
     img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-    # Moving to npc
     x, y = find_npc(img, npc=HELPER_NPC)
+    x, y = x - 57, y - 31
+    x = x + 60
+    y = y + 15
     logger.info('NPC found at: {0}, {1}'.format(x, y))
     click(x, y, handle)
     time.sleep(0.1)
     click(x, y, handle)
-    time.sleep(2)
-
-    img = get_window_image(handle)
-    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-    # Moving to npc
-    x, y = find_npc(img, npc=HELPER_NPC)
-    logger.info('NPC found at: {0}, {1}'.format(x, y))
-    click(x, y, handle)
-    time.sleep(0.1)
-    click(x, y, handle)
-    time.sleep(2)
+    time.sleep(1)
+    click(740, 415 - 25, handle) # select menu 1
+    time.sleep(1)
+    click(740, 245 - 25, handle) # select menu 2
+    time.sleep(1)
+    click(685, 480 - 25, handle) # confirm
+    time.sleep(1)
+    # END: Interract with npc
 
 def necro(*args):
     handle = args[0]['handle']

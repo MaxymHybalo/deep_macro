@@ -5,17 +5,19 @@ import time
 import math
 
 sys.path.insert(0, os.getcwd())
-
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from screen_reader import get_window_image
 from driver import click, double, slide, press
-from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
+# from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
 from world_explorer.utils import window_center, levenshtein_ratio_and_distance, find_npc, find_entry
+from world_explorer.angle import camera_angle
 from ocr import get_text
 
 handle = 657844
-x, y = window_center(handle)
+# x, y = window_center(handle)
+x, y = 0, 0
 ACC = 2 # how accurate angle
-SLIDE_DELTA = 4
+SLIDE_DELTA = 2
 RETURN_SCROLL = 'return_scroll.png'
 BOSSES = {
     'first': 'Хранитель врат',
@@ -36,12 +38,13 @@ HP_END = (649, 67)
 HP_COLOR = [63, 5, 198]
 
 def in_bounds(value, bounding, delta=2): # is value in setted bounds with ACC delta
+    print('Value', value, bounding)
     if value <= bounding + delta and value >= bounding - delta:
         return True
     else:
         return False
 
-def slide_at_angle(angle):
+def slide_at_angle(angle, handle=handle, x=x, y=y):
     img = get_image(handle)
     _, curr_a = current_angle(img)
     print(in_bounds(curr_a, angle))
@@ -55,7 +58,7 @@ def slide_at_angle(angle):
         # time.sleep(0.001)
     print('Final Angle', curr_a)
 
-def cam_vertical_align(vangle=100):
+def cam_vertical_align(vangle=100, handle=handle):
     slide(x, y, x, y + 600, handle)
     time.sleep(0.1)
     slide(x, y, x, y - vangle, handle)
@@ -313,11 +316,11 @@ def dungeon_loop():
     proceed_npc()
     time.sleep(1.5)
 
-for i in range(8):
-    dungeon_loop()
+# for i in range(8):
+#     dungeon_loop()
 # proceed_npc()
-img = get_image(handle)
-print(current_angle(img))
+# img = get_image(handle)
+# print(current_angle(img))
 # slide_at_angle(0)
 
 # cam_vertical_align(200)

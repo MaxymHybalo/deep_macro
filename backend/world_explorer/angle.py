@@ -69,7 +69,7 @@ def extrude_color(img, upper, lower):
     return extracted
 
 def sight_points(img, center=CENTER):
-    red_extracted = extrude_color(img, [10, 255, 255], [0, 120, 70])
+    red_extracted = extrude_color(img, [154, 255, 255], [150, 200, 200])
     gray_image = cv2.cvtColor(red_extracted, cv2.COLOR_BGR2GRAY)
 
     # Parameters for Shi-Tomasi corner detection
@@ -89,8 +89,9 @@ def sight_points(img, center=CENTER):
 def camera_angle(img):
     img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
     sight_start, sight_end = sight_points(img)
+    print('Sight', sight_start, sight_end)
     rad, angle = calc_angle([sight_start, sight_end], ANGLE_BASE_LINE)
-    # print('Angle', rad, angle)
+    print('Angle', rad, angle)
     return (rad, sight_end), angle
 
 def idk(img):
