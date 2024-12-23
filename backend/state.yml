@@ -91,7 +91,7 @@ roles:
   #   type: taming
 
 # === AWAKE ===
-  Upsilon:
+  PurpleWave:
     type: awake
     scroll: ['2', '11']
     stone: ['1', '11']

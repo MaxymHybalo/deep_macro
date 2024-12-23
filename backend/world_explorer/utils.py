@@ -245,6 +245,16 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc = False):
         # This is the minimum number of edits needed to convert string a to string b
         return "The strings are {} edits away".format(distance[row][col])
     
+def rescale(img, scale=220):
+    scale_percent = scale # percent of original size
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    
+    # resize image
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    return resized
+    
 if __name__ == '__main__':
     # calc_cm_angle(None, corners)
     calc_vect_angle((17, 33), (33, 33))

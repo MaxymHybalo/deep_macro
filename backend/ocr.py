@@ -56,8 +56,8 @@ def get_char_name(img):
     return text
 
 
-def get_numbers(img):
-    return pytesseract.image_to_string(img, config='--oem 2 -c tessedit_char_whitelist=0123456789', lang='rus')
+def get_numbers(img, char_list='0123456789'):
+    return pytesseract.image_to_string(img, config='--oem 2 -c tessedit_char_whitelist={0}'.format(char_list), lang='rus')
 
 def get_text(img, lang='rus'):
     res = pytesseract.image_to_string(img, lang=lang)

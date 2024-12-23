@@ -12,7 +12,7 @@ from screen_reader import get_window_image
 from ocr import get_numbers_from_img, get_char_name, get_numbers
 from utils.deep_utils import draw_grid, get_active_windows
 from world_explorer.cam_angle import current_angle, slide_at_angle, cam_vertical_align
-from world_explorer.utils import find_npc, window_center
+from world_explorer.utils import find_npc, window_center, rescale
 
 from jobs.helpers.extruder import Extruder
 from enhancer.invetory_dispatcher import InventoryDispatcher
@@ -64,11 +64,14 @@ def farming(*args):
 def fight(whandle):
     x, y = get_window_coord(whandle)
     working = 0
-    while working < 30:
+    while working < 36:
         # time.sleep(1)
         # for i in range(15):
         press(whandle, '1')
         time.sleep(0.2)
+        press(whandle, '2')
+        time.sleep(0.2)
+
             # press(whandle, '1')
             # time.sleep(0.3)
             # press(whandle, '1')
@@ -101,21 +104,35 @@ def sell_action(cfg):
     if res is not None:
         logger.debug('Weight marker found: {0}'.format(res))
         x, y, w, h = res
-        weight_roi = img[y-2:y+h+2, x+w-7:x+w+17]
-        weight = get_numbers(weight_roi)
+        weight_roi = img[y-2:y+h+2, x+w-7:x+w+28]
+        weight_roi = cv2.cvtColor(weight_roi, cv2.COLOR_BGR2GRAY)
+
+        weight_roi = rescale(weight_roi, 150)
+        ret, th1 = cv2.threshold(weight_roi, 100, 255, cv2.THRESH_BINARY)
+        weight_roi = th1
+
+        weight = get_numbers(weight_roi, char_list='0123456789%')
+        weight = weight.strip()
+        weight.replace('%', '')
         logger.debug('Weight: {0}'.format(weight))
+        
         if len(weight) == 0:
             logger.error('Weight is not detected')
+            # cv2.imshow('Image', weight_roi)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+            
             return
-        logger.error('len(weight): {0}'.format(len(weight)))
         if len(weight) == 3:
             logger.error('Weight is more than 2 digits {0}'.format(weight))
             weight = weight[:-1]
+            logger.error('Weight after crop {0}'.format(weight))
             # cv2.imshow('Image', weight_roi)
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
         if int(weight) > WEIGHT_TRESHOLD:
             logger.debug('Weight is more than {0} - selling'.format(WEIGHT_TRESHOLD))
+            time.sleep(1)
             press(handle, FEATHER_BACK_KEY)
             time.sleep(9)
             logger.debug('Returning to the farm')

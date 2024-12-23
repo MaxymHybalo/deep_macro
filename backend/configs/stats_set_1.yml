@@ -1,15 +1,29 @@
+# strength: 60
+# vitality: 40
+# int: 70
+# wisdom: 60
+# c_rate: 14
+# m_res: 120
+# m_speed: 16
+# evasion: 120
+# dexterity: 70
+# agility: 50
+# acc: 100
+# # m_acc: 60
+# p_atk: 600
+# m_atk: 500
+# # look at 16_30_05_03_05_22
+
 strength: 60
-vitality: 40
+vitality: 45
 int: 70
 wisdom: 60
-c_rate: 14
-m_res: 120
-m_speed: 16
-evasion: 120
-dexterity: 70
-agility: 50
-acc: 100
-# m_acc: 60
+c_rate: 15 # крит
+m_res: 110 # маг резст 
+m_speed: 28 # бег
+evasion: 110 # уклон
+dexterity: 60
+agility: 60
+acc: 110 # точность
 p_atk: 600
 m_atk: 500
-# look at 16_30_05_03_05_22
