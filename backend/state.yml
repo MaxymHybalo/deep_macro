@@ -129,8 +129,8 @@ roles:
   #   cube: ['1', '1']
   #   cycles: '1'
   #   option: '1'
-  MaunaLoa:
-    type: wind
+  Sandie:
+    type: farm
   # Liye:
   #   type: cards
 

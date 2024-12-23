@@ -38,7 +38,6 @@ HP_END = (649, 67)
 HP_COLOR = [63, 5, 198]
 
 def in_bounds(value, bounding, delta=2): # is value in setted bounds with ACC delta
-    print('Value', value, bounding)
     if value <= bounding + delta and value >= bounding - delta:
         return True
     else:
@@ -50,13 +49,13 @@ def slide_at_angle(angle, handle=handle, x=x, y=y):
     print(in_bounds(curr_a, angle))
 
     dx = -SLIDE_DELTA if 360 - curr_a + angle < curr_a + angle else SLIDE_DELTA
-    print('Direction,', 360 - curr_a + angle < curr_a + angle, dx)
+    # print('Direction,', 360 - curr_a + angle < curr_a + angle, dx)
     while in_bounds(curr_a, angle) == False:
         slide(x, y, x + dx, y, handle)
         img = get_image(handle)
         _, curr_a = current_angle(img)
         # time.sleep(0.001)
-    print('Final Angle', curr_a)
+    # print('Final Angle', curr_a)
 
 def cam_vertical_align(vangle=100, handle=handle):
     slide(x, y, x, y + 600, handle)

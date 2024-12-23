@@ -78,16 +78,18 @@ def fight(whandle):
             # press(whandle, '1')
             # time.sleep(0.3)
             # press(whandle, '2')
-
-        slide(x, y, x + 200, y, whandle)
-        press(whandle, 'tab')
-        press(whandle, '3')
-        time.sleep(0.3)
-        press(whandle, '4')
-        time.sleep(0.3)
-        press(whandle, '5')
-        time.sleep(0.3)
+        # slide(x, y, x + 200, y, whandle)
         working = working + 1
+
+    press(whandle, 'tab')
+    press(whandle, '3')
+    time.sleep(0.3)
+    press(whandle, '4')
+    time.sleep(0.3)
+    press(whandle, '5')
+    time.sleep(0.3)
+    cam_vertical_align(0, handle=whandle)
+    slide(x, y, x + 200, y, whandle)
 
 def sell_action(cfg):
     logger.info('Sell action started with: {0}'.format(cfg))
@@ -99,16 +101,19 @@ def sell_action(cfg):
     if res is not None:
         logger.debug('Weight marker found: {0}'.format(res))
         x, y, w, h = res
-        weight_roi = img[y-2:y+h+2, x+w-7:x+w+25]
+        weight_roi = img[y-2:y+h+2, x+w-7:x+w+17]
         weight = get_numbers(weight_roi)
         logger.debug('Weight: {0}'.format(weight))
         if len(weight) == 0:
             logger.error('Weight is not detected')
+            return
+        logger.error('len(weight): {0}'.format(len(weight)))
+        if len(weight) == 3:
+            logger.error('Weight is more than 2 digits {0}'.format(weight))
+            weight = weight[:-1]
             # cv2.imshow('Image', weight_roi)
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
-            
-            return
         if int(weight) > WEIGHT_TRESHOLD:
             logger.debug('Weight is more than {0} - selling'.format(WEIGHT_TRESHOLD))
             press(handle, FEATHER_BACK_KEY)
@@ -119,6 +124,12 @@ def sell_action(cfg):
             time.sleep(6)
         else:
             logger.debug('Weight is less than {0} - not selling'.format(WEIGHT_TRESHOLD))
+        if int(weight) > 100:
+            logger.debug('Weight wrong')
+            cv2.imshow('Image', weight_roi)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            
     # cv2.imshow('Image', img)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()

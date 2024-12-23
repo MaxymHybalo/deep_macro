@@ -89,9 +89,7 @@ def sight_points(img, center=CENTER):
 def camera_angle(img):
     img = img[CM_Y1:CM_Y2, CM_X1:CM_X2]
     sight_start, sight_end = sight_points(img)
-    print('Sight', sight_start, sight_end)
     rad, angle = calc_angle([sight_start, sight_end], ANGLE_BASE_LINE)
-    print('Angle', rad, angle)
     return (rad, sight_end), angle
 
 def idk(img):
