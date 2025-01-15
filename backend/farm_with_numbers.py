@@ -113,7 +113,7 @@ def sell_action(cfg):
 
         weight = get_numbers(weight_roi, char_list='0123456789%')
         weight = weight.strip()
-        weight.replace('%', '')
+        weight = weight.replace('%', '')
         logger.debug('Weight: {0}'.format(weight))
         
         if len(weight) == 0:
@@ -130,7 +130,7 @@ def sell_action(cfg):
             # cv2.imshow('Image', weight_roi)
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
-        if int(weight) > WEIGHT_TRESHOLD:
+        if int(weight) > WEIGHT_TRESHOLD and int(weight) != 79:
             logger.debug('Weight is more than {0} - selling'.format(WEIGHT_TRESHOLD))
             time.sleep(1)
             press(handle, FEATHER_BACK_KEY)

@@ -8,14 +8,14 @@ sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from screen_reader import get_window_image
 from driver import click, double, slide, press
-# from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
+from angle import camera_angle, sight_points, calc_angle, ANGLE_BASE_LINE
 from world_explorer.utils import window_center, levenshtein_ratio_and_distance, find_npc, find_entry
 from world_explorer.angle import camera_angle
 from ocr import get_text
 
-handle = 657844
-# x, y = window_center(handle)
-x, y = 0, 0
+handle = 592274
+x, y = window_center(handle)
+# x, y = 0, 0
 ACC = 2 # how accurate angle
 SLIDE_DELTA = 2
 RETURN_SCROLL = 'return_scroll.png'
@@ -105,12 +105,15 @@ def killed():
 
 def fight():
     print('Start Fight')
-
     press(handle, 'v')
     time.sleep(0.2)
     press(handle, '1')
-    time.sleep(0.2)
+    time.sleep(2)
     press(handle, '2')
+    time.sleep(0.2)
+    press(handle, '3')
+    time.sleep(0.2)
+    press(handle, '4')
 
     while killed() == False:
         time.sleep(1)
@@ -220,23 +223,17 @@ def proceed_npc():
     time.sleep(0.5)
     click(685, 415, handle)
 
+def proceed_boss_1():
+    cam_vertical_align()
+    time.sleep(0.1)
+    slide_at_angle(54.0)
+    time.sleep(2)
+    click(1275, 525, handle)
+    time.sleep(8)
+    find_target(BOSSES['first'])
 # move to 1th boss
 def dungeon_loop():
-    cam_vertical_align()
-    time.sleep(0.1)
-
-    for i in range(3):
-        slide_at_angle(320.0)
-        move_forward()
-    cam_vertical_align(150)
-    time.sleep(0.1)
-
-    click(x, 145, handle)
-    time.sleep(8)
-    cam_vertical_align()
-    move_forward(True)
-    # # find boss
-    find_target(BOSSES['first'])
+    proceed_boss_1()
     # # First correction
     bp = find_breakpoint(BREAK_POINTS['first'])
     print('Break Point', bp)
@@ -315,12 +312,13 @@ def dungeon_loop():
     proceed_npc()
     time.sleep(1.5)
 
+dungeon_loop()
 # for i in range(8):
 #     dungeon_loop()
 # proceed_npc()
 # img = get_image(handle)
 # print(current_angle(img))
-# slide_at_angle(0)
+# proceed_boss_1()
 
 # cam_vertical_align(200)
 # sight_p = sight_points(img)
