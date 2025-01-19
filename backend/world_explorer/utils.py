@@ -13,8 +13,15 @@ def find_entry(img, tmp):
     template_height, template_width = tmp.shape[:2]
     result = cv2.matchTemplate(img, tmp, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-    top_left = max_loc
-    return top_left
+    # Threshold for a strict match
+    threshold = 0.85
+    if max_val >= threshold:
+        top_left = max_loc
+        bottom_right = (top_left[0] + tmp.shape[1], top_left[1] + tmp.shape[0])
+        return top_left
+    else:
+        print("No strict match found.")
+        return None
 
 def find_npc(img, npc='./assets/world_explorer/dungeon_npc.png'):
     bgr_color = np.uint8([[[0, 132, 255]]])  # BGR for #FF8400

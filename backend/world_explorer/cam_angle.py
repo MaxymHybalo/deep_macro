@@ -13,7 +13,7 @@ from world_explorer.utils import window_center, levenshtein_ratio_and_distance, 
 from world_explorer.angle import camera_angle
 from ocr import get_text
 
-handle = 592274
+handle = 461148
 x, y = window_center(handle)
 # x, y = 0, 0
 ACC = 2 # how accurate angle
@@ -68,6 +68,7 @@ def slide_at_line(sight_point):
     img = sight_roi(img)
     sight_p = sight_points(img, 128)
     cam = sight_p[1]
+    
     line_diff, is_p_o_line = is_point_on_line(cam, sight_point)
     dx = delta if line_diff > 0 else -delta
     while is_point_on_line(cam, sight_point)[1] == False:
@@ -76,11 +77,11 @@ def slide_at_line(sight_point):
         img = sight_roi(img)
         sight_p = sight_points(img, 128)
         cam = sight_p[1]
-        print('Slide to line tick ', cam)
-    print('End slide at line', cam, sight_p)
+        # print('Slide to line tick ', cam)
+    # print('End slide at line', cam, sight_p)
 
-def move_forward(backward=False):
-    dx = 100 if backward else -100
+def move_forward(backward=False, delta=100):
+    dx = delta if backward else -delta
     click(x, y + dx, handle)
     time.sleep(0.8)
 
@@ -163,7 +164,7 @@ def ray(direction, x):
     bx, by = [128, 128]
     m = (dy - by) / (dx - bx)
     b = by - m * bx
-    print('Ray', m, b)
+    # print('Ray', m, b)
     return m * x + b
 
 def is_point_on_line(cam_point, direction_point, tolerance=1):
@@ -230,19 +231,27 @@ def proceed_boss_1():
     time.sleep(2)
     click(1275, 525, handle)
     time.sleep(8)
+    click(int(1275 / 2 + 100), int(768 / 2), handle) # move forward to boss if spawned far
     find_target(BOSSES['first'])
-# move to 1th boss
-def dungeon_loop():
-    proceed_boss_1()
-    # # First correction
-    bp = find_breakpoint(BREAK_POINTS['first'])
-    print('Break Point', bp)
-    sp = sight_point(bp, CORRECTORS['first'])
-    slide_at_line(sp)
-    dis = distance([128, 128], sp)
-    for _ in range(int(dis / 10)):
-        move_forward()
-    # End first correction
+
+def align_after_boss_1():
+    dis = float('inf')
+    print('dis < 10.0', dis < 10.0)
+    while dis > 35.0:
+        cam_vertical_align(0)
+        bp = find_breakpoint(BREAK_POINTS['first'])
+        print('Break Point', bp)
+        if bp == None:
+            bp = (128, 128)
+        sp = sight_point(bp, CORRECTORS['first'])
+        slide_at_line(sp)
+        cam_vertical_align(0)
+        dis = distance([128, 128], sp)
+        print('Distance', dis)
+        move_forward(False, 50)
+        cam_vertical_align(0)
+
+def process_boss_2():
     cam_vertical_align()
     time.sleep(0.1)
     slide_at_angle(316)
@@ -252,12 +261,50 @@ def dungeon_loop():
     time.sleep(20)
     move_forward(True) # step back to load mobs
     print(current_angle(get_image(handle)))
-
     find_target(BOSSES['second'])
+
+def dungeon_loop():
+    # # First boss
+    # proceed_boss_1()
+    # # First correction
+    # align_after_boss_1()
+    # End first correction
+    # process_boss_2()
+    # TODO
+    # 1. make correction after 2 boss
+    # 2. then proceed
+    cam_vertical_align(0)
     time.sleep(0.1)
-    cam_vertical_align(160)
+
+    slide_at_angle(175.0) # turn camera to 3rd boss direction
+
+    time.sleep(1)
+    click(x-100, y+100, handle) # move from 2nd boss trash buildings
+    time.sleep(2)
+    click(1200, 345, handle) # move from 2nd boss trash buildings
+    time.sleep(5)
+
+    slide_at_angle(175.0) # turn camera to 3rd boss direction
     time.sleep(0.1)
-    slide_at_angle(163.14) # turn camera to 3rd boss direction
+
+
+    cam_vertical_align(0)
+    time.sleep(0.1)
+    cam_vertical_align(200)
+    time.sleep(0.1)
+    click(660, 140, handle) # click to near point of 3rd boss
+    time.sleep(0.1)
+    click(660, 140, handle) # click to near point of 3rd boss
+
+
+    # return
+    time.sleep(12)
+    cam_vertical_align(0)
+    move_forward()
+    time.sleep(1)
+    find_target(BOSSES['third'])
+    return 
+    time.sleep(0.1)
     time.sleep(0.1)
     cam_vertical_align(160)
     time.sleep(0.1)
@@ -312,12 +359,16 @@ def dungeon_loop():
     proceed_npc()
     time.sleep(1.5)
 
-dungeon_loop()
-# for i in range(8):
+# for i in range(8):/
 #     dungeon_loop()
 # proceed_npc()
+
+dungeon_loop()
+
 # img = get_image(handle)
 # print(current_angle(img))
+# cam_vertical_align(200)
+
 # proceed_boss_1()
 
 # cam_vertical_align(200)
